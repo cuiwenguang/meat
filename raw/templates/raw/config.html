@@ -1,0 +1,52 @@
+{% extends 'layout.html' %}
+{% load staticfiles %}
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <div class="card-title"> 参数设置 </div>
+        <div class="pull-right card-action">
+            <div role="group">
+                <button type="button" id="btnSave" class="btn btn-primary"> 提交 </button>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div id="alertContainer"></div>
+        <form id="configForm" class="form-horizontal" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="pk" value="{{ config.id | default:0 }}">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="unit_of_weight" class="col-sm-4 control-label">重量计量单位</label>
+                        <div class="col-sm-8">
+                            <input class="form-control" id="unit_of_weight" name="unit_of_weight" value="{{ config.unit_of_weight }}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="unit_of_number" class="col-sm-4 control-label">数量计量单位</label>
+                        <div class="col-sm-8">
+                            <input class="form-control" id="unit_of_number" name="unit_of_number" value="{{ config.unit_of_number }}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="default_tare" class="col-sm-4 control-label">酮体默认皮重</label>
+                        <div class="col-sm-8">
+                            <input class="form-control" id="default_tare" name="default_tare" value="{{ config.ketobody_tare }}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="default_number" class="col-sm-4 control-label">酮体默认每次可称重数量</label>
+                        <div class="col-sm-8">
+                            <input class="form-control" id="default_number" name="default_number" value="{{ config.ketobody_weigh_number }}" >
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+    <script type="text/javascript" src="{% static 'raw/config.js' %}"></script>
+{% endblock %}

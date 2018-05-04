@@ -26,5 +26,5 @@ urlpatterns = [
     path('logout/', logout, name="logout"),
     path('', index),
     path('nav', nav),
-    re_path('raw', include(raw_urls)),
+    re_path('raw/', include(raw_urls)),
 ]

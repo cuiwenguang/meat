@@ -1,4 +1,5 @@
 {% extends 'layout.html' %}
+{% load staticfiles %}
 {% block content %}
     <div class="card">
         <div class="card-header">
@@ -19,42 +20,45 @@
                             <div class="form-group col-sm-4">
                                 <label for="category" class="col-sm-3 control-label">品种</label>
                                 <div class="col-sm-9 input-group">
-                                    <select class="form-control" id="category">
+                                    <select class="form-control" id="category" name="category">
+                                        {% for c in categories %}
+                                        <option value="{{ c.id }}" data-price="{{ c.default_price }}">{{ c.name }}</option>
+                                        {% endfor %}
                                     </select>
                                 </div>
                             </div>
                             <div class="form-group col-sm-4">
                                 <label for="price" class="col-sm-3 control-label">单价</label>
                                 <div class="input-group col-sm-9">
-                                    <input type="text" class="form-control" id="price" name="price">
+                                    <input class="form-control" id="price" name="price">
                                     <div class="input-group-addon">元</div>
                                 </div>
                             </div>
                             <div class="form-group col-sm-4">
-                                <label for="cur_number" class="col-sm-3 control-label">数量</label>
+                                <label for="number" class="col-sm-3 control-label">数量</label>
                                 <div class="col-sm-9 input-group">
-                                    <input class="form-control" id="cur_number" value="{{ config.default_number}}">
+                                    <input class="form-control" id="number" name="number" value="{{ config.default_number}}">
                                     <div class="input-group-addon">{{ config.unit_of_number }}</div>
                                 </div>
                             </div>
                             <div class="form-group col-sm-4">
-                                <label for="mz_weight" class="col-sm-3 control-label">毛重</label>
+                                <label for="p_weight" class="col-sm-3 control-label">皮重</label>
                                 <div class="col-sm-9 input-group">
-                                    <input class="form-control" id="mz_weight" name="mz_weight" value="0">
+                                    <input class="form-control" id="p_weight" name="p_weight" readonly data-single="{{ config.default_tare }}" value="">
                                     <div class="input-group-addon">{{ config.unit_of_weight }}</div>
                                 </div>
                             </div>
                             <div class="form-group col-sm-4">
-                                <label for="pz_weight" class="col-sm-3 control-label">皮重</label>
+                                <label for="m_weight" class="col-sm-3 control-label">毛重</label>
                                 <div class="col-sm-9 input-group">
-                                    <input class="form-control" id="pz_weight" name="pz_weight" value="">
+                                    <input class="form-control" id="m_weight" name="m_weight" value="0">
                                     <div class="input-group-addon">{{ config.unit_of_weight }}</div>
                                 </div>
                             </div>
                             <div class="form-group col-sm-4">
-                                <label for="jz_weight" class="col-sm-3 control-label">净重</label>
+                                <label for="weight" class="col-sm-3 control-label">净重</label>
                                 <div class="col-sm-9 input-group">
-                                    <input class="form-control" id="jz_weight" name="jz_weight" value="0" style="color: red; font-weight: bolder">
+                                    <input class="form-control" id="weight" name="weight" readonly value="0" style="color: red; font-weight: bolder">
                                     <div class="input-group-addon">{{ config.unit_of_weight }}</div>
                                 </div>
                             </div>
@@ -82,6 +86,41 @@
                         </div>
                     </div>
                     <div class="col-sm-4">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">收购信息</div>
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <label for="sg_no" class="col-sm-3 control-label"> 收购批次 </label>
+                                    <div class="col-sm-9">
+                                        <input class="form-control" id="sg_no" name="sg_no" readonly placeholder="系统自动生成">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="sg_datetime" class="col-sm-3 control-label">时间</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" id="sg_datetime" name="sg_datetime" placeholder="0">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="sg_source" class="col-sm-3 control-label">总数量</label>
+                                    <div class="col-sm-9">
+                                        <input class="form-control" id="sg_source" name="sg_source" placeholder="">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="sg_source" class="col-sm-3 control-label">总重量</label>
+                                    <div class="col-sm-9">
+                                        <input class="form-control" id="sg_source" name="sg_source" placeholder="">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="sg_source" class="col-sm-3 control-label">均重</label>
+                                    <div class="col-sm-9">
+                                        <input class="form-control" id="sg_source" name="sg_source" placeholder="">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="panel panel-default">
                             <div class="panel-heading"> 交货人信息 </div>
                             <div class="panel-body">
@@ -111,32 +150,13 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="panel panel-default">
-                            <div class="panel-heading">收购信息</div>
-                            <div class="panel-body">
-                                <div class="form-group">
-                                    <label for="sg_no" class="col-sm-3 control-label"> 收购批次 </label>
-                                    <div class="col-sm-9">
-                                        <input class="form-control" id="sg_no" name="sg_no" placeholder="系统自动生成">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="sg_datetime" class="col-sm-3 control-label">时间</label>
-                                    <div class="col-sm-9">
-                                        <input type="text" class="form-control" id="sg_datetime" name="sg_datetime" placeholder="0">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="sg_source" class="col-sm-3 control-label">来源</label>
-                                    <div class="col-sm-9">
-                                        <input class="form-control" id="sg_source" name="sg_source" placeholder="">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </form>
         </div>
     </div>
+{% endblock %}
+{% block scripts %}
+<script type="text/javascript" src="{% static 'js/raw/collect_create.js' %}"></script>
+
 {% endblock %}

@@ -51,12 +51,17 @@ class Customer(models.Model, TransDict):
             ("manage_customer", "允许管理（CRUD）"),
         )
 
+
 class Category(models.Model, TransDict):
     """原料基础信息"""
     name = models.CharField(max_length=50)
     default_price = models.FloatField(default=0)
     type = models.CharField(max_length=50, null=True, blank=True)
     state = models.IntegerField(default=1)
+
+    @classmethod
+    def get_categories(cls):
+        return cls.objects.filter(state__gt=0)
 
 
 class CollectInfo(models.Model, TransDict):
@@ -71,13 +76,14 @@ class CollectInfo(models.Model, TransDict):
     user = models.ForeignKey(User, related_name='collect_user', null=True, on_delete=models.SET_NULL)  # 收购操作员
 
 
-
 class CollectDetail(models.Model, TransDict):
     """收购明细"""
     collect_info = models.ForeignKey(CollectInfo, on_delete=models.CASCADE)
     # category = models.ForeignKey(Category, on_delete=models.CASCADE)
     number = models.IntegerField()
     weight = models.FloatField()
+    p_weight = models.FloatField()
+    m_weight = models.FloatField()
     price = models.FloatField()
 
 

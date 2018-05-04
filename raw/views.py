@@ -24,12 +24,13 @@ def post_config(request):
     config.save()
     return JsonResponse({"code":200, "message": "配置信息保存成功"})
 
+
 def category_list(request):
     return render(request, "raw/category.html")
 
 
 def get_categories(request):
-    categories = Category.objects.filter(state__gt=0)
+    categories = Category.get_categories()
     return JsonResponse({"code":200, "data": [c.to_dict() for c in categories]})
 
 
@@ -71,4 +72,11 @@ def raw_list(request):
 
 def collect_create(request):
     config = RawConfig.objects.first()
-    return render(request, 'raw/collect_create.html', {"config":config})
+    categories = Category.get_categories()
+    return render(request, 'raw/collect_create.html',
+                  {
+                      "config": config,
+                      "categories": categories
+                  })
+
+

@@ -13,7 +13,9 @@
             </div>
         </div>
         <div class="card-body">
-            <form class="form-horizontal">
+            <div id="alertContainer"></div>
+            <form id="frmCreate" class="form-horizontal">
+                {% csrf_token %}
                 <div class="row">
                     <div class="col-sm-8">
                         <div class="row">
@@ -30,14 +32,14 @@
                             <div class="form-group col-sm-4">
                                 <label for="price" class="col-sm-3 control-label">单价</label>
                                 <div class="input-group col-sm-9">
-                                    <input class="form-control" id="price" name="price">
+                                    <input type="number" min="0" step="0.01" class="form-control" id="price" name="price">
                                     <div class="input-group-addon">元</div>
                                 </div>
                             </div>
                             <div class="form-group col-sm-4">
                                 <label for="number" class="col-sm-3 control-label">数量</label>
                                 <div class="col-sm-9 input-group">
-                                    <input class="form-control" id="number" name="number" value="{{ config.default_number}}">
+                                    <input type="number" min="1" step="1" class="form-control" id="number" name="number" value="{{ config.default_number}}">
                                     <div class="input-group-addon">{{ config.unit_of_number }}</div>
                                 </div>
                             </div>
@@ -65,17 +67,17 @@
                         </div>
                         <div class="row">
                             <div class="col-sm-12">
-                                <table id="table1" class="table">
+                                <table id="tabDetails" class="table">
                                     <thead>
                                         <tr>
-                                            <th data-field="no">序号</th>
-                                            <th data-field="cur_number">品种</th>
-                                            <th data-field="cur_number">单价</th>
-                                            <th data-field="cur_number">数量</th>
-                                            <th data-field="mz_weight">毛重</th>
-                                            <th data-field="pz_weight">皮重</th>
-                                            <th data-field="jz_weight">净重</th>
-                                            <th data-field="opt">操作</th>
+                                            <th data-field="seq">序号</th>
+                                            <th data-field="category" data-formatter="tableFormatter.category">品种</th>
+                                            <th data-field="price">单价</th>
+                                            <th data-field="number">数量</th>
+                                            <th data-field="m_weight">毛重</th>
+                                            <th data-field="p_weight">皮重</th>
+                                            <th data-field="weight">净重</th>
+                                            <th data-field="id" data-formatter="tableFormatter.options" >操作</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -92,31 +94,32 @@
                                 <div class="form-group">
                                     <label for="sg_no" class="col-sm-3 control-label"> 收购批次 </label>
                                     <div class="col-sm-9">
-                                        <input class="form-control" id="sg_no" name="sg_no" readonly placeholder="系统自动生成">
+                                        <input type="hidden" id="id" name="id" value="{{ model.id|default:0 }}">
+                                        <input class="form-control" id="sg_no" name="sg_no" readonly placeholder="系统自动生成" value="{{ model.sg_no }}">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="sg_datetime" class="col-sm-3 control-label">时间</label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="form-control" id="sg_datetime" name="sg_datetime" placeholder="0">
+                                        <input type="text" class="form-control" id="sg_datetime" name="sg_datetime" placeholder="" value="{{ model.sg_datetime|date:'Y-m-d H:i:s'}}" >
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="sg_source" class="col-sm-3 control-label">总数量</label>
+                                    <label for="total_number" class="col-sm-3 control-label">总数量</label>
                                     <div class="col-sm-9">
-                                        <input class="form-control" id="sg_source" name="sg_source" placeholder="">
+                                        <input class="form-control" id="total_number" name="total_number" readonly value="{{ model.total_number }}">
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="sg_source" class="col-sm-3 control-label">总重量</label>
+                                    <label for="total_weight" class="col-sm-3 control-label">总重量</label>
                                     <div class="col-sm-9">
-                                        <input class="form-control" id="sg_source" name="sg_source" placeholder="">
+                                        <input class="form-control" id="total_weight" name="total_weight" readonly value="{{ model.total_weight }}">
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="sg_source" class="col-sm-3 control-label">均重</label>
+                                    <label for="total_price" class="col-sm-3 control-label">总金额</label>
                                     <div class="col-sm-9">
-                                        <input class="form-control" id="sg_source" name="sg_source" placeholder="">
+                                        <input class="form-control" id="total_price" name="total_price" value="{{ model.total_price }}">
                                     </div>
                                 </div>
                             </div>
@@ -127,25 +130,25 @@
                                 <div class="form-group">
                                     <label for="id_card" class="col-sm-3 control-label">身份证</label>
                                     <div class="col-sm-9">
-                                        <input class="form-control" id="id_card" name="id_card" placeholder="身份证号码" value="">
+                                        <input class="form-control" id="id_card" name="id_card" placeholder="身份证号码" value="{{ model.customer.id_card }}">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="cust_name" class="col-sm-3 control-label">姓名</label>
                                     <div class="col-sm-9">
-                                        <input class="form-control" id="cust_name" name="cust_name" placeholder="农户姓名自动获取" value="">
+                                        <input class="form-control" id="cust_name" name="cust_name" placeholder="农户姓名" value="{{ model.customer.cust_name }}">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="mobile" class="col-sm-3 control-label">联系电话</label>
                                     <div class="col-sm-9">
-                                        <input class="form-control" id="mobile" name="mobile" placeholder="联系电话">
+                                        <input class="form-control" id="mobile" name="mobile" placeholder="联系电话" value="{{ model.customer.mobile }}">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="address" class="col-sm-3 control-label">详细地址</label>
                                     <div class="col-sm-9">
-                                        <textarea class="form-control" id="address" name="address" placeholder="详细地址"></textarea>
+                                        <textarea class="form-control" id="address" name="address" placeholder="详细地址">{{ model.customer.address }}</textarea>
                                     </div>
                                 </div>
                             </div>
@@ -158,5 +161,4 @@
 {% endblock %}
 {% block scripts %}
 <script type="text/javascript" src="{% static 'js/raw/collect_create.js' %}"></script>
-
 {% endblock %}

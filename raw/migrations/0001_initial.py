@@ -24,7 +24,7 @@ class Migration(migrations.Migration):
                 ('type', models.CharField(blank=True, max_length=50, null=True)),
                 ('state', models.IntegerField(default=1)),
             ],
-            bases=(models.Model, raw.models.TransDict),
+            bases=(models.Model, raw.models.DictMixin),
         ),
         migrations.CreateModel(
             name='CollectDetail',
@@ -34,7 +34,7 @@ class Migration(migrations.Migration):
                 ('weight', models.FloatField()),
                 ('price', models.FloatField()),
             ],
-            bases=(models.Model, raw.models.TransDict),
+            bases=(models.Model, raw.models.DictMixin),
         ),
         migrations.CreateModel(
             name='CollectInfo',
@@ -47,7 +47,7 @@ class Migration(migrations.Migration):
                 ('sg_source', models.CharField(default='', max_length=100)),
                 ('state', models.IntegerField(default=1)),
             ],
-            bases=(models.Model, raw.models.TransDict),
+            bases=(models.Model, raw.models.DictMixin),
         ),
         migrations.CreateModel(
             name='Customer',
@@ -61,7 +61,7 @@ class Migration(migrations.Migration):
             options={
                 'permissions': (('view_customer', '允许查看'), ('manage_customer', '允许管理（CRUD）')),
             },
-            bases=(models.Model, raw.models.TransDict),
+            bases=(models.Model, raw.models.DictMixin),
         ),
         migrations.CreateModel(
             name='PayInfo',
@@ -72,7 +72,7 @@ class Migration(migrations.Migration):
                 ('collect_info', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='raw.CollectInfo')),
                 ('user', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='pay_user', to=settings.AUTH_USER_MODEL)),
             ],
-            bases=(models.Model, raw.models.TransDict),
+            bases=(models.Model, raw.models.DictMixin),
         ),
         migrations.CreateModel(
             name='RawConfig',
@@ -86,7 +86,7 @@ class Migration(migrations.Migration):
             options={
                 'permissions': (('view_config', '允许查看'), ('manage_config', '允许管理（CRUD）')),
             },
-            bases=(models.Model, raw.models.TransDict),
+            bases=(models.Model, raw.models.DictMixin),
         ),
         migrations.AddField(
             model_name='collectinfo',

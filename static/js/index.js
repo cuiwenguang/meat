@@ -38,3 +38,15 @@ Date.prototype.pattern=function(fmt) {
     }
     return fmt;
 }
+
+function showMessage(ret) {
+    if(ret.code == 200){
+        $('<div class="alert alert-success" role="alert">' +
+            '<strong>'+ret.message+'</strong>' +
+        '</div>').appendTo("#alertContainer").show(300).delay(1000).hide(300);
+    } else {
+        $('<div class="alert alert-warning" role="alert">' +
+            '<strong>'+ret.message+'</strong>' +
+        '</div>').appendTo("#alertContainer").show(300).delay(1000).hide(300);
+    }
+}

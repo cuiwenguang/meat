@@ -1,8 +1,9 @@
+import datetime
 from django.shortcuts import render
 from django.http.response import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
-from .models import RawConfig, Category
+from .models import RawConfig, Category, CollectInfo, Customer, CollectDetail, get_sg_no
 
 
 def config_edit(request):
@@ -66,17 +67,63 @@ def delete_category(request):
     return JsonResponse({"code": 200, "message": "删除成功"})
 
 
-def raw_list(request):
-    return render(request, 'raw/list.html')
-
-
 def collect_create(request):
     config = RawConfig.objects.first()
     categories = Category.get_categories()
+    id = request.GET.get("id", 0)
+    try:
+        model = CollectInfo.objects.get(id=id)
+    except:
+        model = CollectInfo(sg_datetime=datetime.datetime.now())
+
     return render(request, 'raw/collect_create.html',
                   {
                       "config": config,
-                      "categories": categories
+                      "categories": categories,
+                      "model": model
                   })
 
 
+def post_collect(request):
+    id = request.POST.get("id", 0)
+    if int(id)>0:
+        model = CollectInfo.objects.get(id=id)
+    else:
+        model = CollectInfo()
+        model.sg_no = get_sg_no()
+
+    id_card = request.POST.get("id_card", '')
+    if len(id_card)>14:
+        cust_name = request.POST.get("cust_name")
+        mobile = request.POST.get("mobile")
+        address = request.POST.get("address")
+        customer = Customer.save_and_get(id_card,
+                                         mobile=mobile,
+                                         cust_name=cust_name,
+                                         address=address)
+    else:
+        customer = None
+
+    model.customer = customer
+    model.user = request.user
+    model.save()
+
+    detail = CollectDetail()
+    detail.category_id = request.POST.get("category")
+    detail.collect_info = model
+    detail.number = request.POST.get("number")
+    detail.weight = request.POST.get("weight")
+    detail.p_weight = request.POST.get("p_weight")
+    detail.m_weight = request.POST.get("m_weight")
+    detail.price =request.POST.get("price")
+    detail.save()
+
+    model.update_total_fields()
+
+    return JsonResponse({"code":200, "message": "称重记录保存成功", "data": model.to_dict()})
+
+
+def get_collect_details(request):
+    id = request.GET.get("id", 0)
+    details = CollectDetail.objects.filter(collect_info_id=id)
+    return JsonResponse({"code": 200, "data": [d.to_dict() for d in details]})

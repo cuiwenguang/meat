@@ -57,17 +57,7 @@ $("#btnSave").click(function () {
         $.post("/raw/postonfig",
             $("#configForm").serialize(),
             function (data) {
-                $("#alertContainer").html('');
-                if(data.code == 200){
-                    $('<div class="alert alert-success" role="alert">' +
-                        '<strong>'+data.message+'</strong>' +
-                    '</div>').appendTo("#alertContainer").show(300).delay(1000).hide(300);
-                    $("#configForm").data('bootstrapValidator').resetForm();
-                } else {
-                    $('<div class="alert alert-warning" role="alert">' +
-                        '<strong>'+data.message+'</strong>' +
-                    '</div>').appendTo("#alertContainer").show(300).delay(1000).hide(300);
-                }
+                showMessage(data);
             });
     }
 })

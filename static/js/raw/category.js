@@ -38,8 +38,6 @@ $("#btnSave").click(function save() {
 
 function del(id) {
     $.post("/raw/delcategory", {"id": id}, function (ret) {
-        if(ret.code==200){
-            $("#categoryTable").bootstrapTable('refresh');
-        }
+        showMessage(ret);
     })
 }

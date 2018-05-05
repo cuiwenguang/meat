@@ -137,3 +137,4 @@ def get_collect_details(request):
     id = request.GET.get("id", 0)
     details = CollectDetail.objects.filter(collect_info_id=id)
     return JsonResponse({"code": 200, "data": [d.to_dict() for d in details]})
+

@@ -1,3 +1,4 @@
+
 $(function () {
     // 类别和价格关联
     $("#category").change(selCategory);
@@ -17,8 +18,6 @@ $(function () {
     // 绑定表格
     tableBind();
 });
-
-
 
 var selCategory = function () {
     $("#price").val($(this).find("option:selected").data("price"));
@@ -79,6 +78,6 @@ var tableFormatter = {
         return value.name;
     },
     options: function (value) {
-        return '<button type="button" onclick="del('+value+')">删除</button>'
+        return '<a onclick="del('+value+')">删除</a>'
     }
 };

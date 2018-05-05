@@ -84,16 +84,27 @@ def collect_create(request):
                   })
 
 
+def collect_list(request):
+    return render(request, 'raw/collect_list.html')
+
+
+def get_collect_list(request):
+    offset = request.GET.get("offset", 0)
+    limit = request.GET.get("limit", 10)
+    data = CollectInfo.search(int(offset), int(limit))
+    return JsonResponse(data)
+
+
 def post_collect(request):
     id = request.POST.get("id", 0)
-    if int(id)>0:
+    if int(id) > 0:
         model = CollectInfo.objects.get(id=id)
     else:
         model = CollectInfo()
         model.sg_no = get_sg_no()
 
     id_card = request.POST.get("id_card", '')
-    if len(id_card)>14:
+    if len(id_card) > 14:
         cust_name = request.POST.get("cust_name")
         mobile = request.POST.get("mobile")
         address = request.POST.get("address")
@@ -115,12 +126,11 @@ def post_collect(request):
     detail.weight = request.POST.get("weight")
     detail.p_weight = request.POST.get("p_weight")
     detail.m_weight = request.POST.get("m_weight")
-    detail.price =request.POST.get("price")
+    detail.price = request.POST.get("price")
     detail.save()
-
     model.update_total_fields()
 
-    return JsonResponse({"code":200, "message": "称重记录保存成功", "data": model.to_dict()})
+    return JsonResponse({"code": 200, "message": "称重记录保存成功", "data": model.to_dict()})
 
 
 def get_collect_details(request):

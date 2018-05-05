@@ -90,18 +90,25 @@ class CollectInfo(models.Model, DictMixin):
     user = models.ForeignKey(User, related_name='collect_user', null=True, on_delete=models.SET_NULL)  # 收购操作员
 
     def update_total_fields(self):
-
         total = CollectDetail.objects\
             .filter(collect_info_id=self.id)\
             .values('collect_info_id')\
             .annotate(total_price=models.Sum(models.F('price') * models.F('weight')),
                       total_number=models.Sum('number'),
-                      total_weight=models.Sum('weight')).first()
-
+                      total_weight=models.Sum('weight'))[0]
         self.total_price = total["total_price"]
         self.total_number = total['total_number']
         self.total_weight = total['total_weight']
         self.save()
+
+    @classmethod
+    def search(cls, offset, limit, **kwargs):
+        count = cls.objects.count()
+        ret = cls.objects.all()[offset:offset+limit]
+        return {
+            "total": count,
+            "rows": [c.to_dict() for c in ret]
+        }
 
 
 class CollectDetail(models.Model, DictMixin):

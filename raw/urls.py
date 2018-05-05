@@ -1,11 +1,14 @@
 from django.urls import path
 
-from .views import (collect_create, post_collect, get_collect_details,
+from .views import (collect_list, get_collect_list,
+                    collect_create, post_collect, get_collect_details,
                     config_edit, post_config,
                     category_list, get_categories, get_category_by_id,
                     post_category, delete_category)
 
 urlpatterns = [
+    path('collect/list', collect_list, name="collect_list"),
+    path('getcollectlist', get_collect_list, name="get_collect_list"),
     path('collect/create', collect_create, name="collect_create"),
     path('postcollect', post_collect, name="post_collect"),
     path('collect/details', get_collect_details, name='get_collect_details'),

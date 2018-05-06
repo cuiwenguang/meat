@@ -39,5 +39,6 @@ $("#btnSave").click(function save() {
 function del(id) {
     $.post("/raw/delcategory", {"id": id}, function (ret) {
         showMessage(ret);
+        $("#categoryTable").bootstrapTable('refresh');
     })
 }

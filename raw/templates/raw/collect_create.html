@@ -1,5 +1,9 @@
 {% extends 'layout.html' %}
 {% load staticfiles %}
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="{% static 'lib/css/bootstrap-table.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'lib/css/bootstrapValidator.min.css' %}">
+{% endblock %}
 {% block content %}
     <div class="card">
         <div class="card-header">
@@ -160,5 +164,8 @@
     </div>
 {% endblock %}
 {% block scripts %}
-<script type="text/javascript" src="{% static 'js/raw/collect_create.js' %}"></script>
+    <script type="text/javascript" src="{% static 'lib/js/bootstrap-table.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'lib/js/bootstrap-table-zh-CN.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'lib/js/bootstrapValidator.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/raw/collect_create.js' %}"></script>
 {% endblock %}

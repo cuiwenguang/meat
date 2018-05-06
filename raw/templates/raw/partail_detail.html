@@ -1,0 +1,26 @@
+{% for item in items %}
+{% if forloop.counter0|divisibleby:4 %}
+<div class="row">
+{% endif %}
+    <div class="col-sm-3">
+        <ul class="list-group">
+            <li class="list-group-item">
+                <span class="badge">{{ item.seq }}</span>
+                品种：{{ item.category.name }}
+            </li>
+            <li class="list-group-item">
+                数量：{{ item.number }}
+            </li>
+            <li class="list-group-item">
+                毛重：{{ item.m_weight }} 皮重：{{ item.p_weight }}
+                <br/>净重：{{ item.weight }}
+            </li>
+            <li class="list-group-item">
+                单价：￥{{ item.price }}
+            </li>
+        </ul>
+    </div>
+{% if forloop.counter|divisibleby:4 %}
+</div>
+{% endif %}
+{% endfor %}

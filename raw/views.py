@@ -138,3 +138,10 @@ def get_collect_details(request):
     details = CollectDetail.objects.filter(collect_info_id=id)
     return JsonResponse({"code": 200, "data": [d.to_dict() for d in details]})
 
+
+def get_sub_detial(request):
+    id = request.GET.get("id", 0)
+    items = CollectDetail.objects.filter(collect_info_id=id)
+    result = [d.to_dict() for d in items]
+    return render(request, 'raw/partail_detail.html', {"items": result})
+

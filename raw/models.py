@@ -4,6 +4,7 @@ from django.db import models
 
 
 
+
 class DictMixin:
     """queryset转字典"""
     def to_dict(self):
@@ -79,6 +80,12 @@ class Category(models.Model, DictMixin):
 
 class CollectInfo(models.Model, DictMixin):
     """收购信息"""
+    state_choice = (
+        (0, "暂存"),
+        (1, "未结算"),
+        (2, "结算中"),
+        (3, "完成"),
+    )
     sg_no = models.CharField(max_length=50, db_index=True)  # 收购批次
     sg_datetime = models.DateTimeField(auto_now=True)  # 收购时间
     customer = models.ForeignKey(Customer, null=True, on_delete=models.SET_NULL)  # 客户账号
@@ -103,8 +110,21 @@ class CollectInfo(models.Model, DictMixin):
 
     @classmethod
     def search(cls, offset, limit, **kwargs):
-        count = cls.objects.count()
-        ret = cls.objects.all()[offset:offset+limit]
+        q = models.Q()
+        for k, v in kwargs.items():
+            c = {}
+            if k == "sg_date" and len(v)==2:
+                c["sg_datetime__range"]= v
+            elif k == "sg_state" and len(v)>0:
+                c["state__in"] = v
+            elif k == "customer" and len(v)>0:
+                c["customer__cust_name"] = v
+            elif k == 'no':
+                if len(v)>0:
+                    c['sg_no'] = v
+            q.add(models.Q(**c), q.AND)
+        count = cls.objects.filter(q).count()
+        ret = cls.objects.filter(q)[offset:offset + limit]
         return {
             "total": count,
             "rows": [c.to_dict() for c in ret]

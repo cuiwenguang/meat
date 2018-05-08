@@ -91,7 +91,22 @@ def collect_list(request):
 def get_collect_list(request):
     offset = request.GET.get("offset", 0)
     limit = request.GET.get("limit", 10)
-    data = CollectInfo.search(int(offset), int(limit))
+    date_params = request.GET.get("sgDate", "")
+    if len(date_params)>0:
+        try:
+            date_range = [ datetime.datetime.strptime(dd.strip(), "%Y-%m-%d") for dd in date_params.split('~')]
+            date_range[1] = date_range[1] + datetime.timedelta(days=1)
+        except:
+            date_range = []
+    else:
+        date_range = []
+    query_params = {
+        "no": request.GET.get("no", ""),
+        "sg_date": date_range,
+        "customer": request.GET.get("customer", ""),
+        "sg_state": [int(s) for s in request.GET.getlist("sgState", [])],
+    }
+    data = CollectInfo.search(int(offset), int(limit), **query_params)
     return JsonResponse(data)
 
 
@@ -173,7 +188,7 @@ def collect_pay(request):
     model = CollectInfo.objects.filter(sg_no=sg_no)
     date_form = datetime.date.today()
     date_to = date_form + datetime.timedelta(days=1)
-    today_data = CollectInfo.objects.filter(sg_datetime__=(date_form, date_to))
+    today_data = CollectInfo.objects.filter(sg_datetime__range=(date_form, date_to))
     return render(request, 'raw/collect_pay.html',
                   {
                       "model": model,

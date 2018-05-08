@@ -1,3 +1,4 @@
+var searchState = []; //搜索状态
 $(function () {
    $("#collectTable").bootstrapTable({
        "url": "/raw/getcollectlist",
@@ -8,12 +9,34 @@ $(function () {
        "detailFormatter": tableFormatter.detailFormatter
    });
    datepickerInit("#sg_datetime");
-   $("#state").multiselect();
+   $("#state").multiselect({});
+});
+
+$("#btnSearch").click(function () {
+    var c = $("#cust_name").val();
+    var no = $("#sg_no").val();
+    var d = $("#sg_datetime").val();
+
+    var s = [];
+    $("#state option:selected").each(function () {
+        s.push(this.value);
+    });
+    queryParams = {
+        customer: c,
+        no: no,
+        sgDate: d,
+        sgState: s
+    };
+    $("#collectTable").bootstrapTable('refreshOptions',{
+        queryParams:queryParams,
+        ajaxOptions:{traditional:true}
+    });
+    //$("#collectTable").bootstrapTable('refresh');
 });
 
 var tableFormatter = {
     custFormatter: function (value) {
-        if(value==null || value ==undefined ) return '-';
+        if(value==null || value==undefined ) return '-';
         return value.cust_name
     },
     weightFormatter: function (value) {

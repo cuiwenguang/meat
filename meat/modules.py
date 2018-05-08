@@ -30,7 +30,7 @@ modules = [
                 },
                 {
                     "name": "收购结算",
-                    "url": "/raw/collect/list",
+                    "url": "/raw/collect/pay",
                     "icon": "fa-table",
                     "lable": "raw",
                     "model": "collectinfo",

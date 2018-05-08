@@ -36,8 +36,15 @@ var tableFormatter = {
     },
     optFormatter: function (value, row) {
         html = "";
-        if(row.state==0) html += "<a>称重</a>";
-        return ' <a>编辑</a> <a>删除</a> '
+        if ($("#action").val() == "pay"){
+            if(row.state == 1) html += "<a href='#'>结算</a>";
+
+        }else {
+            if(row.state==0) html += "<a href='/raw/collect/create?id="+row.id+"'>称重</a>";
+            html += ' <a>打印</a>'
+            if (row.state < 2 ) html += ' <a>编辑</a> <a>删除</a> ';
+            return html
+        }
     },
     detailFormatter: function (index, row) {
         var html = "";

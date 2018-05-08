@@ -17,6 +17,7 @@ $(function () {
 
     // 绑定表格
     tableBind();
+
 });
 
 var selCategory = function () {
@@ -37,6 +38,7 @@ var changeWeight = function () {
 };
 
 $("#btnWeight").click(function () {
+    $("#seq").val($("#tabDetails").find('tbody tr').length+1);
     $.post("/raw/postcollect", $("#frmCreate").serialize(), function (ret) {
         showMessage(ret);
         if(ret.code==200){
@@ -46,6 +48,22 @@ $("#btnWeight").click(function () {
     })
 });
 
+$("#btnSave").click(function () {
+    if($("#tabDetails").find('tbody tr').length == 0){
+        alert('没有任何称重记录，不允许提交');
+        return;
+    }
+    if($("#id_card").val()=="" || $("#cust_name").val()==""){
+        alert('交货人信息不完成，生份证和姓名不允许为空');
+        return;
+    }
+    $.post("/raw/submitcollect", $("#frmCreate").serialize(), function (ret) {
+        showMessage(ret)
+        if (ret.code==200){
+            initForm(ret.data);
+        }
+    })
+});
 
 function tableBind() {
     var id = $("#id").val()
@@ -69,6 +87,11 @@ function initForm(data) {
         $("#cust_name").val(data.customer.cust_name);
         $("#mobile").val(data.customer.mobile);
         $("#address").val(data.customer.address);
+    } else {
+        $("#id_card").val('');
+        $("#cust_name").val('');
+        $("#mobile").val('');
+        $("#address").val('');
     };
 
 }

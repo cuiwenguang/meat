@@ -127,6 +127,7 @@ class PayInfo(models.Model, DictMixin):
     collect_info = models.ForeignKey(CollectInfo, db_index=True, on_delete=models.CASCADE)
     pay_money = models.FloatField(default=0)
     create_at = models.DateTimeField(auto_now=True)
+    remark = models.CharField(max_length=255, default='')
     user = models.ForeignKey(User, related_name='pay_user', null=True, on_delete=models.SET_NULL)  # 结算操作员
 
 

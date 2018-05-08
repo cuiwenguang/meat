@@ -96,6 +96,7 @@ def get_collect_list(request):
 
 
 def post_collect(request):
+    """提交称重明细记录"""
     id = request.POST.get("id", 0)
     if int(id) > 0:
         model = CollectInfo.objects.get(id=id)
@@ -120,6 +121,7 @@ def post_collect(request):
     model.save()
 
     detail = CollectDetail()
+    detail.seq = request.POST.get("seq")
     detail.category_id = request.POST.get("category")
     detail.collect_info = model
     detail.number = request.POST.get("number")
@@ -133,6 +135,26 @@ def post_collect(request):
     return JsonResponse({"code": 200, "message": "称重记录保存成功", "data": model.to_dict()})
 
 
+def submit_collect(request):
+    """完成称重并提交"""
+    id = request.POST.get("id")
+    model = CollectInfo.objects.get(id=id)
+    id_card = request.POST.get("id_card")
+    cust_name = request.POST.get("cust_name")
+    mobile = request.POST.get("mobile")
+    address = request.POST.get("address")
+    customer = Customer.save_and_get(id_card,
+                                     mobile=mobile,
+                                     cust_name=cust_name,
+                                     address=address)
+    model.customer = customer
+    model.user = request.user
+    model.state = 1
+    model.save()
+
+    return JsonResponse({"code": 200, "message": "称重记录保存成功", "data": CollectInfo().to_dict()})
+
+
 def get_collect_details(request):
     id = request.GET.get("id", 0)
     details = CollectDetail.objects.filter(collect_info_id=id)
@@ -144,4 +166,17 @@ def get_sub_detial(request):
     items = CollectDetail.objects.filter(collect_info_id=id)
     result = [d.to_dict() for d in items]
     return render(request, 'raw/partail_detail.html', {"items": result})
+
+
+def collect_pay(request):
+    sg_no = request.GET.get("no")
+    model = CollectInfo.objects.filter(sg_no=sg_no)
+    date_form = datetime.date.today()
+    date_to = date_form + datetime.timedelta(days=1)
+    today_data = CollectInfo.objects.filter(sg_datetime__=(date_form, date_to))
+    return render(request, 'raw/collect_pay.html',
+                  {
+                      "model": model,
+                      "today_data": today_data
+                  })
 

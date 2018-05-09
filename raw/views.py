@@ -1,9 +1,9 @@
 import datetime
 from django.shortcuts import render
-from django.http.response import JsonResponse
+from django.http.response import JsonResponse, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
 
-from .models import RawConfig, Category, CollectInfo, Customer, CollectDetail, get_sg_no
+from .models import RawConfig, Category, CollectInfo, Customer, CollectDetail, PayInfo, get_sg_no
 
 
 def config_edit(request):
@@ -183,15 +183,31 @@ def get_sub_detial(request):
     return render(request, 'raw/partail_detail.html', {"items": result})
 
 
-def collect_pay(request):
-    sg_no = request.GET.get("no")
-    model = CollectInfo.objects.filter(sg_no=sg_no)
-    date_form = datetime.date.today()
-    date_to = date_form + datetime.timedelta(days=1)
-    today_data = CollectInfo.objects.filter(sg_datetime__range=(date_form, date_to))
-    return render(request, 'raw/collect_pay.html',
-                  {
-                      "model": model,
-                      "today_data": today_data
-                  })
+def collect_payview(request):
+    if request.method == "GET":
+        id = request.GET.get("id")
+        model = CollectInfo.objects.get(id=id)
+        money = model.total_price - PayInfo.get_pay_sum(id)
+        today_model = CollectInfo.objects.filter(sg_datetime__gte=datetime.date.today(), state__range=[1, 2])
+        details = PayInfo.objects.filter(collect_info_id=id)
+        return render(request, 'raw/pay_detail.html', locals())
+    else:
+        id = request.POST.get("id")
+        money = float(request.POST.get("money", 0))
+        remark = request.POST.get("remark", '')
+        pay_model = PayInfo(pay_money=money, create_at=datetime.datetime.now(),
+                            collect_info_id=id, user=request.user,
+                            remark=remark)
 
+        model = CollectInfo.objects.get(id=id)
+
+        if money + PayInfo.get_pay_sum(id) == model.total_price:
+            model.state = 3
+        elif money + PayInfo.get_pay_sum(id) < model.total_price:
+            model.state = 2
+        else :
+            return JsonResponse({"code": 410})
+
+        pay_model.save()
+        model.save(update_fields=['state',])
+        return HttpResponseRedirect("/raw/collect/pay?id="+id)

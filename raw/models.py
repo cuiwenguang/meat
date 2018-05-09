@@ -150,6 +150,12 @@ class PayInfo(models.Model, DictMixin):
     remark = models.CharField(max_length=255, default='')
     user = models.ForeignKey(User, related_name='pay_user', null=True, on_delete=models.SET_NULL)  # 结算操作员
 
+    @classmethod
+    def get_pay_sum(cls, id):
+        ret = PayInfo.objects.filter(collect_info_id=id).values('collect_info_id').annotate(sum_price=models.Sum('pay_money'))
+        if len(ret)==0:
+            return 0
+        return ret[0]["sum_price"]
 
 class Sequence(models.Model):
     """自增序列"""

@@ -2,7 +2,7 @@ from django.urls import path
 
 from .views import (collect_list, get_collect_list, get_sub_detial,
                     collect_create, post_collect, get_collect_details,
-                    submit_collect, collect_pay,
+                    submit_collect, collect_payview,
                     config_edit, post_config,
                     category_list, get_categories, get_category_by_id,
                     post_category, delete_category)
@@ -15,7 +15,7 @@ urlpatterns = [
     path('postcollect', post_collect, name="post_collect"),
     path('submitcollect', submit_collect, name="submit_collect"),
     path('collect/details', get_collect_details, name='get_collect_details'),
-    path('collect/pay', collect_pay, name='collect_pay'),
+    path('collect/pay', collect_payview, name='collect_payview'),
 
     path('config', config_edit, name="config_edit"),
     path('postonfig', post_config, name="post_config"),

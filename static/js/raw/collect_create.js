@@ -61,6 +61,7 @@ $("#btnSave").click(function () {
         showMessage(ret)
         if (ret.code==200){
             initForm(ret.data);
+            tableBind();
         }
     })
 });
@@ -80,8 +81,8 @@ function initForm(data) {
     $("#sg_no").val(data.sg_no);
     $("#sg_datetime").val(data.sg_datetime);
     $("#total_number").val(data.total_number);
-    $("#total_weight").val(data.total_weight);
-    $("#total_price").val(data.total_price);
+    $("#total_weight").val(parseFloat(data.total_weight).toFixed(2));
+    $("#total_price").val(parseFloat(data.total_price).toFixed(2));
     if(data.customer){
         $("#id_card").val(data.customer.id_card);
         $("#cust_name").val(data.customer.cust_name);

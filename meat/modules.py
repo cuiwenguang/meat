@@ -85,7 +85,7 @@ modules = [
             "id": 3,
             "name": "产品",
             "icon": "fa-barcode",
-            "url": "inventory",
+            "url": "storage",
             "label": "",
             "model": "",
             "parent": 0,

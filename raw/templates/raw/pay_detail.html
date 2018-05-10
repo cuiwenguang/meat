@@ -47,6 +47,7 @@
                         <a class="list-group-item disabled"> 今日待结算 </a>
                         {% for m in today_model %}
                         <a href="{% url 'collect_payview' %}?id={{ m.id }}" class="list-group-item">
+                            <div class="list-group-item-heading"> 收购编号 {{ m.sg_no }} </div>
                             <div>姓名：{{ m.customer.cust_name }} 身份证：{{ m.customer.id_card }}</div>
                             <div>总重量: {{ m.total_weight }}   总数量 {{ m.total_number }}    总金额： ¥{{ m.total_price }}</div>
                         </a>

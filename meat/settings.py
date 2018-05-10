@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     "raw",
+    'storage',
 ]
 
 MIDDLEWARE = [
@@ -122,3 +123,8 @@ USE_TZ = False
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'),]
+
+STORAGE_CONFIG = {
+    "BORCADE_PATH": os.path.join(BASE_DIR, 'static/barcode'),  # 条形码保存地址
+    "BORCADE_URL": '/static/barcode/',
+}

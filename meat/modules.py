@@ -29,14 +29,6 @@ modules = [
                     "parent": 1,
                 },
                 {
-                    "name": "收购结算",
-                    "url": "/raw/collect/pay",
-                    "icon": "fa-table",
-                    "lable": "raw",
-                    "model": "collectinfo",
-                    "parent": 1,
-                },
-                {
                     "name": "收购品种管理",
                     "url": "/raw/category/list",
                     "icon": "fa-table",
@@ -91,8 +83,8 @@ modules = [
             "parent": 0,
             "children": [
                 {
-                    "name": "基本信息",
-                    "url": "",
+                    "name": "产品列表",
+                    "url": "/storage/product/list",
                     "icon": "",
                     "label": "",
                     "model": "",

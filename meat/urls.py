@@ -19,6 +19,7 @@ from django.contrib.auth.views import login as sys_login
 from .views import logout, index, nav
 
 from raw.urls import urlpatterns as raw_urls
+from storage.urls import urlpatterns as storage_urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,4 +28,5 @@ urlpatterns = [
     path('', index),
     path('nav', nav),
     re_path('raw/', include(raw_urls)),
+    re_path('storage/', include(storage_urls)),
 ]

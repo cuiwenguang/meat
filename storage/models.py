@@ -1,16 +1,60 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+from pystrich.ean13 import EAN13Encoder
 
-class Product(models.Model):
+from meat.utils.mixin import DictMixin
+from meat.settings import STORAGE_CONFIG
+
+class Product(models.Model, DictMixin):
     """产品基础信息"""
     name = models.CharField(max_length=50)
     standard = models.CharField(max_length=20)
     packing = models.CharField(max_length=20)
-    code = models.CharField(max_length=50)
+    code = models.CharField(max_length=50, db_index=True)
     price = models.FloatField(default=0)
     remark = models.CharField(max_length=50)
     state = models.IntegerField(default=1)
+
+    @classmethod
+    def get(cls, id):
+        try:
+            return cls.objects.get(id=id)
+        except:
+            return None
+
+    @classmethod
+    def get_all(cls):
+        """查询全部"""
+        return cls.objects.filter(state__gte=0)
+
+    @classmethod
+    def del_product(cls, id):
+        item = cls.objects.get(id=id)
+        item.state = -1
+        item.save()
+
+    def create_barcode(self):
+        """生产条形码"""
+        encoder = EAN13Encoder(self.code)
+        file_path = "".join(STORAGE_CONFIG["BORCADE_PATH"], self.code, ".png")
+        encoder.save(file_path)
+        return file_path
+
+    def update(self, **kwargs):
+        for k, v in kwargs.items():
+            self[k] = v
+        self.save(update_fields=[f for f in kwargs])
+
+    @classmethod
+    def search(cls, **kwargs):
+        query = models.Q()
+        for k, v in kwargs:
+            if v is not None:
+                q = models.Q(**{k:v})
+                query.add(q)
+
+        return cls.objects.filter(query)
 
 
 class StorageInfo(models.Model):
@@ -24,7 +68,7 @@ class EnterStorage(models.Model):
     user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     Product = models.ForeignKey(Product, null=True, on_delete=models.SET_NULL)
     number = models.IntegerField(default=0)
-    remark = models.IntegerField(max_length=50)
+    remark = models.CharField(max_length=50)
 
 
 class OutStorage(models.Model):

@@ -61,7 +61,7 @@ $("#btnSave").click(function () {
         showMessage(ret)
         if (ret.code==200){
             initForm(ret.data);
-            tableBind();
+            $("#tabDetails").bootstrapTable('removeAll');
         }
     })
 });
@@ -70,7 +70,8 @@ function tableBind() {
     var id = $("#id").val()
     if(parseInt(id)>0){
         $("#tabDetails").bootstrapTable({
-            "url": "/raw/collect/details?id="+id
+            "url": "/raw/collect/details?id="+id,
+            "classes": "table"
         });
     }
     $("#tabDetails").bootstrapTable('refresh');

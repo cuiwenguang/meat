@@ -26,7 +26,10 @@ class Product(models.Model, DictMixin):
     @classmethod
     def get_all(cls):
         """查询全部"""
-        return cls.objects.filter(state__gte=0)
+        q = models.Q(**{"state__gte": 0})
+        # total = cls.objects.count()
+        rows = cls.objects.filter(q)
+        return [m.to_dict() for m in rows]
 
     @classmethod
     def del_product(cls, id):
@@ -36,8 +39,13 @@ class Product(models.Model, DictMixin):
 
     def create_barcode(self):
         """生产条形码"""
-        encoder = EAN13Encoder(self.code)
-        file_path = "".join(STORAGE_CONFIG["BORCADE_PATH"], self.code, ".png")
+        code_name = "".join([STORAGE_CONFIG["BARCODE"]["ADDR"],
+                             STORAGE_CONFIG["BARCODE"]["COM"],
+                             self.code])
+        encoder = EAN13Encoder(code_name)
+
+        file_path = "".join([STORAGE_CONFIG["BARCODE"]["PATH"],
+                             code_name, ".png"])
         encoder.save(file_path)
         return file_path
 

@@ -9,27 +9,24 @@ def product_list(request):
 
 
 def get_products(request):
-    items = Product.get_all()
-    models = [ m.to_dict() for m in items]
-    return JsonResponse({"code": 200, "data": models})
+    return JsonResponse({"code":200, "data":Product.get_all()})
 
 
 def post_product(request):
     id = request.POST.get("id", 0)
-    if id == 0:
+    if int(id) == 0:
         model = Product()
     else:
         model = Product.get(id)
-    fields = {
-        "name": request.POST.get("name"),
-        "standard": request.POST.get("standard"),
-        "packing": request.POST.get("packing"),
-        "code": request.POST.get("code"),
-        "price": request.POST.get("price"),
-        "remark": request.POST.get("remark"),
-        "state": request.POST.get("state", 1),
-    }
-    model.update(**fields)
+
+    model.name = request.POST.get("name")
+    model.standard = request.POST.get("standard")
+    model.packing = request.POST.get("packing")
+    model.code = request.POST.get("code")
+    model.price = request.POST.get("price")
+    model.remark = request.POST.get("remark")
+    model.save()
+    model.create_barcode()
     return JsonResponse({"code":200, "message": "产品信息保存成功"})
 
 

@@ -125,6 +125,10 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'),]
 
 STORAGE_CONFIG = {
-    "BORCADE_PATH": os.path.join(BASE_DIR, 'static/barcode'),  # 条形码保存地址
-    "BORCADE_URL": '/static/barcode/',
+    "BARCODE": {
+        "PATH": os.path.join(BASE_DIR, 'static/barcode/'),  # 条形码保存地址
+        "URL": '/static/barcode/',  # 访问地址
+        "ADDR": "690",  # 生产地 中国大陆(690~695)
+        "COM": "12345",  # 制造厂商代码，由国家物品编码中心赋予制造厂商的代码
+    },
 }

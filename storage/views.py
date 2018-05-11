@@ -44,3 +44,7 @@ def create_barcode(request):
         m.create_barcode()
 
     return JsonResponse({"code": 200, "message": "条形码生产完毕"})
+
+
+def storage_enter(request):
+    return render(request, 'storage/storage_enter.html')

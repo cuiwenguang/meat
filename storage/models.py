@@ -72,7 +72,7 @@ class StorageInfo(models.Model):
 
 
 class EnterStorage(models.Model):
-    crate_at = models.DateTimeField(auto_created=True)
+    create_at = models.DateTimeField(auto_created=True)
     user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     Product = models.ForeignKey(Product, null=True, on_delete=models.SET_NULL)
     number = models.IntegerField(default=0)

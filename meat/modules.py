@@ -91,8 +91,8 @@ modules = [
                     "parent": 3,
                 },
                 {
-                    "name": "商品入库",
-                    "url": "",
+                    "name": "产品入库",
+                    "url": "/storage/enter",
                     "icon": "",
                     "label": "",
                     "model": "",

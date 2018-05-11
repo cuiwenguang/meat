@@ -3,7 +3,7 @@ $(function () {
        "url": "/storage/getproducts",
        "checkbox":true
    });
-   $("#btnEdit").click(function () {
+   $("#btnEdit").click(function () { 
       $("#frmCreate").modal({});
    });
 });
@@ -18,3 +18,11 @@ $("#btnSave").click(function () {
         $("#productTable").bootstrapTable("refresh");
     });
 });
+
+var formatter = {
+    optFormatter: function (value) {
+        html ="<a href='javascript:showEdit("+value+")'> 编辑 </a>"+
+            "<a > 删除 </a>"
+        return html;
+    }
+}

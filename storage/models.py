@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-
+from django.db import transaction
 from pystrich.ean13 import EAN13Encoder
 
 from meat.utils.mixin import DictMixin
@@ -70,13 +70,25 @@ class StorageInfo(models.Model):
     number = models.IntegerField(default=0)
     scattered_number = models.IntegerField(default=0)
 
+    @classmethod
+    def update_storage(cls, product_id, number):
+        model = cls.objects.filter(product_id=product_id).first()
+        model.number += number
+        model.save()
+
+    def enter_storage(self, enter_model):
+        with transaction.atomic():
+            enter_model.save()
+            self.update_storage(enter_model.product_id, enter_model.number)
+
 
 class EnterStorage(models.Model):
     create_at = models.DateTimeField(auto_created=True)
     user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
-    Product = models.ForeignKey(Product, null=True, on_delete=models.SET_NULL)
+    product = models.ForeignKey(Product, null=True, on_delete=models.SET_NULL)
     number = models.IntegerField(default=0)
     remark = models.CharField(max_length=50)
+
 
 
 class OutStorage(models.Model):

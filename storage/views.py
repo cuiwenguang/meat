@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http.response import JsonResponse
-from .models import Product
+from .models import Product, EnterStorage, StorageInfo
 
 
 def product_list(request):
@@ -48,3 +48,14 @@ def create_barcode(request):
 
 def storage_enter(request):
     return render(request, 'storage/storage_enter.html')
+
+
+def post_enter_storage(request):
+    """入库"""
+    model = EnterStorage()
+    model.user = request.user
+    model.product.id = request.POST.get("id")
+    model.number = request.POST.get("number")
+    storage  = StorageInfo()
+    storage.enter_storage(model)
+    return JsonResponse({"code":200, "message": "入库成功"})

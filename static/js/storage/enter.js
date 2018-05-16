@@ -67,5 +67,13 @@ var formatter = {
     codeFormatter: function (value) { return value.code },
     nameFormatter: function (value) { return value.name },
     standardFormatter: function (value) { return value.standard },
-    packingFormatter: function (value) { return value.packing }
+    packingFormatter: function (value) { return value.packing },
+    optFormatter: function (value) {
+        html = "<a href='javascript:del("+value+")'>删除</a>"
+        return html;
+    }
+}
+
+function del(id) {
+
 }

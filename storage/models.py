@@ -88,6 +88,23 @@ class StorageInfo(models.Model, DictMixin):
             enter_model.save()
             self.update_storage(enter_model.product_id, enter_model.number)
 
+    @classmethod
+    def cancel(cls, id, direct):
+        if direct=="enter":
+            model = EnterStorage.objects.get(id=id)
+            number = model.number
+            product_id = - model.product.id
+        elif direct == "out":
+            model = OutStorage.objects.get(id=id)
+            number = model.number
+            product_id = model.product.id
+
+        with transaction.atomic():
+            model.delete()
+            s = cls.objects.filter(product_id=product_id).first()
+            s.number += number
+            s.save()
+
 
 class EnterStorage(models.Model, DictMixin):
     create_at = models.DateTimeField(auto_created=True, auto_now_add=True)
@@ -104,14 +121,22 @@ class EnterStorage(models.Model, DictMixin):
         count = cls.objects.count()
 
         return {
-            "count": count,
+            "total": count,
             "rows": [e.to_dict() for e in data]
         }
 
 
-class OutStorage(models.Model):
+class Customer(models.Model, DictMixin):
+    """出库收货单位"""
+    customer_name = models.CharField(max_length=50)
+    address = models.CharField(max_length=50, null=True, blank=True)
+    phone = models.CharField(max_length=50, null=True, blank=True)
+
+
+class OutStorage(models.Model, DictMixin):
     crate_at = models.DateTimeField(auto_created=True)
     user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
-    Product = models.ForeignKey(Product, null=True, on_delete=models.SET_NULL)
+    product = models.ForeignKey(Product, null=True, on_delete=models.SET_NULL)
+    customer = models.ForeignKey(Customer, null=True, on_delete=models.SET_NULL)
     number = models.IntegerField(default=0)
     remark = models.CharField(max_length=50)

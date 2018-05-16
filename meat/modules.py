@@ -117,10 +117,26 @@ modules = [
         {
             "id": 5,
             "name": "系统管理",
+            "url": "system",
             "icon": "fa-user",
             "parent": 0,
             "children": [
-
+                {
+                    "id": 501,
+                    "name": "用户管理",
+                    "url": "/system/user",
+                    "label": "",
+                    "model": "",
+                    "parent": 5,
+                },
+                {
+                    "id": 502,
+                    "name": "角色管理",
+                    "url": "/system/role",
+                    "label": "",
+                    "model": "",
+                    "parent": 5,
+                }
             ]
         }
     ]

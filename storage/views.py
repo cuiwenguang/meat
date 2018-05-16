@@ -72,3 +72,7 @@ def post_enter_storage(request):
     storage  = StorageInfo()
     storage.enter_storage(model)
     return JsonResponse({"code":200, "message": "入库成功"})
+
+
+def cancel_enter_storage(request):
+    pk = request.GET.get("id")

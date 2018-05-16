@@ -24,6 +24,13 @@ class Product(models.Model, DictMixin):
             return None
 
     @classmethod
+    def get_by_code(cls, code):
+        try:
+            return cls.objects.filter(code=code).first()
+        except:
+            return None
+
+    @classmethod
     def get_all(cls):
         """查询全部"""
         q = models.Q(**{"state__gte": 0})
@@ -65,7 +72,7 @@ class Product(models.Model, DictMixin):
         return cls.objects.filter(query)
 
 
-class StorageInfo(models.Model):
+class StorageInfo(models.Model, DictMixin):
     product = models.ForeignKey(Product, null=True, on_delete=models.SET_NULL)
     number = models.IntegerField(default=0)
     scattered_number = models.IntegerField(default=0)
@@ -82,13 +89,24 @@ class StorageInfo(models.Model):
             self.update_storage(enter_model.product_id, enter_model.number)
 
 
-class EnterStorage(models.Model):
-    create_at = models.DateTimeField(auto_created=True)
+class EnterStorage(models.Model, DictMixin):
+    create_at = models.DateTimeField(auto_created=True, auto_now_add=True)
     user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     product = models.ForeignKey(Product, null=True, on_delete=models.SET_NULL)
     number = models.IntegerField(default=0)
     remark = models.CharField(max_length=50)
 
+    @classmethod
+    def search(cls, limit=10, offset=0, condation=None):
+        begin = limit*offset
+        end = begin + limit
+        data = cls.objects.all().order_by("-id")[begin:end]
+        count = cls.objects.count()
+
+        return {
+            "count": count,
+            "rows": [e.to_dict() for e in data]
+        }
 
 
 class OutStorage(models.Model):

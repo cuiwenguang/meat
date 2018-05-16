@@ -1,5 +1,9 @@
 {% extends 'layout.html' %}
 {% load staticfiles %}
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="{% static 'lib/css/bootstrap-table.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'lib/css/bootstrapValidator.min.css' %}">
+{% endblock %}
 {% block content %}
 <div class="card">
     <div class="card-header">
@@ -17,10 +21,10 @@
                     <thead>
                         <tr>
                             <th data-field="id">流水号</th>
-                            <th data-field="product">产品编号</th>
-                            <th data-field="product">产品名称</th>
-                            <th data-field="product">产品规格</th>
-                            <th data-field="product">产品包装</th>
+                            <th data-field="product" data-formatter="formatter.codeFormatter">产品编号</th>
+                            <th data-field="product" data-formatter="formatter.nameFormatter">产品名称</th>
+                            <th data-field="product" data-formatter="formatter.standardFormatter">产品规格</th>
+                            <th data-field="product" data-formatter="formatter.packingFormatter">产品包装</th>
                             <th data-field="create_at">入库时间</th>
                             <th data-field="number">入库数量</th>
                             <th data-field="user">操作员</th>
@@ -33,7 +37,9 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">产品入库</div>
                     <div class="panel-body">
-                        <form class="form-horizontal">
+                        <form class="form-horizontal" id="formEnter">
+                            {% csrf_token %}
+                            <input type="hidden" id="id" name="id" value="">
                             <div class="form-group">
                                 <label class="control-label col-sm-3" for="number">数量</label>
                                 <div class="col-sm-9">
@@ -66,7 +72,7 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-9 col-sm-offset-3">
-                                    <button class="btn btn-primary" type="button"> 入库 </button>
+                                    <button class="btn btn-primary" type="button" id="btnSubmit"> 入库 </button>
                                 </div>
                             </div>
                         </form>
@@ -76,4 +82,10 @@
         </div>
     </div>
 </div>
+{% endblock %}
+{% block scripts %}
+    <script type="text/javascript" src="{% static 'lib/js/bootstrap-table.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'lib/js/bootstrap-table-zh-CN.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'lib/js/bootstrapValidator.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/storage/enter.js' %}"></script>
 {% endblock %}

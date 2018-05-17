@@ -75,7 +75,7 @@ modules = [
         },
         {
             "id": 3,
-            "name": "产品",
+            "name": "库存",
             "icon": "fa-barcode",
             "url": "storage",
             "label": "",
@@ -83,7 +83,7 @@ modules = [
             "parent": 0,
             "children": [
                 {
-                    "name": "产品列表",
+                    "name": "产品",
                     "url": "/storage/product/list",
                     "icon": "",
                     "label": "",
@@ -91,7 +91,7 @@ modules = [
                     "parent": 3,
                 },
                 {
-                    "name": "产品入库",
+                    "name": "入库",
                     "url": "/storage/enter",
                     "icon": "",
                     "label": "",
@@ -99,8 +99,8 @@ modules = [
                     "parent": 3,
                 },
                 {
-                    "name": "商品出库",
-                    "url": "",
+                    "name": "出库记录",
+                    "url": "/storage/order",
                     "icon": "",
                     "label": "",
                     "model": "",

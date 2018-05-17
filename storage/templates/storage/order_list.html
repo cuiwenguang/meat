@@ -1,0 +1,40 @@
+{% extends 'layout.html' %}
+{% load staticfiles %}
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="{% static 'lib/css/bootstrap-table.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'lib/css/bootstrapValidator.min.css' %}">
+{% endblock %}
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <div class="card-title"> 产品信息 </div>
+        <div class="pull-right card-action">
+            <div role="group">
+                <button type="button" id="btnEdit" class="btn btn-primary" onclick="showEdit(0)"> 出库 </button>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <table id="tableOrder" class="table">
+            <thead>
+                <tr>
+                    <th data-field="id">编号</th>
+                    <th data-field="create_at">时间</th>
+                    <th data-field="customer">客户</th>
+                    <th data-field="hand_user">经办人</th>
+                    <th data-field="money">金额</th>
+                    <th data-field="remark">备注</th>
+                    <th data-field="state">状态</th>
+                    <th data-field="id" data-formatter="formatter.optFormatter">操作</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>`
+{% endblock %}
+{% block scripts %}
+   <script type="text/javascript" src="{% static 'lib/js/bootstrap-table.min.js' %}"></script>
+   <script type="text/javascript" src="{% static 'lib/js/bootstrap-tab                            le-zh-CN.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'lib/js/bootstrapValidator.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/storage/order_list.js' %}"></script>
+{% endblock %}

@@ -33,10 +33,18 @@ class Product(models.Model, DictMixin):
     @classmethod
     def get_all(cls):
         """查询全部"""
+        rows = cls.objects.filter(state=1)
+        return rows
+
+    @classmethod
+    def search(cls, **condation):
         q = models.Q(**{"state__gte": 0})
-        # total = cls.objects.count()
+        total = cls.objects.count()
         rows = cls.objects.filter(q)
-        return [m.to_dict() for m in rows]
+        return {
+            "total": total,
+            "rows": [m.to_dict() for m in rows],
+        }
 
     @classmethod
     def del_product(cls, id):
@@ -73,6 +81,7 @@ class Product(models.Model, DictMixin):
 
 
 class StorageInfo(models.Model, DictMixin):
+
     product = models.ForeignKey(Product, null=True, on_delete=models.SET_NULL)
     number = models.IntegerField(default=0)
     scattered_number = models.IntegerField(default=0)
@@ -89,16 +98,10 @@ class StorageInfo(models.Model, DictMixin):
             self.update_storage(enter_model.product_id, enter_model.number)
 
     @classmethod
-    def cancel(cls, id, direct):
-        if direct=="enter":
-            model = EnterStorage.objects.get(id=id)
-            number = model.number
-            product_id = - model.product.id
-        elif direct == "out":
-            model = OutStorage.objects.get(id=id)
-            number = model.number
-            product_id = model.product.id
-
+    def cancel_enter(cls, enter_id):
+        model = EnterStorage.objects.get(id=enter_id)
+        number = model.number
+        product_id = - model.product.id
         with transaction.atomic():
             model.delete()
             s = cls.objects.filter(product_id=product_id).first()
@@ -132,11 +135,52 @@ class Customer(models.Model, DictMixin):
     address = models.CharField(max_length=50, null=True, blank=True)
     phone = models.CharField(max_length=50, null=True, blank=True)
 
+    @classmethod
+    def get_all(cls):
+        return cls.objects.all()
 
-class OutStorage(models.Model, DictMixin):
-    crate_at = models.DateTimeField(auto_created=True)
-    user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
-    product = models.ForeignKey(Product, null=True, on_delete=models.SET_NULL)
+
+class Order(models.Model, DictMixin):
+    """出库订单"""
+    create_at = models.DateTimeField(auto_now_add=True)
     customer = models.ForeignKey(Customer, null=True, on_delete=models.SET_NULL)
+    hand_user = models.CharField(max_length=20, null=True, blank=True)
+    user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+    money = models.FloatField(default=0)
+    remark = models.CharField(max_length=50)
+    state = models.IntegerField(default=0)
+
+    @classmethod
+    def get(cls, pk):
+        try:
+            return cls.objects.get(id=pk)
+        except Exception as e:
+            return None
+
+    @classmethod
+    def search(cls, limit, offset, **condation):
+        q = models.Q(**condation)
+        total = cls.objects.filter(q).count()
+        rows = cls.objects.filter(q)[offset:offset+limit]
+        return {
+            "total": total,
+            "rows": [o.to_dict() for o in rows]
+        }
+
+    def create(self, order, details):
+        with transaction.atomic():
+            order.save()
+            OrderDetail.objects.bulk_create(details)
+
+    @property
+    def details(self):
+        return OrderDetail.objects.filter(order_id=self.id)
+
+
+class OrderDetail(models.Model, DictMixin):
+    """出库订单明细"""
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, null=True, on_delete=models.SET_NULL)
     number = models.IntegerField(default=0)
     remark = models.CharField(max_length=50)
+

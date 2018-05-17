@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http.response import JsonResponse
-from .models import Product, EnterStorage, StorageInfo
+from .models import Product, EnterStorage, StorageInfo, Customer
 
 
 def product_list(request):
@@ -76,3 +76,14 @@ def post_enter_storage(request):
 
 def cancel_enter_storage(request):
     pk = request.GET.get("id")
+    StorageInfo.cancel_enter(pk)
+    return JsonResponse({"code": 200, "message": "取消入库"})
+
+
+def order(request):
+    return render(request, 'storage/order_list.html')
+
+def order_edit(request):
+    products = Product.get_all()
+    customer = Customer.get_all()
+    return render(request, 'storage/order_edit.html', locals())

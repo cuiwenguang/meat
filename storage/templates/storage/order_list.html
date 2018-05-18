@@ -25,7 +25,7 @@
                     <th data-field="money">金额</th>
                     <th data-field="remark">备注</th>
                     <th data-field="state">状态</th>
-                    <th data-field="id" data-formatter="formatter.optFormatter">操作</th>
+                    <th data-field="id" data-formatter="fmt.optFormatter">操作</th>
                 </tr>
             </thead>
         </table>
@@ -34,7 +34,7 @@
 {% endblock %}
 {% block scripts %}
    <script type="text/javascript" src="{% static 'lib/js/bootstrap-table.min.js' %}"></script>
-   <script type="text/javascript" src="{% static 'lib/js/bootstrap-tab                            le-zh-CN.min.js' %}"></script>
+   <script type="text/javascript" src="{% static 'lib/js/bootstrap-table-zh-CN.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'lib/js/bootstrapValidator.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/storage/order_list.js' %}"></script>
 {% endblock %}

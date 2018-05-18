@@ -1,6 +1,7 @@
+import datetime
 from django.shortcuts import render
 from django.http.response import JsonResponse
-from .models import Product, EnterStorage, StorageInfo, Customer
+from .models import Product, EnterStorage, StorageInfo, Customer, Order, OrderDetail
 
 
 def product_list(request):
@@ -83,7 +84,79 @@ def cancel_enter_storage(request):
 def order(request):
     return render(request, 'storage/order_list.html')
 
+
 def order_edit(request):
+    pk = request.GET.get("id", 0)
+    if pk == 0:
+        model = Order()
+        model.create_at = datetime.datetime.now()
+    else:
+        model = Order.get(pk)
+
     products = Product.get_all()
-    customer = Customer.get_all()
     return render(request, 'storage/order_edit.html', locals())
+
+
+def post_order(request):
+    customer_name = request.POST.get("customer")
+    cusotmer = Customer.get_by_name(customer_name)
+    if cusotmer is None:
+        if len(customer_name)>0:
+            cusotmer = Customer(customer_name=customer_name)
+            cusotmer.save()
+        else:
+            None
+
+    hand_user = request.POST.get("hand_user")
+    create_at = request.POST.get("create_at")
+    money = request.POST.get("money")
+    remark = request.POST.get("remark")
+    id = request.POST.get("id")
+    if id==0:
+        order = Order()
+    else:
+        order = Order.get(id)
+    order.create_at = create_at
+    order.customer = cusotmer
+    order.user = request.user
+    order.hand_user = hand_user
+    order.money = money
+    order.remark = remark
+
+    detail = OrderDetail()
+    detail.order = order
+    detail.product_id = request.POST.get("product")
+    detail.number = request.POST.get("number")
+    detail.remark = ""
+
+    order.create(detail)
+    return JsonResponse({"code":200, "message":"出库订单生成", "data": order.to_dict()})
+
+
+def get_orders(request):
+    limit = int(request.GET.get("limit", 10))
+    offset = int(request.GET.get("offset", 0))
+    data = Order.search(limit=limit, offset=offset)
+    return JsonResponse(data)
+
+
+def detail_list(request):
+    oid = request.GET.get("id")
+    details = Order.details(oid)
+    return render(request, "storage/orderdetail_partial.html", locals())
+
+def get_details(request):
+    oid = request.GET.get("id")
+    details = Order.details(oid)
+    return JsonResponse([d.to_dict() for d in details], safe=False)
+
+
+def customer_search(request):
+    keywards = request.GET.get("query","")
+    if len(keywards)==0:
+        data = []
+    else:
+        data = Customer.search(keywards)
+    return JsonResponse({"code": 200, "data": [{"id": d["id"], "name":d["customer_name"]} for d in data]})
+
+

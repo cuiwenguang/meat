@@ -136,8 +136,24 @@ class Customer(models.Model, DictMixin):
     phone = models.CharField(max_length=50, null=True, blank=True)
 
     @classmethod
+    def get(cls, pk):
+        try:
+            return cls.objects.get(pk)
+        except:
+            return None
+
+    @classmethod
+    def get_by_name(cls, name):
+        return cls.objects.filter(customer_name=name).first()
+
+    @classmethod
     def get_all(cls):
         return cls.objects.all()
+
+    @classmethod
+    def search(cls, keyword):
+        ret = cls.objects.filter(customer_name__contains=keyword)
+        return [c.to_dict() for c in ret]
 
 
 class Order(models.Model, DictMixin):
@@ -167,14 +183,15 @@ class Order(models.Model, DictMixin):
             "rows": [o.to_dict() for o in rows]
         }
 
-    def create(self, order, details):
+    def create(self, detail):
         with transaction.atomic():
-            order.save()
-            OrderDetail.objects.bulk_create(details)
+            self.save()
+            detail.order_id = self.id
+            detail.save()
 
-    @property
-    def details(self):
-        return OrderDetail.objects.filter(order_id=self.id)
+    @classmethod
+    def details(self, order_id):
+        return OrderDetail.objects.filter(order_id=order_id)
 
 
 class OrderDetail(models.Model, DictMixin):

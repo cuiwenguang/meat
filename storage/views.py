@@ -1,6 +1,7 @@
 import datetime
 from django.shortcuts import render
 from django.http.response import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 from .models import Product, EnterStorage, StorageInfo, Customer, Order, OrderDetail
 
 
@@ -10,7 +11,8 @@ def product_list(request):
 
 
 def get_products(request):
-    return JsonResponse({"code":200, "data":Product.get_all()})
+    data = [d.to_dict() for d in Product.get_all()]
+    return JsonResponse({"code": 200, "data":data})
 
 
 def post_product(request):
@@ -130,20 +132,44 @@ def post_order(request):
     detail.remark = ""
 
     order.create(detail)
-    return JsonResponse({"code":200, "message":"出库订单生成", "data": order.to_dict()})
+    return JsonResponse({"code": 200, "message": "保存成功", "data": order.to_dict()})
 
 
 def get_orders(request):
     limit = int(request.GET.get("limit", 10))
     offset = int(request.GET.get("offset", 0))
-    data = Order.search(limit=limit, offset=offset)
+    date_params = request.GET.get("create_at", "")
+    query_params = {}
+    if len(date_params) > 0:
+        try:
+            date_range = [datetime.datetime.strptime(dd.strip(), "%Y-%m-%d") for dd in date_params.split('~')]
+            date_range[1] = date_range[0] + datetime.timedelta(days=1)
+            query_params["create_at__range"] = date_range
+        except:
+            pass
+
+    customer = request.GET.get("customer", "")
+    if len(customer)>0:
+        query_params["customer__customer_name"]=customer
+    state = request.GET.getlist("state")
+    if len(state):
+        query_params["state__in"] = [int(s) for s in state]
+    data = Order.search(limit=limit, offset=offset, **query_params)
     return JsonResponse(data)
+
+
+@csrf_exempt
+def delete_order(request):
+    id = request.POST.get("id")
+    Order.remove_at(id)
+    return JsonResponse({"code": 200, "message": "删除成功"})
 
 
 def detail_list(request):
     oid = request.GET.get("id")
     details = Order.details(oid)
     return render(request, "storage/orderdetail_partial.html", locals())
+
 
 def get_details(request):
     oid = request.GET.get("id")

@@ -3,6 +3,8 @@
 {% block styles %}
 <link rel="stylesheet" type="text/css" href="{% static 'lib/css/bootstrap-table.min.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'lib/css/bootstrapValidator.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'lib/css/daterangepicker.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'lib/css/bootstrap-multiselect.css' %}">
 {% endblock %}
 {% block content %}
 <div class="card">
@@ -10,25 +12,66 @@
         <div class="card-title"> 产品信息 </div>
         <div class="pull-right card-action">
             <div role="group">
-                <button type="button" id="btnEdit" class="btn btn-primary" onclick="showEdit(0)"> 出库 </button>
+                <a class="btn btn-default" href="{% url 'order_edit' %}"> 出库 </a>
             </div>
         </div>
     </div>
     <div class="card-body">
-        <table id="tableOrder" class="table">
+        <div class="row">
+            <div class="col-sm-9">
+                <table id="tableOrder" class="table">
             <thead>
                 <tr>
                     <th data-field="id">编号</th>
                     <th data-field="create_at">时间</th>
-                    <th data-field="customer">客户</th>
+                    <th data-field="customer" data-formatter="fmt.customerFormatter">客户</th>
                     <th data-field="hand_user">经办人</th>
                     <th data-field="money">金额</th>
                     <th data-field="remark">备注</th>
-                    <th data-field="state">状态</th>
+                    <th data-field="state" data-formatter="fmt.stateFormatter">状态</th>
                     <th data-field="id" data-formatter="fmt.optFormatter">操作</th>
                 </tr>
             </thead>
         </table>
+            </div>
+            <div class="col-sm-3">
+                <div class="panel panel-default">
+                    <div class="panel-heading">查询</div>
+                    <div class="panel-body">
+                        <form class="form-horizontal">
+                            <div class="form-group">
+                                <label class="control-label col-sm-3" for="state">状态</label>
+                                <div class="col-sm-9">
+                                    <select id="state" name="state" multiple="multiple">
+                                        <option value="0">暂存</option>
+                                        <option value="1">完成</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-3" for="create_at">时间</label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" id="create_at" name="create_at">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-3" for="sg_no">客户</label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" id="cust_name" name="cust_name">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-9 col-sm-offset-3">
+                                    <button type="button" id="btnSearch" class="btn btn-primary"><span
+                                            class="fa fa-search"></span>查询
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>`
 {% endblock %}
@@ -36,5 +79,9 @@
    <script type="text/javascript" src="{% static 'lib/js/bootstrap-table.min.js' %}"></script>
    <script type="text/javascript" src="{% static 'lib/js/bootstrap-table-zh-CN.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'lib/js/bootstrapValidator.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'lib/js/moment.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'lib/js/daterangepicker.js' %}"></script>
+    <script type="text/javascript" src="{% static 'lib/js/bootstrap-multiselect.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/datapicker.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/storage/order_list.js' %}"></script>
 {% endblock %}

@@ -95,7 +95,7 @@ def get_collect_list(request):
     if len(date_params)>0:
         try:
             date_range = [ datetime.datetime.strptime(dd.strip(), "%Y-%m-%d") for dd in date_params.split('~')]
-            date_range[1] = date_range[1] + datetime.timedelta(days=1)
+            date_range[1] = date_range[0] + datetime.timedelta(days=1)
         except:
             date_range = []
     else:

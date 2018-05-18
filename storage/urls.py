@@ -3,8 +3,8 @@ from django.urls import path
 from .views import (product_list, get_products, post_product,
                     del_product, create_barcode, get_product,
                     storage_enter, post_enter_storage, get_enter_data,
-                    order, order_edit, post_order, get_orders, get_details,
-                     detail_list, customer_search)
+                    order, order_edit, post_order, get_orders, delete_order,
+                    get_details, detail_list, customer_search)
 
 urlpatterns = [
     path('product/list', product_list, name="product_list"),
@@ -19,6 +19,7 @@ urlpatterns = [
     path("getenterdata", get_enter_data, name="get_enter_data"),
     path("order", order, name="order"),
     path("order/edit", order_edit, name="order_edit"),
+    path("order/delete", delete_order, name="delete_order"),
     path("getorders", get_orders, name="get_orders"),
     path("postorder", post_order, name="post_order"),
     path("order/details", get_details, name="get_details"),

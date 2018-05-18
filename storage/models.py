@@ -117,7 +117,7 @@ class EnterStorage(models.Model, DictMixin):
     remark = models.CharField(max_length=50)
 
     @classmethod
-    def search(cls, limit=10, offset=0, condation=None):
+    def search(cls, limit=10, offset=0, condition={}):
         begin = limit*offset
         end = begin + limit
         data = cls.objects.all().order_by("-id")[begin:end]
@@ -174,8 +174,10 @@ class Order(models.Model, DictMixin):
             return None
 
     @classmethod
-    def search(cls, limit, offset, **condation):
-        q = models.Q(**condation)
+    def search(cls, limit, offset, **condition):
+        q = models.Q()
+        for k, v in condition.items():
+            q.add(models.Q(**{k: v}), models.Q.AND)
         total = cls.objects.filter(q).count()
         rows = cls.objects.filter(q)[offset:offset+limit]
         return {
@@ -188,6 +190,12 @@ class Order(models.Model, DictMixin):
             self.save()
             detail.order_id = self.id
             detail.save()
+
+    @classmethod
+    def remove_at(cls, pk):
+        with transaction.atomic():
+            OrderDetail.objects.filter(order_id=pk).delete()
+            cls.objects.get(id=pk).delete()
 
     @classmethod
     def details(self, order_id):

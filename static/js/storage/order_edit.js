@@ -20,7 +20,8 @@ function initCusotmerInput() {
        $.post("/storage/postorder", $("#formOrder").serialize(), function (res) {
            if(res.code==200){
                initForm(res.data);
-               tableBind();
+               $("#tableDetail").bootstrapTable('refresh');
+               showMessage(res);
            }
        })
     });

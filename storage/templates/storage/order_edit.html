@@ -10,6 +10,7 @@
             <div class="card-title"> 出库 </div>
             <div class="pull-right card-action">
                 <div role="group">
+                    <a class="btn btn-default" href="{% url 'order' %}">返回列表</a>
                     <button type="button" id="btnSave" class="btn btn-primary"> 提交 </button>
                     <button type="button" id="btnSaveAndPrint" class="btn btn-primary"> 提交并打印 </button>
                 </div>
@@ -82,14 +83,14 @@
                             <div class="form-group">
                                 <label class="control-label col-sm-3" for="create_at">购买时间</label>
                                 <div class="col-sm-9 has-feedback">
-                                    <input type="text" id="create_at" name="create_at" class="form-control" value="{{ model.create_at }}" >
+                                    <input type="text" id="create_at" name="create_at" class="form-control" value="{{ model.create_at|date:'Y-m-d H:i:s' }}" >
                                     <span class="glyphicon glyphicon-calendar form-control-feedback" aria-hidden="true"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="control-label col-sm-3" for="hand_user">经办人</label>
                                 <div class="col-sm-9">
-                                    <input type="text" id="hand_user" name="hand_user" class="form-control" value="{{ model.hand_user }}" >
+                                    <input type="text" id="hand_user" name="hand_user" class="form-control" value="{{ model.hand_user|default:'' }}" >
                                 </div>
                             </div>
                             <div class="form-group ">

@@ -182,7 +182,7 @@ def get_details(request):
 
 
 def customer_search(request):
-    keywards = request.GET.get("query","")
+    keywards = request.GET.get("query", "")
     if len(keywards)==0:
         data = []
     else:

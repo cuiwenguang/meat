@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, re_path, include
 from django.contrib.auth.views import login as sys_login
-from .views import logout, index, nav
+from .views import logout, index, nav, user_list, get_users
 
 from raw.urls import urlpatterns as raw_urls
 from storage.urls import urlpatterns as storage_urls
@@ -26,6 +26,8 @@ urlpatterns = [
     path('accounts/login/', sys_login, {'template_name': 'login.html'}),
     path('logout/', logout, name="logout"),
     path('', index),
+    path('system/user', user_list, name="user_list"),
+    path("getusers", get_users, name="get_users"),
     path('nav', nav),
     re_path('raw/', include(raw_urls)),
     re_path('storage/', include(storage_urls)),

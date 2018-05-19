@@ -188,8 +188,9 @@ class Order(models.Model, DictMixin):
     def create(self, detail):
         with transaction.atomic():
             self.save()
-            detail.order_id = self.id
-            detail.save()
+            if detail is not None:
+                detail.order_id = self.id
+                detail.save()
 
     @classmethod
     def remove_at(cls, pk):

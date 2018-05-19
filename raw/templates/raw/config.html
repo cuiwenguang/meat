@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 {% load staticfiles %}
 {% block styles %}
-
+<link rel="stylesheet" type="text/css" href="{% static 'lib/css/bootstrapValidator.min.css' %}">
 {% endblock %}
 {% block content %}
 <div class="card">
@@ -51,5 +51,6 @@
 </div>
 {% endblock %}
 {% block scripts %}
+    <script type="text/javascript" src="{% static 'lib/js/bootstrapValidator.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/raw/config.js' %}"></script>
 {% endblock %}

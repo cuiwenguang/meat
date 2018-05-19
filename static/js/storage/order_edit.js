@@ -1,6 +1,37 @@
 $(function () {
     initCusotmerInput();
+    validateForm();
+    $("#btnAddDetail").click(function () {
+        $.post("/storage/postorder", $("#formOrder").serialize(), function (res) {
+            if (res.code == 200) {
+                initForm(res.data);
+                tableBind(true);
+                showMessage(res);
+            }
+        })
+    });
+    $("#btnSave").click(function () {
+        if ($("#tableDetail").find('tbody tr').length == 0) {
+            showMessage({code: 403, message: "没有任何出库信息，不允许提交"})
+            return;
+        }
+        $("#formOrder").bootstrapValidator('validate');
+        if ($("#formOrder").data('bootstrapValidator').isValid()) {
+            $("#state").val(1);
+            $.post("/storage/postorder", $("#formOrder").serialize(), function (res) {
+                if (res.code == 200) {
+                    clearForm();
+                    $("#tableDetail").bootstrapTable('removeAll');
+                    showMessage(res);
+                }
+            })
+        }
+    });
+    $("#product").change(computeMoney);
+    $("#number").keyup(computeMoney);
+    tableBind(false);
 });
+
 
 function initCusotmerInput() {
     $("#customer").typeahead({
@@ -16,19 +47,55 @@ function initCusotmerInput() {
         },
         autoSelect: true
     });
-    $("#btnAddDetail").click(function () {
-       $.post("/storage/postorder", $("#formOrder").serialize(), function (res) {
-           if(res.code==200){
-               initForm(res.data);
-               $("#tableDetail").bootstrapTable('refresh');
-               showMessage(res);
-           }
-       })
-    });
-    $("#product").change(computeMoney);
-    $("#number").keyup(computeMoney);
-    tableBind();
 }
+
+function validateForm() {
+    $("#formOrder").bootstrapValidator({
+        message: "无效的值",
+        feedbackIcons: {
+            /*input状态样式图片*/
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        excuded: "disabled",
+        fields: {
+            'customer': {
+                message: "客户信息输入不正确",
+                validators: {
+                    notEmpty: {
+                        message: "客户信息不能为空"
+                    }
+                }
+            },
+
+            'create_at': {
+                message: "时间格式不正确",
+                validators: {
+                    notEmpty: {
+                        message: "数量计量单位不能为空"
+                    },
+                    date: {
+                        format: 'YYYY-MM-DD hh:mm:ss',
+                        message: '日期格式不正确'
+                    }
+                }
+            },
+            'money': {
+                message: "金额输入值不正确",
+                validators: {
+                    notEmpty: {
+                        message: "金额不能为空"
+                    },
+                    numeric: {
+                        message: "金额只能输入整数"
+                    }
+                }
+            }
+        }
+    });
+}
+
 
 function initForm(form) {
     $("#id").val(form.id);
@@ -38,27 +105,48 @@ function initForm(form) {
     $("#money").val(form.money);
     $("#remark").val(form.remark);
 }
+function clearForm(form) {
+    $("#id").val(0);
+    $("#customer").val("");
+    $("#hand_user").val("");
+    $("#money").val(0);
+    $("#remark").val('');
+}
 
-function tableBind() {
+function tableBind(isPostBack) {
     var id = $("#id").val();
-    $("#tableDetail").bootstrapTable({
-        "url": "/storage/order/details?id="+id
-    });
+    if (parseInt(id) > 0) {
+        $("#tableDetail").bootstrapTable({
+            "url": "/storage/order/details?id=" + id
+        });
+    }
+    ;
+    if (isPostBack) {
+        $("#tableDetail").bootstrapTable('refresh');
+    }
 }
 
 var computeMoney = function () {
     var number = parseInt($("#number").val());
-    if($("#number").val() == "") number = 0;
+    if ($("#number").val() == "") number = 0;
     var money = parseFloat($("#product").find("option:selected").data("price")) * number;
     money = parseFloat($("#money").data("value")) + money;
     $("#money").val(money.toFixed(2));
 }
 
 var fmt = {
-    codeFormatter: function (value) {return value.code;},
-    nameFormatter: function (value) {return value.name;},
-    standardFormatter: function (value) {return value.standard;},
-    priceFormatter: function (value) {return value.price;},
+    codeFormatter: function (value) {
+        return value.code;
+    },
+    nameFormatter: function (value) {
+        return value.name;
+    },
+    standardFormatter: function (value) {
+        return value.standard;
+    },
+    priceFormatter: function (value) {
+        return value.price;
+    },
     optFormatter: function (value) {
         html = "<a>删除</a>"
         return html;

@@ -32,7 +32,7 @@ var fmt = {
         return ret = value ? value.customer_name : "-";
     },
     stateFormatter: function (value) {
-        return value == 0 ? "暂存" : "完成";
+        return value == 0 ? "暂存" : "<label style='color:green'>完成</label>";
     },
     optFormatter: function (value) {
         html = "<a href='/storage/order/edit?id=" + value + "'> 编辑 </a>" +

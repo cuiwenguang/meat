@@ -89,7 +89,7 @@ def order(request):
 
 def order_edit(request):
     pk = request.GET.get("id", 0)
-    if pk == 0:
+    if int(pk) == 0:
         model = Order()
         model.create_at = datetime.datetime.now()
     else:
@@ -113,8 +113,9 @@ def post_order(request):
     create_at = request.POST.get("create_at")
     money = request.POST.get("money")
     remark = request.POST.get("remark")
+    state = request.POST.get("state")
     id = request.POST.get("id")
-    if id==0:
+    if int(id)==0:
         order = Order()
     else:
         order = Order.get(id)
@@ -124,14 +125,17 @@ def post_order(request):
     order.hand_user = hand_user
     order.money = money
     order.remark = remark
-
-    detail = OrderDetail()
-    detail.order = order
-    detail.product_id = request.POST.get("product")
-    detail.number = request.POST.get("number")
-    detail.remark = ""
-
+    order.state = state
+    if int(state) == 0:
+        detail = OrderDetail()
+        detail.order = order
+        detail.product_id = request.POST.get("product")
+        detail.number = request.POST.get("number")
+        detail.remark = ""
+    else:
+        detail = None
     order.create(detail)
+
     return JsonResponse({"code": 200, "message": "保存成功", "data": order.to_dict()})
 
 

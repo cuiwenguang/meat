@@ -22,7 +22,7 @@ $("#btnSave").click(function () {
 var formatter = {
     optFormatter: function (value) {
         html ="<a href='javascript:showEdit("+value+")'> 编辑 </a>"+
-            "<a > 删除 </a>"
+            "<a > 删除 </a>";
         return html;
     }
 }

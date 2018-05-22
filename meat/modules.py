@@ -111,8 +111,35 @@ modules = [
         {
             "id": 4,
             "name": "统计分析",
+            "url": "stat",
             "icon": "fa-th",
             "parent": 0,
+            "children": [
+                {
+                    "id": 401,
+                    "name": "收购统计",
+                    "url": "/raw/stat",
+                    "label": "",
+                    "model": "",
+                    "parent": 5,
+                },
+                {
+                    "id": 402,
+                    "name": "入库统计",
+                    "url": "/storage/enter/stat",
+                    "label": "",
+                    "model": "",
+                    "parent": 5,
+                },
+                {
+                    "id": 403,
+                    "name": "销售统计",
+                    "url": "/storage/out/stat",
+                    "label": "",
+                    "model": "",
+                    "parent": 5,
+                }
+            ]
         },
         {
             "id": 5,

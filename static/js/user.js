@@ -16,7 +16,7 @@ function showEdit(id) {
 var save = function() {
     $("#frmUser").bootstrapValidator('validate');
     if($("#frmUser").data('bootstrapValidator').isValid()){
-       $.post('', $("#frmUser").serialize(), function (res) {
+       $.post('/system/user/create', $("#frmUser").serialize(), function (res) {
            if (res.code == 200){
                $("#tableUser").bootstrapTable('refresh');
            }
@@ -25,7 +25,7 @@ var save = function() {
 }
 
 function validate() {
-    $("#frmCreate").bootstrapValidator({
+    $("#frmUser").bootstrapValidator({
         message: "无效的值",
         feedbackIcons: {/*input状态样式图片*/
                  valid: 'glyphicon glyphicon-ok',
@@ -65,4 +65,12 @@ function validate() {
             }
         }
     });
+}
+
+var fmt = {
+    optFormatter: function (value) {
+        html = "<a href='javascript:showEdit("+value+")'> 编辑 </a>" +
+            "<a href='javascript:delUser("+value+")'> 删除 </a>";
+        return html;
+    }
 }

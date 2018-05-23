@@ -28,7 +28,7 @@ urlpatterns = [
     path('', index),
     path('system/user', user_list, name="user_list"),
     path("system/getusers", get_users, name="get_users"),
-    path("sytem/user/create", create_user, name="get_users"),
+    path("system/user/create", create_user, name="get_users"),
     path('nav', nav),
     re_path('raw/', include(raw_urls)),
     re_path('storage/', include(storage_urls)),

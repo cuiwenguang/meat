@@ -1,19 +1,18 @@
 import datetime
 from django.contrib.auth.models import User
 from django.db import models
-
 from meat.utils.mixin import DictMixin
 
 
 class RawConfig(models.Model, DictMixin):
     """系统参数配置表"""
-    default_number = models.IntegerField(default=5)  #默认每次可称重数量
+    default_number = models.IntegerField(default=5)  # 默认每次可称重数量
     default_tare = models.FloatField(default=0)  # 默认皮重
     unit_of_weight = models.CharField(max_length=10, default="KG")  # 重量计量单位
     unit_of_number = models.CharField(max_length=10, default="只(头)")  # 数量计量单位
 
     class Meta:
-        permissions =(
+        permissions = (
             ("view_config", "允许查看"),
             ("manage_config", "允许管理（CRUD）"),
         )
@@ -26,7 +25,7 @@ class Customer(models.Model, DictMixin):
     mobile = models.CharField(max_length=20)
 
     class Meta:
-        permissions =(
+        permissions = (
             ("view_customer", "允许查看"),
             ("manage_customer", "允许管理（CRUD）"),
         )
@@ -75,9 +74,9 @@ class CollectInfo(models.Model, DictMixin):
     user = models.ForeignKey(User, related_name='collect_user', null=True, on_delete=models.SET_NULL)  # 收购操作员
 
     def update_total_fields(self):
-        total = CollectDetail.objects\
-            .filter(collect_info_id=self.id)\
-            .values('collect_info_id')\
+        total = CollectDetail.objects \
+            .filter(collect_info_id=self.id) \
+            .values('collect_info_id') \
             .annotate(total_price=models.Sum(models.F('price') * models.F('weight')),
                       total_number=models.Sum('number'),
                       total_weight=models.Sum('weight'))[0]
@@ -91,14 +90,14 @@ class CollectInfo(models.Model, DictMixin):
         q = models.Q()
         for k, v in kwargs.items():
             c = {}
-            if k == "sg_date" and len(v)==2:
-                c["sg_datetime__range"]= v
-            elif k == "sg_state" and len(v)>0:
+            if k == "sg_date" and len(v) == 2:
+                c["sg_datetime__range"] = v
+            elif k == "sg_state" and len(v) > 0:
                 c["state__in"] = v
-            elif k == "customer" and len(v)>0:
+            elif k == "customer" and len(v) > 0:
                 c["customer__cust_name"] = v
             elif k == 'no':
-                if len(v)>0:
+                if len(v) > 0:
                     c['sg_no'] = v
             q.add(models.Q(**c), q.AND)
         count = cls.objects.filter(q).count()
@@ -130,10 +129,12 @@ class PayInfo(models.Model, DictMixin):
 
     @classmethod
     def get_pay_sum(cls, id):
-        ret = PayInfo.objects.filter(collect_info_id=id).values('collect_info_id').annotate(sum_price=models.Sum('pay_money'))
-        if len(ret)==0:
+        ret = PayInfo.objects.filter(collect_info_id=id).values('collect_info_id').annotate(
+            sum_price=models.Sum('pay_money'))
+        if len(ret) == 0:
             return 0
         return ret[0]["sum_price"]
+
 
 class Sequence(models.Model):
     """自增序列"""
@@ -145,7 +146,7 @@ class Sequence(models.Model):
         try:
             seq = Sequence.objects.get(key_name=key)
         except:
-            seq = Sequence(key_name=key,number=0)
+            seq = Sequence(key_name=key, number=0)
         seq.number = seq.number + 1
         seq.save()
         return seq.number
@@ -155,5 +156,5 @@ def get_sg_no():
     """获取一个收购编号"""
     pre = datetime.datetime.now().strftime("%y%m%d")
     seq = Sequence.get(pre)
-    s = "".join(['0']*(4-len(str(seq))))
+    s = "".join(['0'] * (4 - len(str(seq))))
     return "".join((pre, s, str(seq)))

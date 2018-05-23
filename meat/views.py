@@ -32,7 +32,8 @@ def get_users(request):
             "id": user.id,
             "username": user.username,
             "first_name": user.first_name,
-            "emial": user.email,
+            "last_name": user.last_name,
+            "email": user.email,
         })
 
     return JsonResponse({"code": 200, "data": ret})

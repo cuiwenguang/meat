@@ -25,6 +25,10 @@
                 </tr>
            </thead>
        </table>
+        <template id="rowButtons">
+            <button type='button' class='btn-sm btn-default' id='btnEdit' onclick='showEdit(${id}})'>编辑</button>
+            <button type='button' class='btn-sm btn-default' id='btnEdit' onclick='del(${id}})'>删除</button>
+        </template>
     </div>
 </div>
 <div class="modal fade" id="frmCreate" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="添加品种">

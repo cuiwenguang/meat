@@ -6,6 +6,7 @@ from pystrich.ean13 import EAN13Encoder
 from meat.utils.mixin import DictMixin
 from meat.settings import STORAGE_CONFIG
 
+
 class Product(models.Model, DictMixin):
     """产品基础信息"""
     name = models.CharField(max_length=50)
@@ -15,6 +16,15 @@ class Product(models.Model, DictMixin):
     price = models.FloatField(default=0)
     remark = models.CharField(max_length=50)
     state = models.IntegerField(default=1)
+
+    class Meta:
+        verbose_name = '产品'
+        default_permissions = ()
+        permissions = (
+            ('product_list', '查看'),
+            ('post_product', '编辑'),
+            ('del_product', '删除'),
+        )
 
     @classmethod
     def get(cls, id):
@@ -86,6 +96,10 @@ class StorageInfo(models.Model, DictMixin):
     number = models.IntegerField(default=0)
     scattered_number = models.IntegerField(default=0)
 
+    class Meta:
+        verbose_name = '库存'
+        default_permissions = ()
+
     @classmethod
     def update_storage(cls, product_id, number):
         model = cls.objects.filter(product_id=product_id).first()
@@ -116,6 +130,13 @@ class EnterStorage(models.Model, DictMixin):
     number = models.IntegerField(default=0)
     remark = models.CharField(max_length=50)
 
+    class Meta:
+        verbose_name = '入库'
+        default_permissions = ()
+        permissions = (
+            ('storage_enter', '入库'),
+        )
+
     @classmethod
     def search(cls, limit=10, offset=0, condition={}):
         begin = limit*offset
@@ -134,6 +155,9 @@ class Customer(models.Model, DictMixin):
     customer_name = models.CharField(max_length=50)
     address = models.CharField(max_length=50, null=True, blank=True)
     phone = models.CharField(max_length=50, null=True, blank=True)
+
+    class Meta:
+        default_permissions = ()
 
     @classmethod
     def get(cls, pk):
@@ -165,6 +189,15 @@ class Order(models.Model, DictMixin):
     money = models.FloatField(default=0)
     remark = models.CharField(max_length=50)
     state = models.IntegerField(default=0)
+
+    class Meta:
+        verbose_name = '销售订单'
+        default_permissions = ()
+        permissions = (
+            ('order', '查看订单'),
+            ('order_edit', '创建订单'),
+            ('delete_order', '删除订单'),
+        )
 
     @classmethod
     def get(cls, pk):
@@ -209,4 +242,7 @@ class OrderDetail(models.Model, DictMixin):
     product = models.ForeignKey(Product, null=True, on_delete=models.SET_NULL)
     number = models.IntegerField(default=0)
     remark = models.CharField(max_length=50)
+
+    class Meta:
+        default_permissions = ()
 

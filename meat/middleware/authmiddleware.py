@@ -12,3 +12,4 @@ class AuthenticationMiddleware(MiddlewareMixin):
                 return JsonResponse({"code": 403, "message": "非法访问或登陆失效"})
             else:
                 return HttpResponseRedirect("/accounts/login/?next="+request.path)
+

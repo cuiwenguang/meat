@@ -12,9 +12,10 @@ class RawConfig(models.Model, DictMixin):
     unit_of_number = models.CharField(max_length=10, default="只(头)")  # 数量计量单位
 
     class Meta:
+        verbose_name = '参数配置模块'
         default_permissions = ()
         permissions = (
-            ("view_rawconfig", "允许查看"),
+            ("config_edit", "配置编辑"),
         )
 
 
@@ -25,7 +26,7 @@ class Customer(models.Model, DictMixin):
     mobile = models.CharField(max_length=20)
 
     class Meta:
-        permissions = ()
+        default_permissions = ()
 
     @classmethod
     def save_and_get(cls, id_card, **kwargs):
@@ -48,9 +49,10 @@ class Category(models.Model, DictMixin):
     state = models.IntegerField(default=1)
 
     class Meta:
+        verbose_name = '品种分类'
         default_permissions = ()
         permissions = (
-            ("view_category", "查看"),
+            ("category_list", "查看"),
             ("edit_category", "编辑"),
             ("delete_category", "删除"),
         )
@@ -58,7 +60,6 @@ class Category(models.Model, DictMixin):
     @classmethod
     def get_categories(cls):
         return cls.objects.filter(state__gt=0)
-
 
 
 class CollectInfo(models.Model, DictMixin):
@@ -80,8 +81,16 @@ class CollectInfo(models.Model, DictMixin):
     user = models.ForeignKey(User, related_name='collect_user', null=True, on_delete=models.SET_NULL)  # 收购操作员
 
     class Meta:
+        verbose_name = "收购"
         default_permissions = ()
-        permissions =()
+        permissions = (
+            ('collect_list', '查看'),
+            ('collect_create', '称重'),
+            ('collect_edit', '编辑'),
+            ('collect_delete', '删除'),
+            ('collect_payview', '结算'),
+            ('collect_print', '打印'),
+        )
 
     def update_total_fields(self):
         total = CollectDetail.objects \
@@ -140,6 +149,9 @@ class PayInfo(models.Model, DictMixin):
     remark = models.CharField(max_length=255, default='')
     user = models.ForeignKey(User, related_name='pay_user', null=True, on_delete=models.SET_NULL)  # 结算操作员
 
+    class Meta:
+        default_permissions = ()
+
     @classmethod
     def get_pay_sum(cls, id):
         ret = PayInfo.objects.filter(collect_info_id=id).values('collect_info_id').annotate(
@@ -153,6 +165,9 @@ class Sequence(models.Model):
     """自增序列"""
     key_name = models.CharField(max_length=2, db_index=True)
     number = models.IntegerField(default=0)
+
+    class Meta:
+        default_permissions = ()
 
     @staticmethod
     def get(key):

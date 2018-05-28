@@ -20,12 +20,7 @@ def nav(request):
     for parent in data:
         for child in parent["children"]:
             perm_name = '.'.join([child['label'], child['perimission']])
-            if request.user.has_perm(perm_name):
-                child['display'] = True
-                #parent['display'] = True
-            else:
-                child['display'] = False
-
+            child['display'] = request.user.has_perm(perm_name)
     return render(request, 'nav.html', {"modules": data})
 
 

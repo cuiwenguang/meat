@@ -211,3 +211,7 @@ def collect_payview(request):
         pay_model.save()
         model.save(update_fields=['state',])
         return HttpResponseRedirect("/raw/collect/pay?id="+id)
+
+
+def collect_stat(request):
+    return render(request, 'raw/collect_stat.html')

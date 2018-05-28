@@ -8,7 +8,9 @@
         <div class="panel-body">
             <ul class="nav navbar-nav">
                 {% for child in module.children %}
-                <li><a href="{{ child.url }}">{{ child.name }}</a></li>
+                    {% if child.display %}
+                    <li><a href="{{ child.url }}">{{ child.name }}</a></li>
+                    {% endif %}
                 {% endfor %}
             </ul>
         </div>

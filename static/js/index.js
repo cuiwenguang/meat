@@ -2,7 +2,7 @@ $(function () {
     $.get('/nav', function (data) {
         $("#sideMenu").html(data);
 
-    })
+    });
 })
 
 Date.prototype.pattern=function(fmt) {

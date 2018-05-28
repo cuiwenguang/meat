@@ -1,7 +1,7 @@
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User, Group
-from django.contrib.auth.decorators import login_required
+
 from django.contrib.auth.views import logout as sys_logout
 
 from .modules import modules
@@ -11,16 +11,26 @@ def logout(request):
     return redirect(index)
 
 
-@login_required
 def index(request):
     return render(request, 'index.html')
 
 
 def nav(request):
-    return render(request, 'nav.html', {"modules": modules})
+    data = modules.copy()
+    for parent in data:
+        for child in parent["children"]:
+            perm_name = '.'.join([child['label'], child['perimission']])
+            if request.user.has_perm(perm_name):
+                child['display'] = True
+                #parent['display'] = True
+            else:
+                child['display'] = False
+
+    return render(request, 'nav.html', {"modules": data})
 
 
 def user_list(request):
+
     return render(request, "user_list.html")
 
 
@@ -54,3 +64,6 @@ def create_user(request):
     return JsonResponse({"code": 200, "message": "用户创建成功"})
 
 
+def role_permission(request):
+    roles = Group.objects.all()
+    return render(request, 'permission.html', locals())

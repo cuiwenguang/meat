@@ -18,6 +18,7 @@ function showEdit(id) {
 }
 
 function opratorFormatter(value) {
+    test ='<a href="{{ user|default:0 }}"></a>'
     html = "<button type='button' class='btn-sm btn-default' id='btnEdit' onclick='showEdit("+ value +")'>编辑</button> " +
         "<button type='button' class='btn-sm btn-default' id='btnEdit' onclick='del("+ value +")'>删除</button>"
 

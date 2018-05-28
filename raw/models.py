@@ -12,9 +12,9 @@ class RawConfig(models.Model, DictMixin):
     unit_of_number = models.CharField(max_length=10, default="只(头)")  # 数量计量单位
 
     class Meta:
+        default_permissions = ()
         permissions = (
-            ("view_config", "允许查看"),
-            ("manage_config", "允许管理（CRUD）"),
+            ("view_rawconfig", "允许查看"),
         )
 
 
@@ -25,10 +25,7 @@ class Customer(models.Model, DictMixin):
     mobile = models.CharField(max_length=20)
 
     class Meta:
-        permissions = (
-            ("view_customer", "允许查看"),
-            ("manage_customer", "允许管理（CRUD）"),
-        )
+        permissions = ()
 
     @classmethod
     def save_and_get(cls, id_card, **kwargs):
@@ -50,9 +47,18 @@ class Category(models.Model, DictMixin):
     type = models.CharField(max_length=50, null=True, blank=True)
     state = models.IntegerField(default=1)
 
+    class Meta:
+        default_permissions = ()
+        permissions = (
+            ("view_category", "查看"),
+            ("edit_category", "编辑"),
+            ("delete_category", "删除"),
+        )
+
     @classmethod
     def get_categories(cls):
         return cls.objects.filter(state__gt=0)
+
 
 
 class CollectInfo(models.Model, DictMixin):
@@ -72,6 +78,10 @@ class CollectInfo(models.Model, DictMixin):
     sg_source = models.CharField(max_length=100, default='')  # 收购来源
     state = models.IntegerField(default=0)  # 数据状态，备用
     user = models.ForeignKey(User, related_name='collect_user', null=True, on_delete=models.SET_NULL)  # 收购操作员
+
+    class Meta:
+        default_permissions = ()
+        permissions =()
 
     def update_total_fields(self):
         total = CollectDetail.objects \
@@ -118,6 +128,9 @@ class CollectDetail(models.Model, DictMixin):
     m_weight = models.FloatField(default=0)
     price = models.FloatField(default=0)
     seq = models.IntegerField(default=1)
+
+    class Meta:
+        default_permissions = ()
 
 
 class PayInfo(models.Model, DictMixin):

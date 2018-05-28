@@ -8,7 +8,7 @@ modules = [
             "name": "收购",
             "url": "collect",
             "icon": "fa-tachometer",
-            "lable": "raw",
+            "label": "raw",
             "model": "collectinfo",
             "parent": 0,
             "children": [
@@ -16,33 +16,41 @@ modules = [
                     "name": "收购称重",
                     "url": "/raw/collect/create",
                     "icon": "fa-tachometer",
-                    "lable": "raw",
+                    "label": "raw",
                     "model": "collectinfo",
+                    "perimission": "create_collect_weight",
                     "parent": 1,
+                    "display": True,
                 },
                 {
                     "name": "收购台账",
                     "url": "/raw/collect/list",
                     "icon": "fa-table",
-                    "lable": "raw",
+                    "label": "raw",
                     "model": "collectinfo",
+                    "perimission": "view_collect_list",
                     "parent": 1,
+                    "display": True,
                 },
                 {
                     "name": "收购品种管理",
                     "url": "/raw/category/list",
                     "icon": "fa-table",
-                    "lable": "raw",
+                    "label": "raw",
                     "model": "Category",
+                    "perimission": "view_category",
                     "parent": 1,
+                    "display": True,
                 },
                 {
                     "name": "收购参数设置",
                     "url": "/raw/config",
                     "icon": "fa-table",
-                    "lable": "raw",
+                    "label": "raw",
                     "model": "RawConfig",
+                    "perimission": "view_config",
                     "parent": 1,
+                    "display": True,
                 },
             ]
         },
@@ -61,7 +69,9 @@ modules = [
                     "icon": "fa-table",
                     "label": "raw",
                     "model": "collectinfo",
+                    "perimission": "",
                     "parent": 2,
+                    "display": True,
                 },
                 {
                     "name": "排酸台账",
@@ -69,7 +79,9 @@ modules = [
                     "icon": "fa-table",
                     "label": "raw",
                     "model": "collectinfo",
+                    "perimission": "",
                     "parent": 2,
+                    "display": True,
                 }
             ]
         },
@@ -88,7 +100,9 @@ modules = [
                     "icon": "",
                     "label": "",
                     "model": "",
+                    "perimission": "view_storage_product",
                     "parent": 3,
+                    "display": True,
                 },
                 {
                     "name": "入库",
@@ -96,7 +110,9 @@ modules = [
                     "icon": "",
                     "label": "",
                     "model": "",
+                    "perimission": "view_storage_enter",
                     "parent": 3,
+                    "display": True,
                 },
                 {
                     "name": "出库记录",
@@ -104,7 +120,9 @@ modules = [
                     "icon": "",
                     "label": "",
                     "model": "",
+                    "perimission": "view_storage_order",
                     "parent": 3,
+                    "display": True,
                 }
             ],
         },
@@ -121,7 +139,9 @@ modules = [
                     "url": "/raw/stat",
                     "label": "",
                     "model": "",
+                    "perimission": "",
                     "parent": 5,
+                    "display": True,
                 },
                 {
                     "id": 402,
@@ -129,7 +149,9 @@ modules = [
                     "url": "/storage/enter/stat",
                     "label": "",
                     "model": "",
+                    "perimission": "",
                     "parent": 5,
+                    "display": True,
                 },
                 {
                     "id": 403,
@@ -137,7 +159,9 @@ modules = [
                     "url": "/storage/out/stat",
                     "label": "",
                     "model": "",
+                    "perimission": "",
                     "parent": 5,
+                    "display": True,
                 }
             ]
         },
@@ -154,7 +178,9 @@ modules = [
                     "url": "/system/user",
                     "label": "",
                     "model": "",
+                    "perimission": "",
                     "parent": 5,
+                    "display": True,
                 },
                 {
                     "id": 502,
@@ -162,7 +188,9 @@ modules = [
                     "url": "/system/role",
                     "label": "",
                     "model": "",
+                    "perimission": "",
                     "parent": 5,
+                    "display": True,
                 }
             ]
         }

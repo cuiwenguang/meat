@@ -59,10 +59,10 @@ var tableFormatter = {
     },
     optFormatter: function (value, row) {
         html = "";
-        if(row.state == 1 || row.state==2) html += "<a href='/raw/collect/pay?id="+row.id+"'>结算</a>";
-        if(row.state==0) html += "<a href='/raw/collect/create?id="+row.id+"'>称重</a>";
+        if(row.state == 1 || row.state==2) html += "<a href='/raw/collect/pay?id="+row.id+"' data-permission='pay'>结算</a>";
+        if(row.state==0) html += "<a href='/raw/collect/create?id="+row.id+"' data-permission='weight'>称重</a>";
         html += ' <a>打印</a>'
-        if (row.state < 2 ) html += ' <a>编辑</a> <a>删除</a> ';
+        if (row.state < 2 ) html += "<a data-permission='eidt'>编辑</a> <a data-permission='delete'>删除</a> " ;
         return html
     },
     detailFormatter: function (index, row) {

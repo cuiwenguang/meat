@@ -1239,3 +1239,8 @@ body.login-page {
   .featurette-heading {
     margin-top: 100px;
     margin-bottom: 20px; } }
+
+.table-button > a{
+  margin: 0px 5px;
+  font-weight: bolder;
+}

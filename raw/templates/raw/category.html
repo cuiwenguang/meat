@@ -10,7 +10,9 @@
         <div class="card-title"> 品种信息 </div>
         <div class="pull-right card-action">
             <div role="group">
+                {% if perms.raw.post_category %}
                 <button type="button" id="btnEdit" class="btn btn-primary" onclick="showEdit(0)"> 添加 </button>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -26,8 +28,14 @@
            </thead>
        </table>
         <template id="rowButtons">
-            <button type='button' class='btn-sm btn-default' id='btnEdit' onclick='showEdit(${id}})'>编辑</button>
-            <button type='button' class='btn-sm btn-default' id='btnEdit' onclick='del(${id}})'>删除</button>
+            <div class="table-button">
+                {% if perms.raw.post_category %}
+                <a id='btnEdit' href='javascript:showEdit(${id})' >编辑</a>
+                {% endif %}
+                {% if perms.raw.delete_category %}
+                <a id='btnEdit' href='javascript:del(${id})'>删除</a>
+                {% endif %}
+            </div>
         </template>
     </div>
 </div>
@@ -68,5 +76,6 @@
    <script type="text/javascript" src="{% static 'lib/js/bootstrap-table.min.js' %}"></script>
    <script type="text/javascript" src="{% static 'lib/js/bootstrap-table-zh-CN.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'lib/js/bootstrapValidator.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'lib/js/jquery.tmpl.min.js' %}"></script>
    <script type="text/javascript" src="{% static 'js/raw/category.js' %}"></script>
 {% endblock %}

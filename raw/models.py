@@ -53,7 +53,7 @@ class Category(models.Model, DictMixin):
         default_permissions = ()
         permissions = (
             ("category_list", "查看"),
-            ("edit_category", "编辑"),
+            ("post_category", "编辑"),
             ("delete_category", "删除"),
         )
 

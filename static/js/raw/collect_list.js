@@ -58,12 +58,25 @@ var tableFormatter = {
         }
     },
     optFormatter: function (value, row) {
+        /**
         html = "";
         if(row.state == 1 || row.state==2) html += "<a href='/raw/collect/pay?id="+row.id+"' data-permission='pay'>结算</a>";
         if(row.state==0) html += "<a href='/raw/collect/create?id="+row.id+"' data-permission='weight'>称重</a>";
         html += ' <a>打印</a>'
         if (row.state < 2 ) html += "<a data-permission='eidt'>编辑</a> <a data-permission='delete'>删除</a> " ;
-        return html
+        */
+        html = $("#rowButtons").tmpl(row); //.prop('outerHTML');
+        if (row.state == 0){
+            html.find("#a2").remove()
+            html.find("#a3").remove()
+        } else if(row.state == 1){
+            html.find("#a1").remove()
+        } else{
+            html.find("#a1").remove()
+            html.find("#a4").remove()
+            html.find("#a5").remove()
+        }
+        return html.prop("outerHTML");
     },
     detailFormatter: function (index, row) {
         var html = "";

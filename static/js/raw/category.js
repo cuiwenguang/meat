@@ -18,9 +18,11 @@ function showEdit(id) {
 }
 
 function opratorFormatter(value) {
+    /**
     html = "<button type='button' class='btn-sm btn-default' id='btnEdit' onclick='showEdit("+ value +")'>编辑</button> " +
         "<button type='button' class='btn-sm btn-default' id='btnEdit' onclick='del("+ value +")'>删除</button>"
-
+    */
+    var html = $('#rowButtons').tmpl({id:value}).prop("outerHTML");
     return html
 }
 

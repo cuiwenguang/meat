@@ -31,6 +31,25 @@
                         </tr>
                         </thead>
                     </table>
+                    <template id="rowButtons">
+                        <div class="table-button">
+                            {% if perms.raw.collect_create %}
+                            <a id="a1" href='/raw/collect/create?id="${id}'>称重</a>
+                            {% endif %}
+                            {% if perms.raw.collect_print %}
+                            <a id="a2">打印</a>
+                            {% endif %}
+                            {% if perms.raw.collect_payview %}
+                            <a id="a3" href='/raw/collect/pay?id=${id}'>结算</a>
+                            {% endif %}
+                            {% if perms.raw.collect_edit %}
+                            <a id="a4">编辑</a>
+                            {% endif %}
+                            {% if perms.raw.collect_delete %}
+                            <a id="a5">删除</a>
+                            {% endif %}
+                        </div>
+                    </template>
                 </div>
                 <div class="col-sm-3">
                     <div class="panel panel-default">
@@ -128,6 +147,7 @@
     <script type="text/javascript" src="{% static 'lib/js/moment.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'lib/js/daterangepicker.js' %}"></script>
     <script type="text/javascript" src="{% static 'lib/js/bootstrap-multiselect.js' %}"></script>
+    <script type="text/javascript" src="{% static 'lib/js/jquery.tmpl.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/datapicker.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/raw/collect_list.js' %}"></script>
 {% endblock %}

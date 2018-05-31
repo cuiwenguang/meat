@@ -162,6 +162,16 @@ modules = [
                     "perimission": "",
                     "parent": 5,
                     "display": True,
+                },
+{
+                    "id": 404,
+                    "name": "销售分析",
+                    "url": "/storage/out/analysis",
+                    "label": "",
+                    "model": "",
+                    "perimission": "",
+                    "parent": 5,
+                    "display": True,
                 }
             ]
         },

@@ -1,0 +1,58 @@
+{% extends 'layout.html' %}
+{% load staticfiles %}
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="{% static 'lib/css/bootstrap-table.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'lib/css/bootstrapValidator.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'lib/css/daterangepicker.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'lib/css/bootstrap-multiselect.css' %}">
+{% endblock %}
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <div class="card-title"> 销售分析 </div>
+        <div class="pull-right card-action">
+            <div role="group">
+
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <canvas id="bar-chart" class="chart" width="567" height="309" style="width: 567px; height: 309px;"></canvas>
+    </div>
+</div>`
+{% endblock %}
+{% block scripts %}
+   <script type="text/javascript" src="{% static 'lib/js/bootstrap-table.min.js' %}"></script>
+   <script type="text/javascript" src="{% static 'lib/js/bootstrap-table-zh-CN.min.js' %}"></script>
+   <script type="text/javascript" src="{% static 'lib/js/Chart.min.js' %}"></script>
+    <script type="text/javascript">
+    var datasource = {{ ret |safe }}
+        dd = {
+            "labels": ["2018-05-19", "2018-05-18"],
+            "values": [[25, 11], [33, 37]],
+            "products": ["\u7f8a\u8089\u5377", "\u7f8a\u6392"]
+        }
+
+        $(function () {
+            colors = ['#f00', '#0f0', '#0ff', '#00f'];
+            var ds = [];
+            for(var i in datasource['products']){
+                var item = {
+                    label: datasource['products'][i],
+                    fillColor: colors[i],
+                    strokeColor: colors[i],
+                    data: datasource['values'][i]
+                }
+                ds.push(item)
+            }
+
+            data = {
+                labels: datasource['labels'],
+                datasets: ds
+            };
+            ctx = $('#bar-chart').get(0).getContext('2d');
+            myBarChart = new Chart(ctx).Bar(data);
+        });
+
+    </script>
+{% endblock %}

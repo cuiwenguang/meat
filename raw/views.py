@@ -88,6 +88,18 @@ def collect_list(request):
     return render(request, 'raw/collect_list.html')
 
 
+def get_col_detail(request):
+    id = request.GET.get("id")
+    collect_details = CollectDetail.objects.filter(collect_info_id=id)
+    return JsonResponse({"code": 200, "data": [c.to_dict() for c in collect_details]})
+
+
+def get_col_total(request):
+    id = request.GET.get("id")
+    info = CollectInfo.objects.get(id=id)
+    return JsonResponse({"code": 200, "data": info.to_dict()})
+
+
 def get_collect_list(request):
     offset = request.GET.get("offset", 0)
     limit = request.GET.get("limit", 10)

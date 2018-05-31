@@ -92,3 +92,30 @@ var tableFormatter = {
         return html;
     }
 }
+
+function showPrint(id) {
+    $("#collectDetailsTable").bootstrapTable({
+       "url": "/raw/collect/getcoldetail?id="+id,
+    });
+    $.ajax({
+            url: "/raw/collect/getcoltotal?id="+id,
+            method: "get",
+            async: false,
+            success: function (res) {
+                if (res.code==200){
+                    $("#totalNumber").html(res.data.total_number);
+                    $("#totalPrice").html(res.data.total_price);
+                    $("#sg_datetime").html(res.data.sg_datetime);
+                    $("#sg_no").html(res.data.sg_no);
+                }
+            }
+        });
+    $("#frmCreate").modal();
+}
+
+
+function printme() {
+    document.body.innerHTML=document.getElementById('print-block').innerHTML;
+    window.print();
+    window.location.href='/raw/collect/list'
+}

@@ -6,6 +6,71 @@
     <link rel="stylesheet" type="text/css" href="{% static 'lib/css/bootstrap-multiselect.css' %}">
 {% endblock %}
 {% block content %}
+    <div class="modal fade" id="frmCreate" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="添加品种">
+        <div class="modal-dialog" style="width: 1080px">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">收购品种编辑</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="print-block">
+                        <div class="title">
+                            <div id="alertContainer"></div>
+                            <div id="printContainer" style="text-align: center">
+                                <h2 style="letter-spacing: 5px">锡林浩特市蒙辰畜产品有限公司</h2>
+                                <div style="text-align: center">收购时间：<span id="sg_datetime"></span>收购编号：<span
+                                        id="sg_no"></span></div>
+                            </div>
+                        </div>
+                        <div>
+                            <table id="collectDetailsTable" class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th data-field="category.name">名称</th>
+                                    <th data-field="m_weight">毛重</th>
+                                    <th data-field="p_weight">皮重</th>
+                                    <th data-field="weight">净重</th>
+                                    <th data-field="kg" data-formatter="kg">单位</th>
+                                    <th data-field="price">单价</th>
+                                    <th data-field="number">羊数</th>
+                                    <th data-field="number">合计金额</th>
+                                </tr>
+                                </thead>
+                            </table>
+                            <div class="row" style="margin-left: 10px">
+                                <div style="margin: 10px 0">合计：
+                                    <span style="letter-spacing: 25px;margin-left: 25px">
+                                        <span>拾</span>
+                                        <span>万</span>
+                                        <span>千</span>
+                                        <span>百</span>
+                                        <span>拾</span>
+                                        <span>元</span>
+                                        <span>角</span>
+                                        <span>分</span>
+                                    </span>
+                                    总价：<span id="totalPrice">123556</span>&nbsp;数量：<span id="totalNumber">26</span>
+
+                                </div>
+                                <p style="width: 230px;float: left;">开票人：</p>
+                                <p style="width: 200px;float: left;">货主：</p>
+                                <p style="width: 200px;float: left;">财会：</p>
+                                <p style="width: 200px;float: left;">出纳：</p>
+                                <p style="width: 200px;float: left;">电话：132 6542 5412</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" onclick="printme()" class="btn btn-primary" data-dismiss="modal"> 打印</button>
+                    <button type="button" id="back" class="btn btn-default" data-dismiss="modal"> 取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="card">
         <div class="card-header">
             <div class="card-title"> 收购信息</div>
@@ -37,7 +102,7 @@
                             <a id="a1" href='/raw/collect/create?id="${id}'>称重</a>
                             {% endif %}
                             {% if perms.raw.collect_print %}
-                            <a id="a2">打印</a>
+                            <a id="a2" href='javascript:showPrint(${id})'>打印</a>
                             {% endif %}
                             {% if perms.raw.collect_payview %}
                             <a id="a3" href='/raw/collect/pay?id=${id}'>结算</a>

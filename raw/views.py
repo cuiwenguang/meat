@@ -99,6 +99,64 @@ def get_col_total(request):
     info = CollectInfo.objects.get(id=id)
     return JsonResponse({"code": 200, "data": info.to_dict()})
 
+def collect_edit(request):
+    id = request.GET.get("id")
+    config = RawConfig.objects.first()
+    categories = Category.get_categories()
+    try:
+        model = CollectInfo.objects.get(id=id)
+    except:
+        model = CollectInfo(sg_datetime=datetime.datetime.now())
+    details = CollectDetail.objects.filter(collect_info_id=id)
+    return render(request, 'raw/collect_edit.html',
+                  {
+                      "config": config,
+                      "categories": categories,
+                      "model": model,
+                      "details": details,
+                      "collect_info_id": id,
+                  })
+
+
+def collect_update(request):
+    id = request.GET.get('id')
+    collect_info = CollectDetail.objects.get(id=id)
+    return JsonResponse({"code": 200, "data": collect_info.to_dict()})
+
+
+def collect_update_info(request):
+    did = request.GET.get("did")
+    collect_info = CollectDetail.objects.get(id=did)
+    print(collect_info)
+    collect_info.price = request.GET.get("price")
+    collect_info.number = request.GET.get("number")
+    collect_info.weight = request.GET.get("weight")
+    collect_info.p_weight = request.GET.get("p_weight")
+    collect_info.m_weight = request.GET.get("m_weight")
+    collect_info.category_id = request.GET.get("cg_name")
+    collect_info.save()
+    return JsonResponse({"code": 200, "data": collect_info.to_dict()})
+
+
+def collect_delcollectinfo(request):
+    id = request.GET.get("did")
+    c = CollectDetail.objects.get(id=id)
+    c.delete()
+    CollectDetail.objects.all()
+    return JsonResponse({"code": 200})
+
+
+def collect_update_customer(request):
+    id = request.GET.get("collect_info_id")
+    collectInfo = CollectInfo.objects.get(id=id)
+    collectInfo.sg_datetime = request.GET.get("sgDatetime")
+    customer = Customer.objects.get(id=collectInfo.customer_id)
+    customer.cust_name = request.GET.get("custName")
+    customer.mobile = request.GET.get('mobile')
+    customer.address = request.GET.get('address')
+    customer.save()
+    return JsonResponse({"code": 200})
+
 
 def get_collect_list(request):
     offset = request.GET.get("offset", 0)

@@ -1,0 +1,209 @@
+{% extends 'layout.html' %}
+{% load staticfiles %}
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="{% static 'lib/css/bootstrap-table.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'lib/css/bootstrapValidator.min.css' %}">
+{% endblock %}
+{% block content %}
+    <input type="hidden"   id="collect_info_id" value="{{ collect_info_id}}">
+    <div class="panel panel-default">
+        <div class="panel-heading"> 收购详情</div>
+        <div class="panel-body">
+            <div class="card-body">
+                <table class="table table-bordered" id="collectDetailsTab">
+                    <thead>
+                    <tr>
+                        <th data-field="num">序号</th>
+                        <th data-field="name">品种</th>
+                        <th data-field="number">数量</th>
+                        <th data-field="p_weight">皮重</th>
+                        <th data-field="m_weight">毛重</th>
+                        <th data-field="weight">净重</th>
+                        <th data-field="price">单价</th>
+                        <th data-field="id" data-formatter="opratorFormatter">操作</th>
+                    </tr>
+                    </thead>
+                    {% for d in details %}
+                        <tr>
+                            <td><input type="hidden" value="{{ forloop.counter }}">{{ forloop.counter }}</td>
+                            <td>
+                                <input type="hidden" type="hidden" value="{{ d.id }}">
+                                {% for c in categories %}
+                                    {% if d.category_id == c.id %} {{ c.name }} {% endif %}
+                                {% endfor %}
+                            </td>
+                            <td>{{ d.number }}</td>
+                            <td>{{ d.p_weight }}</td>
+                            <td>{{ d.m_weight }}</td>
+                            <td>{{ d.weight }}</td>
+                            <td>{{ d.price }}</td>
+                            <td>
+                                <button type='button' class='btn-sm btn-default '
+                                        onclick="updateTab({{ d.id }})" id="btnEdit{{ forloop.counter }}">
+                                    编辑
+                                </button>
+                                <button type='button' class='btn-sm btn-default' onclick="delData({{ d.id }})">删除</button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="frmCreate" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="编辑收购信息">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">收购信息编辑</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="frmCategory" class="form-horizontal">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <input id="detailId" hidden value="">
+                            <label for="cust_name" class="col-sm-3 control-label">品种</label>
+                            <div class="col-sm-6">
+{#                                {% for d in details %}#}
+                                    <select class="form-control" id="cg_name" name="cg_name">
+                                        {% for c in categories %}
+                                            <option value="{{ c.id }}" >
+{#                                                    {% if d.category_id == c.id %}selected {% endif %}> #}
+                                                      {{ c.name }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+{#                                {% endfor %}#}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="number" class="col-sm-3 control-label">数量</label>
+                            <div class="col-sm-6">
+                                <input type="number" placeholder="请输入数字" class="form-control" id="number" name="number" value="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="p_weight" class="col-sm-3 control-label">皮重</label>
+                            <div class="col-sm-6">
+                                <input class="form-control" placeholder="请输入数字" type="text" id="p_weight" value="" name="p_weight">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="m_weight" class="col-sm-3 control-label">毛重</label>
+                            <div class="col-sm-6">
+                                <input class="form-control" type="text" placeholder="请输入数字" id="m_weight" name="m_weight" value="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="weight" class="col-sm-3 control-label">净重</label>
+                            <div class="col-sm-6">
+                                <input class="form-control" type="text" placeholder="请输入数字"  id="weight" name="weight" value="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="price" class="col-sm-3 control-label">单价</label>
+                            <div class="col-sm-6">
+                                <input class="form-control" placeholder="请输入数字" id="price" name="price" value="">
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="dataSave"  class="btn btn-primary"> 保存</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal"> 取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <div id="alertContainer"></div>
+            <form id="frmCreate" class="form-horizontal">
+                {% csrf_token %}
+                <div class="row">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">收购基本信息</div>
+                            <div class="panel-body">
+                                <div class="form-group col-sm-3">
+                                    <label for="sg_no" class="col-sm-3 control-label"> 收购批次 </label>
+                                    <div class="col-sm-9">
+                                        <input type="hidden" id="id" name="id" value="{{ model.id|default:0 }}">
+                                        <input class="form-control" id="sg_no" name="sg_no" readonly placeholder="系统自动生成" value="{{ model.sg_no }}">
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-3">
+                                    <label for="sg_datetime" class="col-sm-3 control-label">时间</label>
+                                    <div class="col-sm-9">
+                                        <input type="datetime-locals" class="form-control" id="sg_datetime" name="sg_datetime" placeholder="" value="{{ model.sg_datetime|date:'Y-m-d H:i:s'}}" >
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-3">
+                                    <label for="total_number" class="col-sm-3 control-label">总数量</label>
+                                    <div class="col-sm-9">
+                                        <input class="form-control" id="total_number" name="total_number" readonly value="{{ model.total_number }}">
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-3">
+                                    <label for="total_weight" class="col-sm-3 control-label">总重量</label>
+                                    <div class="col-sm-9">
+                                        <input class="form-control" id="total_weight" name="total_weight" readonly value="{{ model.total_weight }}">
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-3">
+                                    <label for="total_price" class="col-sm-3 control-label">总金额</label>
+                                    <div class="col-sm-9">
+                                        <input class="form-control" id="total_price" readonly name="total_price"
+                                               value="{{ model.total_price }}">
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-3">
+                                    <label for="id_card" class="col-sm-3 control-label">身份证</label>
+                                    <div class="col-sm-9">
+                                        <input class="form-control" id="id_card" name="id_card" placeholder="身份证号码" value="{{ model.customer.id_card }}">
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-3">
+                                    <label for="cust_name" class="col-sm-3 control-label">姓名</label>
+                                    <div class="col-sm-9">
+                                        <input class="form-control" id="cust_name" name="cust_name" placeholder="农户姓名" value="{{ model.customer.cust_name }}">
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-3">
+                                    <label for="mobile" class="col-sm-3 control-label">联系电话</label>
+                                    <div class="col-sm-9">
+                                        <input class="form-control" id="mobile" name="mobile" placeholder="联系电话" value="{{ model.customer.mobile }}">
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-3">
+                                    <label for="address" class="col-sm-3 control-label">详细地址</label>
+                                    <div class="col-sm-9">
+                                        <textarea class="form-control" id="address" name="address" placeholder="详细地址">{{ model.customer.address }}</textarea>
+                                    </div>
+                                </div>
+                                <div class="pull-right card-action">
+                                    <div role="group">
+                                        <button type="button" id="saveCus" class="btn btn-primary"> 提交</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                </div>
+            </form>
+        <div>
+        </div>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+    <script type="text/javascript" src="{% static 'lib/js/bootstrap-table.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'lib/js/bootstrap-table-zh-CN.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'lib/js/bootstrapValidator.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/raw/collect_create.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/raw/collcet_edit.js' %}"></script>
+{% endblock %}

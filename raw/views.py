@@ -283,5 +283,12 @@ def collect_payview(request):
         return HttpResponseRedirect("/raw/collect/pay?id="+id)
 
 
-def collect_stat(request):
+def stat_list(request):
     return render(request, 'raw/collect_stat.html')
+
+
+def get_stat_data(request):
+    begin_data = request.GET.get("beginDate")  # 2018-05-01 00:00:00
+    end_data = request.GET.get("endDate")  # 2018-05-01 23:59:59
+    data = CollectInfo.get_stat_data(begin_data, end_data)
+    return JsonResponse({"code": 200, "data": data})

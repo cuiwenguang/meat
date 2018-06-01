@@ -1,7 +1,8 @@
 import datetime
 from django.contrib.auth.models import User
-from django.db import models
+from django.db import models, connection
 from meat.utils.mixin import DictMixin
+from .sql import *
 
 
 class RawConfig(models.Model, DictMixin):
@@ -103,6 +104,47 @@ class CollectInfo(models.Model, DictMixin):
         self.total_number = total['total_number']
         self.total_weight = total['total_weight']
         self.save()
+
+    @classmethod
+    def get_stat_data(cls, begin, end):
+        """
+        :param begin:
+        :param end:
+        :return:
+        """
+        cursor = connection.cursor()
+        cursor.execute(stat_sql.format(begin, end))
+        result = cursor.fetchall()
+        ret = []
+        for item in result:
+            ret.append({
+                "category": item[0],
+                "number": item[2],
+                "weight": item[3],
+                "price": item[4],
+            })
+        return ret
+
+    @classmethod
+    def get_analyze_data(cls, begin, end):
+        """
+        :param bengin:
+        :param end:
+        :return: 返回结果有三种：周：X表示周一到周日 月：1-31 1年： 1~12月
+        """
+        cursor = connection.cursor()
+        cursor.execute(anal_sql.format(begin, end))
+        result = cursor.fetchall()
+        ret = []
+        for item in result:
+            ret.append({
+                "name": item[0],
+                "cur_data": item[1],
+                "total_number": item[3],
+                "total_weight": item[4],
+                "total_money": item[5],
+            })
+        return ret
 
     @classmethod
     def search(cls, offset, limit, **kwargs):

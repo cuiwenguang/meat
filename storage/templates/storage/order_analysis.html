@@ -19,7 +19,6 @@
 
                     </select>
                     <input id="rangeDate" name="rangeDate" class="form-control" style="width: 300px" placeholder="选择时间段">
-
                     <button class="btn btn-primary">统计</button>
                 </form>
             </div>
@@ -28,16 +27,27 @@
     <div class="card-body">
         <div class="row">
             <div class="col-sm-12">
-                <table class="table">
+                <table id="table1" class="table table-bordered">
                     <thead>
                         <tr>
-                            <th></th>
+                            {% for th in data.table.fields %}
+                            <th>{{ th }}</th>
+                            {% endfor %}
                         </tr>
                     </thead>
+                    <tbody>
+                        {% for tr in data.table.rows %}
+                        <tr>
+                            {% for td in  tr %}
+                            <td>{{ td }}</td>
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
                 </table>
             </div>
         </div>
-        <canvas id="bar-chart" class="chart" width="567" height="309" style="width: 567px; height: 309px;"></canvas>
+        <canvas id="bar-chart" class="chart" style="width: 80%; height: 360px;"></canvas>
     </div>
 </div>`
 {% endblock %}
@@ -52,11 +62,12 @@
     <script type="text/javascript" src="{% static 'js/datapicker.js' %}"></script>
 
     <script type="text/javascript">
-    var datasource = {{ ret |safe }}
+    var datasource = {{ data.chart |safe }}
 
         $(function () {
             datepickerInit("#rangeDate");
             $("#selProduct").multiselect({});
+            $("#table1").rowspan(0)
             colors = ['#f00', '#0f0', '#0ff', '#00f'];
             var ds = [];
             for(var i in datasource['fields']){

@@ -1,7 +1,9 @@
-import datetime, json
-from django.shortcuts import render
+import datetime
+
 from django.http.response import JsonResponse
+from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
+
 from .models import Product, EnterStorage, StorageInfo, Customer, Order, OrderDetail
 
 
@@ -213,6 +215,8 @@ def customer_search(request):
 
 
 def order_analysis(request):
+    from storage.analysis_utils import to_bar_chart_data, to_table_data
+
     if request.GET.get("rangeDate"):
         begin_date = request.GET.get("rangeDate").split(' ~ ')[0]
         end_date = request.GET.get("rangeDate").split(' ~ ')[1]
@@ -222,12 +226,17 @@ def order_analysis(request):
         end_date = '-'.join([str(dt.year), str(dt.month), str(dt.day)])
     search_types = request.GET.getlist("selProduct")
     data = Order.get_analysis_by_date(begin_date, end_date, search_types)
+    table_data = to_table_data(data)
+    chart_data = to_bar_chart_data(table_data)
+    data = {
+        "chart": chart_data,
+        "table": table_data
+    }
     products = Product.get_all()
-    from .analysis_utils import to_bar_chart_data
     return render(request, 'storage/order_analysis.html',
                   {
                       "products": products,
-                      "ret": to_bar_chart_data(data)
+                      "data": data
                   })
 
 

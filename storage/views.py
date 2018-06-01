@@ -213,35 +213,24 @@ def customer_search(request):
 
 
 def order_analysis(request):
-    dt = datetime.datetime.now()
-    begin = '-'.join([str(dt.year), str(dt.month), '01'])
-    end = '-'.join([str(dt.year), str(dt.month), str(dt.day)])
-    begin_date = request.GET.get("begin_date", '2018-05-01')
-    end_date = request.GET.get("begin_date", '2018-06-1')
-    data = Order.get_analysis_by_date(begin_date, end_date)
+    if request.GET.get("rangeDate"):
+        begin_date = request.GET.get("rangeDate").split(' ~ ')[0]
+        end_date = request.GET.get("rangeDate").split(' ~ ')[1]
+    else:
+        dt = datetime.datetime.now()
+        begin_date = '-'.join([str(dt.year), str(dt.month), '01'])
+        end_date = '-'.join([str(dt.year), str(dt.month), str(dt.day)])
+    search_types = request.GET.getlist("selProduct")
+    data = Order.get_analysis_by_date(begin_date, end_date, search_types)
+    products = Product.get_all()
+    from .analysis_utils import to_bar_chart_data
+    return render(request, 'storage/order_analysis.html',
+                  {
+                      "products": products,
+                      "ret": to_bar_chart_data(data)
+                  })
 
-    labels = set([d[0] for d in data])
-    products = set([d[2] for d in data])
-    values = []
-    x = 0
-    for lab in labels:
-        d1 = [dx for dx in data if dx[0] == lab]
-        values.append([])
-        y = 0
-        for p in products:
-            d2 = [dy[1] for dy in d1 if dy[2] == p]
-            if len(d2) == 0:
-                values[x].append(0)
-            else:
-                values[x].append(d2[0])
-            y += 1
-        x += 1
 
-    result = {
-        "labels": list(labels),
-        "products": list(products),
-        "values": values
-    }
 
-    return render(request, 'storage/order_analysis.html', {"ret": json.dumps(result)})
+
 

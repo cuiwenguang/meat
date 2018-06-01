@@ -236,10 +236,11 @@ class Order(models.Model, DictMixin):
         return OrderDetail.objects.filter(order_id=order_id)
 
     @classmethod
-    def get_analysis_by_date(cls, begin_date, end_date):
+    def get_analysis_by_date(cls, begin_date, end_date, search_types):
         from django.db import connection
         from .const_sql import order_analysis_sql
-        sql = order_analysis_sql.format(begin_date, end_date)
+
+        sql = order_analysis_sql.format(begin_date, end_date, ','.join(search_types))
         cursor = connection.cursor()
         cursor.execute(sql)
         rows = cursor.fetchall()

@@ -5,10 +5,12 @@ from .views import (product_list, get_products, post_product,
                     storage_enter, post_enter_storage, get_enter_data,
                     order, order_edit, post_order, get_orders, delete_order,
                     get_details, detail_list, customer_search,
-                    order_analysis,)
+                    order_analysis, show_product, edit_product)
 
 urlpatterns = [
     path('product/list', product_list, name="product_list"),
+    path('editproduct', edit_product, name="edit_product"),  # 编辑产品信息
+    path('showproduct', show_product, name="update_product"),  # 更新产品信息
     path('getproducts', get_products, name="get_products"),
     path('getproductbycode', get_product, name="get_product"),
     path('postproduct', post_product, name="post_product"),

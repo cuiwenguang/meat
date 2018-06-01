@@ -19,22 +19,44 @@ def post_product(request):
     id = request.POST.get("id", 0)
     if int(id) == 0:
         model = Product()
+        p_name = request.POST.get("name")
+        model.name = request.POST.get("name")
+        model.standard = request.POST.get("standard")
+        model.packing = request.POST.get("packing")
+        model.code = request.POST.get("code")
+        model.price = request.POST.get("price")
+        model.remark = request.POST.get("remark")
+        model.save()
+        model.create_barcode()
+        product = Product.objects.get(name=p_name)
+        info = StorageInfo()
+        info.product_id = product.id
+        info.save()
+        return JsonResponse({"code": 200, "message": "产品信息保存成功"})
     else:
         model = Product.get(id)
+        model.name = request.POST.get("name")
+        model.standard = request.POST.get("standard")
+        model.packing = request.POST.get("packing")
+        model.code = request.POST.get("code")
+        model.price = request.POST.get("price")
+        model.remark = request.POST.get("remark")
+        model.save()
+        return JsonResponse({"code": 300, "data": model.to_dict()})
 
-    model.name = request.POST.get("name")
-    model.standard = request.POST.get("standard")
-    model.packing = request.POST.get("packing")
-    model.code = request.POST.get("code")
-    model.price = request.POST.get("price")
-    model.remark = request.POST.get("remark")
-    model.save()
-    model.create_barcode()
-    return JsonResponse({"code":200, "message": "产品信息保存成功"})
+
+def edit_product(request):
+    return JsonResponse({"code": 200, "message": "编辑产品信息成功"})
+
+
+def show_product(request):
+    id = request.POST.get('id')
+    model = Product.get(id)
+    return JsonResponse({"code": 200, "data": model.to_dict()})
 
 
 def del_product(request):
-    id = request.POST.get("id")
+    id = request.GET.get("id")
     Product.del_product(id)
     return JsonResponse({"code": 200, "message": "产品删除"})
 

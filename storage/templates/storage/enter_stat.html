@@ -1,0 +1,89 @@
+{% extends 'layout.html' %}
+{% load staticfiles %}
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="{% static 'lib/css/bootstrap-table.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'lib/css/bootstrapValidator.min.css' %}">
+<link href='http://fonts.googleapis.com/css?family=Roboto+Condensed:300,400' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Lato:300,400,700,900' rel='stylesheet' type='text/css'>
+    <!-- CSS Libs -->
+    <link rel="stylesheet" type="text/css" href="{% static '/lib/css/font-awesome.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static '/lib/css/animate.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static '/lib/css/bootstrap-switch.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static '/lib/css/checkbox3.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static '/lib/css/jquery.dataTables.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static '/lib/css/dataTables.bootstrap.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static '/lib/css/select2.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static '/css/style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static '/css/themes/flat-blue.css' %}">
+{% endblock %}
+{% block content %}
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title"> 收购统计</div>
+            <div class="pull-right card-action">
+                <div role="group">
+                    <input id="day" class="btn btn-primary" type="button" value="当天">
+                    <input id="weekday" class="btn btn-primary" type="button" value="本周">
+                    <input id="mouth" class="btn btn-primary" type="button" value="本月">
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                    <table id="statTab" class='table table-bordered'>
+                        <thead id="thead">
+                            <th>品种</th>
+                            <th>数量</th>
+                            <th>重量</th>
+                            <th>价格</th>
+                        </thead>
+                        <tbody id="tbody">
+                        </tbody>
+                    </table>
+            </div>
+            <div class="row">
+                <div class="col-sm-6" id="firstCanvas" style="width: 45%">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <div class="title">收购数量统计</div>
+                            </div>
+                        </div>
+                        <div class="card-body no-padding">
+                            <canvas id="pie-chart" class="chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6" id="lastCanvas" style="width: 45%">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <div class="title">收购金额总计</div>
+                            </div>
+                        </div>
+                        <div class="card-body no-padding">
+                            <canvas id="bar-chart" class="chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block scripts %}
+    <script type="text/javascript" src="{% static '/lib/js/jquery.min.js' %}"></script>
+    <script type="text/javascript" src="{% static '/lib/js/bootstrap.min.js' %}"></script>
+    <script type="text/javascript" src="{% static '/lib/js/Chart.min.js' %}"></script>
+    <script type="text/javascript" src="{% static '/lib/js/bootstrap-switch.min.js' %}"></script>
+    <script type="text/javascript" src="{% static '/lib/js/jquery.matchHeight-min.js' %}"></script>
+    <script type="text/javascript" src="{% static '/lib/js/jquery.dataTables.min.js' %}"></script>
+    <script type="text/javascript" src="{% static '/lib/js/dataTables.bootstrap.min.js' %}"></script>
+    <script type="text/javascript" src="{% static '/lib/js/select2.full.min.js' %}"></script>
+    <script type="text/javascript" src="{% static '/lib/js/ace/ace.js' %}"></script>
+    <script type="text/javascript" src="{% static '/lib/js/ace/mode-html.js' %}"></script>
+    <script type="text/javascript" src="{% static '/lib/js/ace/theme-github.js' %}"></script>
+    <script type="text/javascript" src="{% static '/js/app.js' %}"></script>
+    <script type="text/javascript" src="{% static '/js/date.js' %}"></script>
+    <script type="text/javascript" src="{% static '/js/raw/collect_stat.js' %}"></script>
+{% endblock %}

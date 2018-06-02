@@ -5,7 +5,7 @@ WHERE create_at BETWEEN '{0}' AND '{1}'
 GROUP BY product_id'''
 
 # 统计出库数据
-stat_out_sql = '''SELECT name, sum(number) as number,money FROM
+stat_out_sql = '''SELECT name, sum(number) as number,sum(money) FROM
 (SELECT storage_orderdetail.number, storage_product.name, product_id,
 order_id, storage_order.create_at,storage_order.money, storage_order.customer_id, storage_product.price
 from storage_orderdetail

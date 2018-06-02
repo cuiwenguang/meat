@@ -35,9 +35,7 @@ var fmt = {
         return value == 0 ? "暂存" : "<label style='color:green'>完成</label>";
     },
     optFormatter: function (value) {
-        html = "<a href='/storage/order/edit?id=" + value + "'> 编辑 </a>" +
-            "<a href='javascript:print(" + value + ")'> 打印 </a>" +
-            "<a href='javascript:deleteOrder(" + value + ")'> 删除 </a>";
+        html = $("#rowButtons").tmpl({id:value}).prop('outerHTML');
         return html
     },
     detailformatter: function (index, row) {
@@ -61,4 +59,12 @@ function deleteOrder(id) {
             $("#tableOrder").bootstrapTable("refresh");
         }
     });
+}
+
+function showPrint(id) {
+    alert(id)
+    $("#collectDetailsTable").bootstrapTable({
+       "url": "/storage/order/detail/list?id="+id,
+    });
+    $("#frmCreate").modal();
 }

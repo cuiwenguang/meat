@@ -91,6 +91,7 @@ class CollectInfo(models.Model, DictMixin):
             ('collect_delete', '删除'),
             ('collect_payview', '结算'),
             ('collect_print', '打印'),
+            ('stat_list', '统计'),
         )
 
     def update_total_fields(self):

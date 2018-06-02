@@ -136,8 +136,7 @@ function delProduct(id) {
 
 var formatter = {
     optFormatter: function (value) {
-        html = "<a href='javascript:showEdit(" + value + ")'> 编辑 </a>" +
-            "<a href='javascript:delProduct(" + value + ")'> 删除 </a>"
+        html = $('#rowButtons').tmpl({id:value}).prop("outerHTML");
         return html;
     }
 }

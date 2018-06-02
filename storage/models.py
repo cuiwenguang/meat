@@ -150,6 +150,7 @@ class EnterStorage(models.Model, DictMixin):
         default_permissions = ()
         permissions = (
             ('storage_enter', '入库'),
+            ('enter_stat', '入库统计'),
         )
 
     @classmethod
@@ -212,6 +213,8 @@ class Order(models.Model, DictMixin):
             ('order', '查看订单'),
             ('order_edit', '创建订单'),
             ('delete_order', '删除订单'),
+            ('out_stat', '销售统计'),
+            ('order_analysis', '销售分析')
         )
 
     @classmethod

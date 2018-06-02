@@ -10,9 +10,13 @@
         <div class="card-title"> 产品信息 </div>
         <div class="pull-right card-action">
             <div role="group">
-                <button type="button" id="btnEdit" class="btn btn-primary" onclick="showEdit(0)"> 添加 </button>
+                {% if perms.storage.post_product %}
+                    <button type="button" id="btnEdit" class="btn btn-primary" onclick="showEdit(0)"> 添加 </button>
+                {% endif %}
 {#                <button type="button" id="btnEdit" class="btn btn-primary"> 条码导出 </button>#}
-                <button type="button" id="btnEdit" class="btn btn-primary"> 条码打印 </button>
+
+                <button type="button"  class="btn btn-primary"> 条码打印 </button>
+
             </div>
         </div>
     </div>
@@ -30,6 +34,16 @@
                 </tr>
             </thead>
         </table>
+        <template id="rowButtons">
+            <div class="table-button">
+                {% if perms.storage.post_product %}
+                    <a href='javascript:showEdit(${id})'> 编辑 </a>
+                {% endif %}
+                {% if perms.storage.del_product %}
+                    <a href='javascript:delProduct(${id})'> 删除 </a>
+                {% endif %}
+            </div>
+        </template>
     </div>
 </div>
 <div class="modal fade" id="frmCreate" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="添加产品">
@@ -93,5 +107,6 @@
    <script type="text/javascript" src="{% static 'lib/js/bootstrap-table.min.js' %}"></script>
    <script type="text/javascript" src="{% static 'lib/js/bootstrap-table-zh-CN.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'lib/js/bootstrapValidator.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'lib/js/jquery.tmpl.min.js' %}"></script>
    <script type="text/javascript" src="{% static 'js/storage/product_list.js' %}"></script>
 {% endblock %}

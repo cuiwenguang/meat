@@ -1,7 +1,3 @@
-
-
-
-
 def to_bar_chart_data(table_data):
     """查询结果转化为bar图标需要的格式"""
     labels = [td[0] for td in table_data["rows"]]

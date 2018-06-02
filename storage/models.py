@@ -1,8 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.db import transaction
+from django.db import transaction,connection
 from pystrich.ean13 import EAN13Encoder
-
+from .sql import *
 from meat.utils.mixin import DictMixin
 from meat.settings import STORAGE_CONFIG
 
@@ -39,6 +39,21 @@ class Product(models.Model, DictMixin):
             return cls.objects.filter(code=code).first()
         except:
             return None
+
+    @classmethod
+    def get_stat_data(cls, begin, end):
+        """获取入库统计数据"""
+        cursor = connection.cursor()
+        cursor.execute(stat_enter_sql.format(begin, end))
+        result = cursor.fetchall()
+        ret = []
+        for item in result:
+            ret.append({
+                "name": item[0],
+                "total_number": item[2],
+                "total_price": item[3]
+            })
+        return ret
 
     @classmethod
     def get_all(cls):

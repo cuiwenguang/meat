@@ -19,7 +19,7 @@
 {% block content %}
     <div class="card">
         <div class="card-header">
-            <div class="card-title"> 收购统计</div>
+            <div class="card-title"> 入库统计</div>
             <div class="pull-right card-action">
                 <div role="group">
                     <input id="day" class="btn btn-primary" type="button" value="当天">
@@ -35,7 +35,6 @@
                             <th>品种</th>
                             <th>数量</th>
                             <th>重量</th>
-                            <th>价格</th>
                         </thead>
                         <tbody id="tbody">
                         </tbody>
@@ -85,5 +84,5 @@
     <script type="text/javascript" src="{% static '/lib/js/ace/theme-github.js' %}"></script>
     <script type="text/javascript" src="{% static '/js/app.js' %}"></script>
     <script type="text/javascript" src="{% static '/js/date.js' %}"></script>
-    <script type="text/javascript" src="{% static '/js/raw/collect_stat.js' %}"></script>
+    <script type="text/javascript" src="{% static '/js/storage/enter_stat.js' %}"></script>
 {% endblock %}

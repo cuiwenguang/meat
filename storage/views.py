@@ -215,7 +215,7 @@ def customer_search(request):
 
 
 def order_analysis(request):
-    from storage.analysis_utils import to_bar_chart_data, to_table_data
+    from storage.analysis_utils import to_table_data, to_chart_data
 
     if request.GET.get("rangeDate"):
         begin_date = request.GET.get("rangeDate").split(' ~ ')[0]
@@ -226,9 +226,13 @@ def order_analysis(request):
         end_date = '-'.join([str(dt.year), str(dt.month), str(dt.day)])
     search_types = request.GET.getlist("selProduct")
     data = Order.get_analysis_by_date(begin_date, end_date, search_types)
-    table_data = to_table_data(data)
-    chart_data = to_bar_chart_data(table_data)
-    data = {
+    table_data, l, f = to_table_data(data)
+    chart_data = {
+        "labels": l,
+        "fields": f,
+        "values": to_chart_data(table_data,l,f)
+    }
+    ret= {
         "chart": chart_data,
         "table": table_data
     }
@@ -236,7 +240,7 @@ def order_analysis(request):
     return render(request, 'storage/order_analysis.html',
                   {
                       "products": products,
-                      "data": data
+                      "data": ret
                   })
 
 

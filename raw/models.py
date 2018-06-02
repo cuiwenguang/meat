@@ -127,6 +127,13 @@ class CollectInfo(models.Model, DictMixin):
         return ret
 
     @classmethod
+    def get_analyze_data(cls, begin, end):
+        cursor = connection.cursor()
+        cursor.execute(analyze_sql.format(begin, end))
+        result = cursor.fetchall()
+        return result
+
+    @classmethod
     def search(cls, offset, limit, **kwargs):
         q = models.Q()
         for k, v in kwargs.items():

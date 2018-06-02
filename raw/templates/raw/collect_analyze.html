@@ -12,11 +12,6 @@
         <div class="pull-right card-action">
             <div role="group">
                 <form class="form-inline" method="get">
-                    <select id="selProduct" name="selProduct" class="form-control" multiple="multiple">
-                        {% for product in  products %}
-                        <option value="{{ product.id }}">{{ product.name }}</option>
-                        {% endfor %}
-                    </select>
                     <input id="rangeDate" name="rangeDate" class="form-control" placeholder="选择时间段">
                     <button class="btn btn-primary">统计</button>
                 </form>
@@ -40,8 +35,9 @@
                     <thead>
                         <tr>
                             <th>日期</th>
-                            <th>商品</th>
+                            <th>品种</th>
                             <th>数量</th>
+                            <th>总量</th>
                             <th>金额</th>
                         </tr>
                     </thead>

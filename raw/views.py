@@ -292,3 +292,29 @@ def get_stat_data(request):
     end_data = request.GET.get("endDate")  # 2018-05-01 23:59:59
     data = CollectInfo.get_stat_data(begin_data, end_data)
     return JsonResponse({"code": 200, "data": data})
+
+
+def collect_analyze(request):
+    if request.GET.get("rangeDate"):
+        begin_date = request.GET.get("rangeDate").split(' ~ ')[0]
+        end_date = request.GET.get("rangeDate").split(' ~ ')[1]
+    else:
+        dt = datetime.datetime.now()
+        begin_date = '-'.join([str(dt.year), str(dt.month), '01'])
+        end_date = '-'.join([str(dt.year), str(dt.month), str(dt.day)])
+    data = CollectInfo.get_analyze_data(begin_date, end_date)
+    from .analyze_utils import to_table_data, to_chart_data
+    table_data, l, f = to_table_data(data)
+    chart_data = {
+        "labels": l,
+        "fields": f,
+        "values": to_chart_data(table_data, l, f)
+    }
+    ret = {
+        "chart": chart_data,
+        "table": table_data
+    }
+    return render(request, 'raw/collect_analyze.html',
+                  {
+                      "data": ret
+                  })

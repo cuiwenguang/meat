@@ -222,6 +222,21 @@ class Order(models.Model, DictMixin):
             return None
 
     @classmethod
+    def get_stat_data(cls, begin, end):
+        """获取出库统计数据"""
+        cursor = connection.cursor()
+        cursor.execute(stat_out_sql.format(begin, end))
+        result = cursor.fetchall()
+        ret = []
+        for item in result:
+            ret.append({
+                "name": item[0],
+                "total_number": item[1],
+                "total_price": item[2]
+            })
+        return ret
+
+    @classmethod
     def search(cls, limit, offset, **condition):
         q = models.Q()
         for k, v in condition.items():

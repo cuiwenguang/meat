@@ -5,7 +5,7 @@ from .views import (product_list, get_products, post_product,
                     storage_enter, post_enter_storage, get_enter_data,
                     order, order_edit, post_order, get_orders, delete_order,
                     get_details, detail_list, customer_search,
-                    order_analysis, show_product, edit_product, enter_stat, get_enter_datas)
+                    order_analysis, show_product, edit_product, enter_stat, get_enter_datas, out_stat, get_out_datas)
 
 urlpatterns = [
     path('product/list', product_list, name="product_list"),
@@ -32,5 +32,8 @@ urlpatterns = [
 
     path("enter/stat", enter_stat, name="enter_stat"),  # 入库统计
     path("enter/stat/data", get_enter_datas, name="get_stat_data"),  # 获取入库统计数据
+
+    path("out/stat", out_stat, name="out_stat"),  # 出库库统计
+    path("out/stat/data", get_out_datas, name="get_out_data"),  # 获取出库统计数据
     path("out/analysis", order_analysis, name="order_analysis"),
 ]

@@ -126,27 +126,6 @@ class CollectInfo(models.Model, DictMixin):
         return ret
 
     @classmethod
-    def get_analyze_data(cls, begin, end):
-        """
-        :param bengin:
-        :param end:
-        :return: 返回结果有三种：周：X表示周一到周日 月：1-31 1年： 1~12月
-        """
-        cursor = connection.cursor()
-        cursor.execute(anal_sql.format(begin, end))
-        result = cursor.fetchall()
-        ret = []
-        for item in result:
-            ret.append({
-                "name": item[0],
-                "cur_data": item[1],
-                "total_number": item[3],
-                "total_weight": item[4],
-                "total_money": item[5],
-            })
-        return ret
-
-    @classmethod
     def search(cls, offset, limit, **kwargs):
         q = models.Q()
         for k, v in kwargs.items():

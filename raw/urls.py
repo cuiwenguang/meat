@@ -6,7 +6,8 @@ from .views import (collect_list, get_collect_list, get_sub_detial,
                     config_edit, post_config,
                     category_list, get_categories, get_category_by_id,
                     post_category, delete_category, get_col_detail, get_col_total, collect_edit, collect_update,
-                    collect_update_info, collect_delcollectinfo, collect_update_customer, stat_list, get_stat_data)
+                    collect_update_info, collect_delcollectinfo, collect_update_customer, stat_list, get_stat_data,
+                   )
 
 urlpatterns = [
     path('collect/list', collect_list, name="collect_list"),
@@ -39,7 +40,4 @@ urlpatterns = [
 
     path('stat', stat_list, name="stat_list"),#跳转页面
     path('getstatdata', get_stat_data, name="get_stat_data"),#获取统计信息
-    #
-    # path('anal', anal_list, name="anal_list"),#收购分析跳转页面
-    # path('getanaldata', get_anal_data, name="get_anal_data"),#获取统计信息
 ]

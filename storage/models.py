@@ -13,7 +13,7 @@ class Product(models.Model, DictMixin):
     standard = models.CharField(max_length=20)
     packing = models.CharField(max_length=20)
     code = models.CharField(max_length=50, db_index=True)
-    price = models.FloatField(default=0)
+    price = models.DecimalField(default=0, max_digits=11, decimal_places=2)
     remark = models.CharField(max_length=50)
     state = models.IntegerField(default=1)
 
@@ -202,7 +202,7 @@ class Order(models.Model, DictMixin):
     customer = models.ForeignKey(Customer, null=True, on_delete=models.SET_NULL)
     hand_user = models.CharField(max_length=20, null=True, blank=True)
     user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
-    money = models.FloatField(default=0)
+    money = models.DecimalField(default=0, max_digits=11, decimal_places=2)
     remark = models.CharField(max_length=50)
     state = models.IntegerField(default=0)
 

@@ -1,4 +1,5 @@
 import datetime
+from decimal import Decimal
 from django.shortcuts import render
 from django.http.response import JsonResponse, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
@@ -263,7 +264,8 @@ def collect_payview(request):
         return render(request, 'raw/pay_detail.html', locals())
     else:
         id = request.POST.get("id")
-        money = float(request.POST.get("money", 0))
+
+        money = Decimal(request.POST.get("money", 0))
         remark = request.POST.get("remark", '')
         pay_model = PayInfo(pay_money=money, create_at=datetime.datetime.now(),
                             collect_info_id=id, user=request.user,

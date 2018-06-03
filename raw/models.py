@@ -74,9 +74,9 @@ class CollectInfo(models.Model, DictMixin):
     sg_no = models.CharField(max_length=50, db_index=True)  # 收购批次
     sg_datetime = models.DateTimeField(auto_now=True)  # 收购时间
     customer = models.ForeignKey(Customer, null=True, on_delete=models.SET_NULL)  # 客户账号
-    total_price = models.FloatField(default=0)
+    total_price = models.DecimalField(default=0, max_digits=11, decimal_places=2)
     total_number = models.IntegerField(default=0)
-    total_weight = models.FloatField(default=0)
+    total_weight = models.DecimalField(default=0, max_digits=11, decimal_places=2)
     sg_source = models.CharField(max_length=100, default='')  # 收购来源
     state = models.IntegerField(default=0)  # 数据状态，备用
     user = models.ForeignKey(User, related_name='collect_user', null=True, on_delete=models.SET_NULL)  # 收购操作员
@@ -162,10 +162,10 @@ class CollectDetail(models.Model, DictMixin):
     collect_info = models.ForeignKey(CollectInfo, db_index=True, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, db_index=True, null=True, on_delete=models.SET_NULL)
     number = models.IntegerField(default=0)
-    weight = models.FloatField(default=0)
-    p_weight = models.FloatField(default=0)
-    m_weight = models.FloatField(default=0)
-    price = models.FloatField(default=0)
+    weight = models.DecimalField(default=0, max_digits=11, decimal_places=2)
+    p_weight = models.DecimalField(default=0, max_digits=11, decimal_places=2)
+    m_weight = models.DecimalField(default=0, max_digits=11, decimal_places=2)
+    price = models.DecimalField(default=0, max_digits=11, decimal_places=2)
     seq = models.IntegerField(default=1)
 
     class Meta:
@@ -174,7 +174,7 @@ class CollectDetail(models.Model, DictMixin):
 
 class PayInfo(models.Model, DictMixin):
     collect_info = models.ForeignKey(CollectInfo, db_index=True, on_delete=models.CASCADE)
-    pay_money = models.FloatField(default=0)
+    pay_money = models.DecimalField(default=0, max_digits=11, decimal_places=2)
     create_at = models.DateTimeField(auto_now=True)
     remark = models.CharField(max_length=255, default='')
     user = models.ForeignKey(User, related_name='pay_user', null=True, on_delete=models.SET_NULL)  # 结算操作员

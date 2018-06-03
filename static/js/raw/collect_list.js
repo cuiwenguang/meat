@@ -40,10 +40,10 @@ var tableFormatter = {
         return value.cust_name
     },
     weightFormatter: function (value) {
-        return value.toFixed(2);
+        return value + "kg";
     },
     moneyFormatter: function (value) {
-        return "￥" + value.toFixed(2);
+        return "￥" + value;
     },
     stateFormatter: function (value) {
         switch(value){

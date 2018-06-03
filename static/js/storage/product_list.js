@@ -109,11 +109,11 @@ $("#btnSave").click(function () {
         $.post("/storage/postproduct", $("#frmProduct").serialize(), function (ret) {
             if (ret.code == 200) {
                 $(".productTable").bootstrapTable("refresh");
-                window.location.href = "http://127.0.0.1:8000/storage/product/list"
+                window.location.href = "/storage/product/list"
             }
             if (ret.code == 300) {
                 $(".productTable").bootstrapTable("refresh");
-                window.location.href = "http://127.0.0.1:8000/storage/product/list"
+                window.location.href = "/storage/product/list"
             }
         }, "json");
     }
@@ -128,7 +128,7 @@ function delProduct(id) {
         data: data,
         success: function (res) {
             if (res.code == 200) {
-                window.location.href = "http://127.0.0.1:8000/storage/product/list"
+                window.location.href = "/storage/product/list"
             }
         }
     });

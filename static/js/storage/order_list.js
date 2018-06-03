@@ -62,9 +62,29 @@ function deleteOrder(id) {
 }
 
 function showPrint(id) {
-    alert(id)
-    $("#collectDetailsTable").bootstrapTable({
-       "url": "/storage/order/detail/list?id="+id,
-    });
+    $("#tbody").html("")
+    $.ajax({
+            url: "/storage/order/getorderlist",
+            method: "get",
+            async: false,
+            data: {id:id},
+            success: function (res) {
+                console.log(res.data)
+                dataList = res.data;
+                for (var i =0; i<dataList.length;i++){
+                    html = "<tr><td>"+dataList[i].code+"</td><td>"+dataList[i].name+"</td><td>kg</td>" +
+                        "<td>"+dataList[i].number+"</td><td>"+dataList[i].price+"</td><td>"+dataList[i].money+"</td></tr>"
+                    $("#tbody").append(html)
+                }
+
+            }
+        });
     $("#frmCreate").modal();
+}
+
+function printOrder() {
+    document.body.innerHTML=document.getElementById('print-block').innerHTML;
+    window.print();
+    window.location.href='/storage/order'
+
 }

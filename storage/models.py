@@ -240,6 +240,23 @@ class Order(models.Model, DictMixin):
         return ret
 
     @classmethod
+    def get_order_data(cls, id):
+        """获取报表信息"""
+        cursor = connection.cursor()
+        cursor.execute(order_list_sql.format(id))
+        result = cursor.fetchall()
+        ret = []
+        for item in result:
+            ret.append({
+                "code": item[0],
+                "name": item[1],
+                "number": item[2],
+                "price": item[3],
+                "money": item[4]
+            })
+        return ret
+
+    @classmethod
     def search(cls, limit, offset, **condition):
         q = models.Q()
         for k, v in condition.items():

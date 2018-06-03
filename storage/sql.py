@@ -16,4 +16,8 @@ where create_at BETWEEN '{0}' AND '{1}'
 GROUP BY name;'''
 
 
+order_list_sql = """select code,name,number,price,number*price as money from storage_orderdetail inner join 
+storage_product on storage_orderdetail.product_id = storage_product.id where order_id = '{0}'"""
+
+
 

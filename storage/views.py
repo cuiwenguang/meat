@@ -31,6 +31,7 @@ def post_product(request):
         model.save()
         model.create_barcode()
         product = Product.objects.get(name=p_name)
+        print(product)
         info = StorageInfo()
         info.product_id = product.id
         info.save()
@@ -184,6 +185,12 @@ def get_orders(request):
         query_params["state__in"] = [int(s) for s in state]
     data = Order.search(limit=limit, offset=offset, **query_params)
     return JsonResponse(data)
+
+
+def get_order_list(request):
+    id = request.GET.get("id")
+    data = Order.get_order_data(id)
+    return JsonResponse({"code": 200, "data": data})
 
 
 @csrf_exempt

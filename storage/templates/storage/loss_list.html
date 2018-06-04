@@ -10,15 +10,84 @@
         <div class="card-title"> 报损信息 </div>
         <div class="pull-right card-action">
             <div role="group">
-               <button class="btn btn-primary"> 添加 </button>
+               <button id="btnEdit" class="btn btn-primary" onclick="showEdit(0)"> 添加 </button>
             </div>
         </div>
     </div>
     <div class="card-body">
-
+        <table id="lossList" class="table">
+            <thead>
+                <tr>
+                    <th data-field="create_at">提交时间</th>
+                    <th data-field="product_id">产品名称</th>
+                    <th data-field="number">数量</th>
+                    <th data-field="desc">报销原因</th>
+                    <th data-field="atate">状态</th>
+                    <th data-field="check_date">审核日期</th>
+                    <th data-field="check_desc">审核描述</th>
+                    <th data-field="check_user_id">审核人</th>
+                    <th data-field="user_id">提交人</th>
+                    <th data-field="id" data-formatter="fmt.optFormatter">操作</th>
+                </tr>
+            </thead>
+        </table>
+        <template id="rowButtons">
+            <div class="table-button">
+                {% if perms.storage.post_product %}
+                    <a href='javascript:showEdit(${id})'> 审核 </a>
+                {% endif %}
+            </div>
+        </template>
     </div>
 </div>
-
+<div class="modal fade" id="frmCreate" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="添加损耗">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">损耗编辑</h4>
+            </div>
+            <div class="modal-body">
+                <form id="frmProduct" class="form-horizontal">
+                    {% csrf_token %}
+                    <input type="hidden" id="id" name="id" value="0" />
+                     <div class="form-group">
+                        <label for="price" class="col-sm-4 control-label">日期</label>
+                        <div class="col-sm-8">
+                            <input type="date" class="form-control" id="create_at" name="create_at">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="product" class="col-sm-4 control-label">名称</label>
+                        <div class="col-sm-8">
+                            <select class="form-control" id="product" name="product" value="" required>
+                                {% for product in products %}
+                                <option value="{{ product.id }}">{{ product.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="standard" class="col-sm-4 control-label">数量</label>
+                        <div class="col-sm-8">
+                            <input class="form-control" id="number" name="number" value="" type="number">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="packing" class="col-sm-4 control-label">损耗原因</label>
+                        <div class="col-sm-8">
+                            <input class="form-control" id="desc" name="desc" value="">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnSave" class="btn btn-primary" data-dismiss="modal"> 保存 </button>
+                <button type="button" class="btn btn-default"  data-dismiss="modal"> 取消 </button>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
 {% block scripts %}
    <script type="text/javascript" src="{% static 'lib/js/bootstrap-table.min.js' %}"></script>

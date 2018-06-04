@@ -4,7 +4,7 @@ from django.http.response import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 
-from .models import Product, EnterStorage, StorageInfo, Customer, Order, OrderDetail
+from .models import Product, EnterStorage, StorageInfo, Customer, Order, OrderDetail,Loss
 
 
 def product_list(request):
@@ -280,4 +280,20 @@ def storage_list(request):
 
 
 def loss_list(request):
-    return render(request, 'storage/loss_list.html')
+    products = Product.objects.all()
+    return render(request, 'storage/loss_list.html',{'products': products})
+
+def loss_add(request):
+    model = Loss()
+    model.create_at = request.POST.get('create_at')
+    model.product_id = request.POST.get('product')
+    model.number = request.POST.get('number')
+    model.desc = request.POST.get('desc')
+    model.user = request.user
+    model.state = 0
+    model.save()
+    return JsonResponse({"code": 200})
+
+def get_loss_list(request):
+    models = Loss.objects.all()
+    return JsonResponse({'code': 200, 'data':[c.to_dict() for c in models]})

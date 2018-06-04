@@ -343,6 +343,11 @@ class Loss(models.Model, DictMixin):
     check_date = models.DateTimeField(auto_now_add=True)
     check_desc = models.CharField(max_length=50)
 
+    @classmethod
+    def get_info(cls):
+        rows = cls.objects.all()
+        return rows
+
     class Meta:
         verbose_name = "报损"
         default_permissions = ()

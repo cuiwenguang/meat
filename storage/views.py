@@ -258,7 +258,7 @@ def enter_stat(request):
 def get_enter_datas(request):
     begin_data = request.GET.get("beginDate")  # 2018-05-01 00:00:00
     end_data = request.GET.get("endDate")  # 2018-05-01 23:59:59
-    data = Product.get_stat_data(begin_data, end_data)
+    data = EnterStorage.get_stat_data(begin_data, end_data)
     return JsonResponse({"code": 200, "data": data})
 
 
@@ -270,6 +270,7 @@ def get_out_datas(request):
     begin_data = request.GET.get("beginDate")  # 2018-05-01 00:00:00
     end_data = request.GET.get("endDate")  # 2018-05-01 23:59:59
     data = Order.get_stat_data(begin_data, end_data)
+    print(data)
     return JsonResponse({"code": 200, "data": data})
 
 

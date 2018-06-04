@@ -14,8 +14,8 @@ $(function () {
     $("#weekday").click(function () {
             // beginWeek = getWeek(0);
             // endWeek = getWeek(7);
-            beginWeek = '2018-05-28 00:00:00';
-            endWeek = '2018-06-03 23:59:59';
+            beginWeek = '2018-06-04 00:00:00';
+            endWeek = '2018-06-10 23:59:59';
             console.log(beginWeek, endWeek)
             timeSpan = {"beginDate": beginWeek, "endDate": endWeek}
             $("#tbody").html("");
@@ -47,6 +47,7 @@ function request(timeSpan) {
         data: timeSpan,
         success: function (res) {
             if (res.code == 200) {
+                console.log(res.data)
                 respData = res.data
             }
         }
@@ -83,11 +84,11 @@ function updateGUI(data) {
         labels:name
 
     };
-    /*
+
     myLineChart = new Chart(ctx,{
         type:"pie",
         data:data,
-    });*/
+    });
 
     //初始化柱状图
     var ctx, data, myBarChart;

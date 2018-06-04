@@ -4,7 +4,9 @@ $(function () {
     $("#day").click(function () {
             todaBeginDate = getToday(0);
             todaEndDate = getToday(1);
-            timeSpan = {"beginDate": todaBeginDate, "endDate": todaEndDate}
+            console.log(todaBeginDate);
+            console.log(todaEndDate);
+            timeSpan = {"beginDate": todaBeginDate, "endDate": todaEndDate};
             $("#tbody").html("");
             var data = request(timeSpan)
             updateGUI(data)

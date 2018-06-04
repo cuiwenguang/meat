@@ -174,6 +174,21 @@ class EnterStorage(models.Model, DictMixin):
             "rows": [e.to_dict() for e in data]
         }
 
+    @classmethod
+    def get_stat_data(cls, begin, end):
+        """获取出库统计数据"""
+        cursor = connection.cursor()
+        cursor.execute(stat_enter_sql.format(begin, end))
+        result = cursor.fetchall()
+        ret = []
+        for item in result:
+            ret.append({
+                "name": item[0],
+                "total_number": item[2],
+                "total_price": item[3]
+            })
+        return ret
+
 
 class Customer(models.Model, DictMixin):
     """出库收货单位"""

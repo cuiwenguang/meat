@@ -14,8 +14,8 @@ $(function () {
     $("#weekday").click(function () {
             // beginWeek = getWeek(0);
             // endWeek = getWeek(7);
-            beginWeek = '2018-05-28 00:00:00';
-            endWeek = '2018-06-03 23:59:59';
+            beginWeek = '2018-06-04 00:00:00';
+            endWeek = '2018-06-10 23:59:59';
             console.log(beginWeek, endWeek)
             timeSpan = {"beginDate": beginWeek, "endDate": endWeek}
             $("#tbody").html("");

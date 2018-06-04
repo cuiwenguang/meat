@@ -95,7 +95,7 @@ modules = [
             "parent": 0,
             "children": [
                 {
-                    "name": "产品",
+                    "name": "产品管理",
                     "url": "/storage/product/list",
                     "icon": "",
                     "label": "storage",
@@ -105,7 +105,7 @@ modules = [
                     "display": True,
                 },
                 {
-                    "name": "入库",
+                    "name": "产品入库",
                     "url": "/storage/enter",
                     "icon": "",
                     "label": "storage",
@@ -115,7 +115,7 @@ modules = [
                     "display": True,
                 },
                 {
-                    "name": "出库记录",
+                    "name": "销售管理",
                     "url": "/storage/order",
                     "icon": "",
                     "label": "storage",
@@ -135,7 +135,7 @@ modules = [
                     "display": True,
                 },
                 {
-                    "name": "盘库",
+                    "name": "库存盘点",
                     "url": "/storage/info",
                     "icon": "",
                     "label": "storage",

@@ -105,8 +105,8 @@ function showPrint(id) {
                 if (res.code==200){
                     $("#totalNumber").html(res.data.total_number);
                     $("#totalPrice").html(res.data.total_price);
-                    $("#sg_datetime").html(res.data.sg_datetime);
-                    $("#sg_no").html(res.data.sg_no);
+                    $("#span_datetime").html(res.data.sg_datetime);
+                    $("#span_no").html(res.data.sg_no);
                 }
             }
         });

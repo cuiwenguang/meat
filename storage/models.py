@@ -331,3 +331,21 @@ class OrderDetail(models.Model, DictMixin):
     class Meta:
         default_permissions = ()
 
+
+class Loss(models.Model, DictMixin):
+    create_at = models.DateTimeField(auto_now_add=True)
+    product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
+    number = models.IntegerField(default=0)
+    desc = models.CharField(max_length=100)
+    state = models.IntegerField(default=0) # 0 申请， 1 审核通过， 2 不通过
+    user = models.ForeignKey(User, related_name='user', on_delete=models.SET_NULL, null=True)
+    check_user = models.ForeignKey(User,related_name='check_user', on_delete=models.SET_NULL, null=True)
+    check_date = models.DateTimeField(auto_now_add=True)
+    check_desc = models.CharField(max_length=50)
+
+    class Meta:
+        verbose_name = "报损"
+        default_permissions = ()
+        permissions = (
+            ("loss_list", "查看"),
+        )

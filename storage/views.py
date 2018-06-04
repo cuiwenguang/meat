@@ -278,3 +278,6 @@ def storage_list(request):
     rows = StorageInfo.get_info()
     return render(request, 'storage/storage_list.html', {"rows": rows})
 
+
+def loss_list(request):
+    return render(request, 'storage/loss_list.html')

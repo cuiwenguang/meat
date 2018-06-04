@@ -1,0 +1,58 @@
+{% extends 'layout.html' %}
+{% load staticfiles %}
+{% block styles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'lib/css/bootstrap-table.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'lib/css/bootstrapValidator.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'lib/css/daterangepicker.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'lib/css/bootstrap-multiselect.css' %}">
+{% endblock %}
+{% block content %}
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title"> 库存盘点 </div>
+            <div class="pull-right card-action">
+                <div role="group">
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-9">
+                    <table id="tableOrder" class="table">
+                        <thead>
+                        <tr>
+                            <th data-field="id">产品编号</th>
+                            <th data-field="create_at">名称</th>
+                            <th data-field="id">规格</th>
+                            <th data-field="id">价格</th>
+                            <th data-field="customer">库存数量</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in rows %}
+                            <tr>
+                                <td>{{ row.product.code }}</td>
+                                <td>{{ row.product.name }}</td>
+                                <td>{{ row.product.standard }}</td>
+                                <td>{{ row.product.price }}</td>
+                                <td>{{ row.number }}</td>
+                            </tr>
+                            {% endfor %}
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>`
+{% endblock %}
+{% block scripts %}
+    <script type="text/javascript" src="{% static 'lib/js/bootstrap-table.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'lib/js/bootstrap-table-zh-CN.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'lib/js/bootstrapValidator.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'lib/js/moment.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'lib/js/daterangepicker.js' %}"></script>
+    <script type="text/javascript" src="{% static 'lib/js/bootstrap-multiselect.js' %}"></script>
+    <script type="text/javascript" src="{% static 'lib/js/jquery.tmpl.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/datapicker.js' %}"></script>
+{% endblock %}

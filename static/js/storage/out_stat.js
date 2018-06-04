@@ -47,7 +47,6 @@ function request(timeSpan) {
         data: timeSpan,
         success: function (res) {
             if (res.code == 200) {
-                console.log(res.data)
                 respData = res.data
             }
         }
@@ -84,14 +83,15 @@ function updateGUI(data) {
         labels:name
 
     };
+    /*
     myLineChart = new Chart(ctx,{
         type:"pie",
         data:data,
-    });
+    });*/
 
     //初始化柱状图
     var ctx, data, myBarChart;
-    Chart.defaults.global.responsive = true;
+    //Chart.defaults.global.responsive = true;
     ctx = $('#bar-chart').get(0).getContext('2d');
     data = {
         labels: name,
@@ -111,6 +111,7 @@ function updateGUI(data) {
                     }
                 }
             }
+
     myBarChart = new Chart(ctx,{
         type:"bar",
         data:data,

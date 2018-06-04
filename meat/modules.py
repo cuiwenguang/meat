@@ -114,6 +114,16 @@ modules = [
                     "parent": 3,
                     "display": True,
                 },
+{
+                    "name": "盘库",
+                    "url": "/storage/info",
+                    "icon": "",
+                    "label": "storage",
+                    "model": "",
+                    "perimission": "storage_list",
+                    "parent": 3,
+                    "display": True,
+                },
                 {
                     "name": "出库记录",
                     "url": "/storage/order",

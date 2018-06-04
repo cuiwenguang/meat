@@ -216,3 +216,5 @@ def get_sg_no():
     seq = Sequence.get(pre)
     s = "".join(['0'] * (4 - len(str(seq))))
     return "".join((pre, s, str(seq)))
+
+

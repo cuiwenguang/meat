@@ -6,7 +6,7 @@ from .views import (product_list, get_products, post_product,
                     order, order_edit, post_order, get_orders, delete_order,
                     get_details, detail_list, customer_search,
                     order_analysis, show_product, edit_product, enter_stat, get_enter_datas, out_stat, get_out_datas,
-                    get_order_list)
+                    get_order_list, storage_list)
 
 urlpatterns = [
     path('product/list', product_list, name="product_list"),
@@ -18,6 +18,7 @@ urlpatterns = [
     path('delproduct', del_product, name="del_product"),
     path('createbarcode', create_barcode, name="create_barcode"),
 
+    path("info", storage_list, name="storage_list"),
     path("enter", storage_enter, name="storage_enter"),
     path("post_enter", post_enter_storage, name="post_enter_storage"),
     path("getenterdata", get_enter_data, name="get_enter_data"),

@@ -114,6 +114,15 @@ class StorageInfo(models.Model, DictMixin):
     class Meta:
         verbose_name = '库存'
         default_permissions = ()
+        permissions = (
+            ("storage_list", "盘库"),
+        )
+
+    @classmethod
+    def get_info(cls):
+        """盘点库存信息"""
+        rows = cls.objects.all()
+        return rows
 
     @classmethod
     def update_storage(cls, product_id, number):

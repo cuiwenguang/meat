@@ -7,13 +7,13 @@ $(function () {
     // 根据数量初始化皮重
     var pz = parseInt($("#number").val()) * parseFloat($("#p_weight").data("single"));
     $("#p_weight").val(pz)
-    $("#number").blur(changeNumber);
-
+    $("#number").keyup(changeNumber);
+    $("#number").change(changeNumber);
     //根据毛重和皮重计算净重，测试代码，以后回通过传感器自动获取
     var jz = parseFloat($("#m_weight").val()) - parseFloat($("#p_weight").val());
     if(jz<0) jz=0;
     $("#weight").val(jz.toFixed(2));
-    $("#m_weight").blur(changeWeight);
+    $("#m_weight").keyup(changeWeight);
 
     // 绑定表格
     tableBind();

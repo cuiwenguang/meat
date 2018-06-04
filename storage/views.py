@@ -273,3 +273,7 @@ def get_out_datas(request):
     return JsonResponse({"code": 200, "data": data})
 
 
+def storage_list(request):
+    rows = StorageInfo.get_info()
+    return render(request, 'storage/storage_list.html', {"rows": rows})
+

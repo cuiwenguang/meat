@@ -335,6 +335,11 @@ class OrderDetail(models.Model, DictMixin):
 
 
 class Loss(models.Model, DictMixin):
+    state_choice = (
+        (0, "申请"),
+        (1, "审核通过"),
+        (2, "不通过"),
+    )
     create_at = models.DateTimeField(auto_now_add=True)
     product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
     number = models.IntegerField(default=0)
@@ -344,6 +349,18 @@ class Loss(models.Model, DictMixin):
     check_user = models.ForeignKey(User,related_name='check_user', on_delete=models.SET_NULL, null=True)
     check_date = models.DateTimeField(auto_now_add=True)
     check_desc = models.CharField(max_length=50)
+
+    @classmethod
+    def search(cls, limit, offset, **condition):
+        q = models.Q()
+        for k, v in condition.items():
+            q.add(models.Q(**{k: v}), models.Q.AND)
+        total = cls.objects.filter(q).count()
+        rows = cls.objects.filter(q)[offset:offset + limit]
+        return {
+            "total": total,
+            "rows": [o.to_dict() for o in rows]
+        }
 
     @classmethod
     def get_info(cls):

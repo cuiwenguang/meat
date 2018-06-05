@@ -3,6 +3,8 @@
 {% block styles %}
 <link rel="stylesheet" type="text/css" href="{% static 'lib/css/bootstrap-table.min.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'lib/css/bootstrapValidator.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'lib/css/daterangepicker.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'lib/css/bootstrap-multiselect.css' %}">
 {% endblock %}
 {% block content %}
 <div class="card">
@@ -15,29 +17,75 @@
         </div>
     </div>
     <div class="card-body">
-        <table id="lossList" class="table">
-            <thead>
-                <tr>
-                    <th data-field="create_at">提交时间</th>
-                    <th data-field="product_id">产品名称</th>
-                    <th data-field="number">数量</th>
-                    <th data-field="desc">报销原因</th>
-                    <th data-field="state">状态</th>
-                    <th data-field="check_date">审核日期</th>
-                    <th data-field="check_desc">审核描述</th>
-                    <th data-field="check_user_id">审核人</th>
-                    <th data-field="user_id">提交人</th>
-                    <th data-field="id" data-formatter="fmt.optFormatter">操作</th>
-                </tr>
-            </thead>
-        </table>
-        <template id="rowButtons">
-            <div class="table-button">
-                {% if perms.storage.post_product %}
-                    <a href='javascript:showEdit(${id})'> 审核 </a>
-                {% endif %}
+        <div class="row">
+            <div class="col-sm-9">
+                <table id="tableLoss" class="table">
+                    <thead>
+                        <tr>
+                            <th data-field="id">报损编号</th>
+                            <th data-field="create_at">提交时间</th>
+                            <th data-field="product" data-formatter="fmt.productFormatter">产品名称</th>
+                            <th data-field="number">数量</th>
+                            <th data-field="desc">报销原因</th>
+                            <th data-field="state" data-formatter="fmt.stateFormatter">状态</th>
+                            <th data-field="check_date">审核日期</th>
+                            <th data-field="check_desc">审核描述</th>
+                            <th data-field="check_user">审核人</th>
+                            <th data-field="user">申请人</th>
+                            <th data-field="id" data-formatter="fmt.optFormatter">操作</th>
+                        </tr>
+                    </thead>
+                </table>
+                <template id="rowButtons">
+                    <div class="table-button">
+                        {% if perms.storage.post_product %}
+                            <a href='javascript:checkEdit(${id})'> 审核 </a>
+                        {% endif %}
+                        {% if perms.raw.collect_edit %}
+                            <a href='javascript:showEdit(${id})'>编辑</a>
+                        {% endif %}
+                    </div>
+                </template>
             </div>
-        </template>
+         <div class="col-sm-3">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">查询</div>
+                        <div class="panel-body">
+                            <form class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="control-label col-sm-3" for="state">状态</label>
+                                    <div class="col-sm-9">
+                                        <select id="state" name="state" multiple="multiple">
+                                            <option value="0">申请</option>
+                                            <option value="1">审核通过</option>
+                                            <option value="1">不通过</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-3" for="create_at">时间</label>
+                                    <div class="col-sm-9">
+                                        <input class="form-control" id="create_at" name="create_at">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-3" for="user_name">申请人</label>
+                                    <div class="col-sm-9">
+                                        <input class="form-control" id="user_name" name="user_name">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-9 col-sm-offset-3">
+                                        <button type="button" id="btnSearch" class="btn btn-primary"><span
+                                                class="fa fa-search"></span>查询
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+        </div>
     </div>
 </div>
 <div class="modal fade" id="frmCreate" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="添加损耗">
@@ -51,12 +99,6 @@
                 <form id="frmProduct" class="form-horizontal">
                     {% csrf_token %}
                     <input type="hidden" id="id" name="id" value="0" />
-                     <div class="form-group">
-                        <label for="price" class="col-sm-4 control-label">日期</label>
-                        <div class="col-sm-8">
-                            <input type="date" class="form-control" id="create_at" name="create_at">
-                        </div>
-                    </div>
                     <div class="form-group">
                         <label for="product" class="col-sm-4 control-label">名称</label>
                         <div class="col-sm-8">
@@ -68,13 +110,13 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="standard" class="col-sm-4 control-label">数量</label>
+                        <label for="number" class="col-sm-4 control-label">数量</label>
                         <div class="col-sm-8">
                             <input class="form-control" id="number" name="number" value="" type="number">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="packing" class="col-sm-4 control-label">损耗原因</label>
+                        <label for="desc" class="col-sm-4 control-label">损耗原因</label>
                         <div class="col-sm-8">
                             <input class="form-control" id="desc" name="desc" value="">
                         </div>
@@ -82,7 +124,42 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" id="btnSave" class="btn btn-primary" data-dismiss="modal"> 保存 </button>
+                <button type="button" id="btnSave" class="btn btn-primary"> 保存 </button>
+                <button type="button" class="btn btn-default"  data-dismiss="modal"> 取消 </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="frmCheck" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="审核">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">审核编辑</h4>
+            </div>
+            <div class="modal-body">
+                <form id="frmChecks" class="form-horizontal">
+                    {% csrf_token %}
+                    <input type="hidden" id="code" name="code" />
+                    <div class="form-group">
+                        <label for="state" class="col-sm-4 control-label">审核意见</label>
+                        <div class="col-sm-8">
+                            <select class="form-control" id="state" name="state" value="" required>
+                                <option value="1">通过</option>
+                                <option value="2">不通过</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="check_desc" class="col-sm-4 control-label">审核描述</label>
+                        <div class="col-sm-8">
+                            <input class="form-control" id="check_desc" name="check_desc" value="">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnCheck" class="btn btn-primary"> 保存 </button>
                 <button type="button" class="btn btn-default"  data-dismiss="modal"> 取消 </button>
             </div>
         </div>
@@ -93,6 +170,10 @@
    <script type="text/javascript" src="{% static 'lib/js/bootstrap-table.min.js' %}"></script>
    <script type="text/javascript" src="{% static 'lib/js/bootstrap-table-zh-CN.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'lib/js/bootstrapValidator.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'lib/js/moment.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'lib/js/daterangepicker.js' %}"></script>
+     <script type="text/javascript" src="{% static 'lib/js/bootstrap-multiselect.js' %}"></script>
     <script type="text/javascript" src="{% static 'lib/js/jquery.tmpl.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/datapicker.js' %}"></script>
    <script type="text/javascript" src="{% static 'js/storage/loss_list.js' %}"></script>
 {% endblock %}

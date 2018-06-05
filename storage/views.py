@@ -300,7 +300,6 @@ def loss_list(request):
     products = Product.objects.all()
     return render(request, 'storage/loss_list.html',{'products': products})
 
-
 def loss_add(request):
     model = Loss()
     model.create_at = request.POST.get('create_at')
@@ -312,9 +311,44 @@ def loss_add(request):
     model.save()
     return JsonResponse({"code": 200})
 
-
 def get_loss_list(request):
-    models = Loss.objects.all()
-    return JsonResponse({'code': 200, 'data':[c.to_dict() for c in models]})
+    limit = int(request.GET.get("limit", 10))
+    offset = int(request.GET.get("offset", 0))
+    username = request.GET.get('user_name', "")
+    state = request.GET.getlist('state')
+    date_params = request.GET.get("create_at", "")
+    query_params = {}
+    if len(date_params) > 0:
+        try:
+            date_range = [datetime.datetime.strptime(dd.strip(), "%Y-%m-%d") for dd in date_params.split('~')]
+            date_range[1] = date_range[0] + datetime.timedelta(days=1)
+            query_params["create_at__range"]=date_range
+        except:
+            pass
+    if len(username)>0:
+        query_params["user__username"] = username
+    if len(state) > 0:
+        query_params["state__in"] = [int(s) for s in state]
+    data = Loss.search(limit=limit, offset=offset, **query_params)
+    #models = Loss.objects.all()
+    return JsonResponse(data)
 
+def get_loss(request):
+    id = request.POST.get('id')
+    model = Loss.objects.get(id=id)
+    return JsonResponse({"code": 200, "data" : model.to_dict()})
 
+def edit_loss(request):
+    id = request.POST.get('code')
+    model = Loss.objects.get(id=id)
+    model.check_date = datetime.datetime.now()
+    model.state = request.POST.get('state')
+    model.check_desc = request.POST.get('check_desc')
+    model.check_user = request.user
+    model.save()
+    if model.state==1:
+        a = StorageInfo.objects.get(product_id=model.product.id)
+        a.number = a.number - model.number
+        a.save()
+
+    return JsonResponse({"code":200})

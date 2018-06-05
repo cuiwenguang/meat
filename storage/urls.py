@@ -6,6 +6,8 @@ from .views import (product_list, get_products, post_product,
                     order, order_edit, post_order, get_orders, delete_order,
                     get_details, detail_list, customer_search,
                     order_analysis, show_product, edit_product, enter_stat, get_enter_datas, out_stat, get_out_datas,
+                    get_order_list, storage_list, loss_list, loss_add, get_loss_list, edit_loss, get_loss,
+                    get_bar_code_name,
                     get_order_list, storage_list, loss_list, loss_add, get_loss_list, get_bar_code_name)
 
 urlpatterns = [
@@ -42,5 +44,7 @@ urlpatterns = [
 
     path("loss/list", loss_list, name="loss_list"),
     path("loss/add", loss_add, name="loss_add"),
-    path("get/loss/list", get_loss_list, name="get_loss_list")
+    path("get/loss/list", get_loss_list, name="get_loss_list"),
+    path("edit/loss", edit_loss, name="edit_loss"),
+    path("get/loss", get_loss, name="get_loss"),
 ]

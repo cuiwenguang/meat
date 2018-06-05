@@ -2,6 +2,8 @@
 {% load staticfiles %}
 {% block styles %}
 <link rel="stylesheet" type="text/css" href="{% static 'lib/css/bootstrap-table.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'lib/css/daterangepicker.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'lib/css/bootstrap-multiselect.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'lib/css/bootstrapValidator.min.css' %}">
 {% endblock %}
 {% block content %}
@@ -34,6 +36,34 @@
                 </table>
             </div>
             <div class="col-sm-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">入库查询</div>
+                    <div class="panel-body">
+                        <form class="form-horizontal" method="get" id="formEnterSearch">
+                            <div class="form-group">
+                                <label class="control-label col-sm-3" for="packing">产品</label>
+                                <div class="col-sm-9">
+                                    <select class="form-control" id="mulSelProduct" name="mulSelProduct" multiple="multiple">
+                                        {% for p in products %}
+                                        <option value="{{ p.id }}">{{ p.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-3" for="number">时间</label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" id="rangeDate" name="rangeDate">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-9 col-sm-offset-3">
+                                    <button class="btn btn-primary" type="button" id="btnSearch"> 查询 </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
                 <div class="panel panel-default">
                     <div class="panel-heading">产品入库</div>
                     <div class="panel-body">
@@ -87,5 +117,10 @@
     <script type="text/javascript" src="{% static 'lib/js/bootstrap-table.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'lib/js/bootstrap-table-zh-CN.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'lib/js/bootstrapValidator.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'lib/js/moment.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'lib/js/daterangepicker.js' %}"></script>
+    <script type="text/javascript" src="{% static 'lib/js/bootstrap-multiselect.js' %}"></script>
+    <script type="text/javascript" src="{% static 'lib/js/jquery.tmpl.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/datapicker.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/storage/enter.js' %}"></script>
 {% endblock %}

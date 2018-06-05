@@ -1,7 +1,10 @@
 $(function () {
     $.get('/nav', function (data) {
         $("#sideMenu").html(data);
-
+        path = window.location.pathname;
+        var a = $("#sideMenu").find("a[href='"+path+"']");
+        var title = a.parents('.panel-collapse').prev('a');
+        title.click();
     });
 })
 

@@ -24,6 +24,16 @@ var save = function() {
     }
 }
 
+function delUser(id){
+    $.post('/system/user/delete', {id:id}, function (res) {
+        if(res.code == 200){
+            $("#tableUser").bootstrapTable('refersh');
+        } else {
+            // 发生错误
+        }
+    })
+}
+
 function validate() {
     $("#frmUser").bootstrapValidator({
         message: "无效的值",

@@ -166,9 +166,11 @@ class EnterStorage(models.Model, DictMixin):
     def search(cls, limit=10, offset=0, condition={}):
         begin = limit*offset
         end = begin + limit
-        data = cls.objects.all().order_by("-id")[begin:end]
-        count = cls.objects.count()
-
+        query = models.Q()
+        for k, v in condition.items():
+            query.add(models.Q(**{k: v}), query.AND)
+        data = cls.objects.filter(query).order_by("-id")[begin:end]
+        count = cls.objects.filter(query).count()
         return {
             "total": count,
             "rows": [e.to_dict() for e in data]

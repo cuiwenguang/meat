@@ -1,5 +1,4 @@
 $(function() {
-
   if (localStorage.menuState=="0"){
     $(".app-container").addClass("expanded");
   } else {

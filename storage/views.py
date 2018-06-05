@@ -77,17 +77,29 @@ def create_barcode(request):
 def get_product(request):
     code = request.GET.get("code")
     model = Product.get_by_code(code)
+    if model is None:
+        return JsonResponse({"code": 401, "message": "产品不存在" })
     return JsonResponse({"code": 200, "data": model.to_dict()})
 
 
 def storage_enter(request):
-    return render(request, 'storage/storage_enter.html')
+    products = Product.get_all()
+    return render(request, 'storage/storage_enter.html',
+                  {"products": products})
 
 
 def get_enter_data(request):
     limit = request.GET.get("limit", 10)
     offset = request.GET.get("offset", 0)
-    data = EnterStorage.search(int(limit), int(offset), None)
+    condation = {}
+    range_data = request.GET.get("rangeDate", '')
+    products = request.GET.getlist('products')
+    if len(range_data) > 0:
+        condation['create_at__range'] = range_data.split(' ~ ')
+    if len(products) > 0:
+        condation['product_id__in'] = products
+
+    data = EnterStorage.search(int(limit), int(offset), condation)
     return JsonResponse(data)
 
 
@@ -283,6 +295,7 @@ def loss_list(request):
     products = Product.objects.all()
     return render(request, 'storage/loss_list.html',{'products': products})
 
+
 def loss_add(request):
     model = Loss()
     model.create_at = request.POST.get('create_at')
@@ -294,6 +307,9 @@ def loss_add(request):
     model.save()
     return JsonResponse({"code": 200})
 
+
 def get_loss_list(request):
     models = Loss.objects.all()
     return JsonResponse({'code': 200, 'data':[c.to_dict() for c in models]})
+
+

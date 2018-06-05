@@ -1,4 +1,6 @@
 $(function () {
+    datepickerInit("#rangeDate");
+    $("#mulSelProduct").multiselect({});
     $("#formEnter").bootstrapValidator({
         message: "无效的值",
         feedbackIcons: {/*input状态样式图片*/
@@ -51,16 +53,41 @@ $("#btnSubmit").click(function () {
             });
     }
 });
-$("#code").blur(function () {
-    if ($("#code").val=="") return;
-    $.get("/storage/getproductbycode?code="+$("#code").val(), function (res) {
-        if(res.code == 200){
-            $("#id").val(res.data.id);
-            $("#name").val(res.data.name);
-            $("#standard").val(res.data.standard);
-            $("#packing").val(res.data.packing);
-        }
+
+$("#btnSearch").click(function () {
+    var d = $("#rangeDate").val();
+    var s = [];
+    $("#mulSelProduct option:selected").each(function () {
+        s.push(this.value);
     });
+    queryParams = {
+        rangeDate: d,
+        products: s
+    };
+    $("#tableEnter").bootstrapTable('refreshOptions', {
+        queryParams: queryParams,
+        ajaxOptions: {traditional: true}
+    });
+});
+
+
+$("#code").keyup(function () {
+    if ($("#code").val().length == 4) {
+        $.get("/storage/getproductbycode?code=" + $("#code").val(), function (res) {
+            if (res.code == 200) {
+                $("#id").val(res.data.id);
+                $("#name").val(res.data.name);
+                $("#standard").val(res.data.standard);
+                $("#packing").val(res.data.packing);
+            } else {
+                $("#id").val(0);
+                $("#name").val('');
+                $("#standard").val('');
+                $("#packing").val('');
+                alert("产品不存在");
+            }
+        });
+    }
 });
 
 var formatter = {
@@ -72,7 +99,7 @@ var formatter = {
         html = "<a href='javascript:del("+value+")'>删除</a>"
         return html;
     }
-}
+};
 
 function del(id) {
 

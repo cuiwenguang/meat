@@ -25,8 +25,8 @@ def nav(request):
 
 
 def user_list(request):
-
-    return render(request, "user_list.html")
+    groups = Group.objects.all()
+    return render(request, "user_list.html", {"groups": groups})
 
 
 def get_users(request):
@@ -49,16 +49,27 @@ def create_user(request):
     email = request.POST.get("email")
     password = request.POST.get("password")
     first_name = request.POST.get("first_name")
-    last_name = request.POST.get("last_name")
+    group_id = request.POST.get("group")
+    group = Group.objects.get(id=group_id)
 
-    user = User()
-    User.objects.create(username=username,email=email,
-                        password=password, first_name=first_name,
-                        last_name=last_name)
-
+    user = User.objects.create_user(username, email, password)
+    user.first_name = first_name
+    user.last_name = group.name
+    user.save()
+    user.groups.add(group_id)
     return JsonResponse({"code": 200, "message": "用户创建成功"})
+
+
+def remove_user(request):
+    pk = request.POST.get("id")
+    user = User.objects.get(id=pk)
+    user.delete()
+    return JsonResponse({"code": 200, "message": "删除成功"})
 
 
 def role_permission(request):
     roles = Group.objects.all()
     return render(request, 'permission.html', locals())
+
+
+

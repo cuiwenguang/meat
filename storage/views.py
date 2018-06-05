@@ -319,18 +319,12 @@ def get_loss_list(request):
     date_params = request.GET.get("create_at", "")
     query_params = {}
     if len(date_params) > 0:
-        try:
-            date_range = [datetime.datetime.strptime(dd.strip(), "%Y-%m-%d") for dd in date_params.split('~')]
-            date_range[1] = date_range[0] + datetime.timedelta(days=1)
-            query_params["create_at__range"]=date_range
-        except:
-            pass
+        query_params["create_at__range"]=date_params.split(' ~ ')
     if len(username)>0:
         query_params["user__username"] = username
     if len(state) > 0:
         query_params["state__in"] = [int(s) for s in state]
     data = Loss.search(limit=limit, offset=offset, **query_params)
-    #models = Loss.objects.all()
     return JsonResponse(data)
 
 def get_loss(request):

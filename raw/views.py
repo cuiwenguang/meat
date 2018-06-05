@@ -100,6 +100,7 @@ def get_col_total(request):
     info = CollectInfo.objects.get(id=id)
     return JsonResponse({"code": 200, "data": info.to_dict()})
 
+
 def collect_edit(request):
     id = request.GET.get("id")
     config = RawConfig.objects.first()
@@ -117,6 +118,14 @@ def collect_edit(request):
                       "details": details,
                       "collect_info_id": id,
                   })
+
+
+def collect_del(request):
+    id = request.GET.get("id")
+    collect_info = CollectInfo.objects.get(id=id)
+    collect_info.state = -1
+    collect_info.save()
+    return JsonResponse({"code":200})
 
 
 def collect_update(request):
@@ -237,6 +246,7 @@ def submit_collect(request):
     model.user = request.user
     model.state = 1
     model.save()
+
     return JsonResponse({"code": 200, "message": "称重记录保存成功", "data": CollectInfo().to_dict()})
 
 
@@ -269,7 +279,9 @@ def collect_payview(request):
         pay_model = PayInfo(pay_money=money, create_at=datetime.datetime.now(),
                             collect_info_id=id, user=request.user,
                             remark=remark)
+
         model = CollectInfo.objects.get(id=id)
+
         if money + PayInfo.get_pay_sum(id) == model.total_price:
             model.state = 3
         elif money + PayInfo.get_pay_sum(id) < model.total_price:
@@ -313,8 +325,7 @@ def collect_analyze(request):
         "chart": chart_data,
         "table": table_data
     }
-    return render(request,
-                  'raw/collect_analyze.html',
+    return render(request, 'raw/collect_analyze.html',
                   {
                       "data": ret
                   })

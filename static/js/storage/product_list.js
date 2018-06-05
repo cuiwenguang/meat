@@ -140,3 +140,33 @@ var formatter = {
         return html;
     }
 }
+
+
+$("#printBarCode").click(function () {
+    $("#bar-code").html("")
+    $.ajax({
+        url: "/storage/product/getcode",
+        success: function (res) {
+            if (res.code == 200) {
+                var list =res.data;
+                for (var i=0;i<list.length;i++){
+                    console.log(list[i].name)
+                    html = "<div class=\"bar-code\" style=\"width: 170px;text-align: center;float:left;\">\n" +
+                        "                        <img style=\"width: 160px;height: 60px;\" src=\"../../../static/barcode/69012345"+list[i].code+".png\">\n" +
+                        "                        <p style='font-size: 12px'>产品编号："+list[i].code+"</p>\n" +
+                        "                        <p style='font-size: 12px'>产品名："+list[i].name+"</p>\n" +
+                        "                    </div>";
+                    $("#bar-code").append(html)
+                }
+                $("#frmPrint").modal()
+            }
+        }
+    });
+})
+
+$("#btnPrint").click(function () {
+
+    document.body.innerHTML = document.getElementById('print-block').innerHTML;
+    window.print();
+    window.location.href = '/storage/product/list'
+})

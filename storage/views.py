@@ -58,6 +58,11 @@ def show_product(request):
     return JsonResponse({"code": 200, "data": model.to_dict()})
 
 
+def get_bar_code_name(request):
+    product_list = Product.objects.filter(state=1)
+    return JsonResponse({"code": 200, "data":[c.to_dict() for c in product_list]})
+
+
 def del_product(request):
     id = request.GET.get("id")
     Product.del_product(id)
@@ -283,6 +288,7 @@ def loss_list(request):
     products = Product.objects.all()
     return render(request, 'storage/loss_list.html',{'products': products})
 
+
 def loss_add(request):
     model = Loss()
     model.create_at = request.POST.get('create_at')
@@ -293,6 +299,7 @@ def loss_add(request):
     model.state = 0
     model.save()
     return JsonResponse({"code": 200})
+
 
 def get_loss_list(request):
     models = Loss.objects.all()

@@ -18,18 +18,21 @@
         </div>
     </div>
     <div class="card-body">
+        <button id="toggleView" class="btn btn-default">条码预览</button>
+        <button id="dataView" class="btn btn-default">数据预览</button>
         <table id="productTable" class="table">
-            <thead>
-                <tr>
-                    <th data-field="code">编号</th>
-                    <th data-field="name">名称</th>
-                    <th data-field="standard">规格</th>
-                    <th data-field="packing">包装</th>
-                    <th data-field="price">价格</th>
-                    <th data-field="remark">备注</th>
-                    <th data-field="id" data-formatter="formatter.optFormatter">操作</th>
-                </tr>
+            <thead id="thead">
+            <tr>
+                <th data-field="code">编号</th>
+                <th data-field="name">名称</th>
+                <th data-field="standard">规格</th>
+                <th data-field="packing">包装</th>
+                <th data-field="price">价格</th>
+                <th data-field="remark">备注</th>
+                <th data-field="id" data-formatter="formatter.optFormatter">操作</th>
+            </tr>
             </thead>
+            <tbody id="tbody"></tbody>
         </table>
         <template id="rowButtons">
             <div class="table-button">
@@ -41,6 +44,7 @@
                 {% endif %}
             </div>
         </template>
+
     </div>
 </div>
     <div class="modal fade" id="frmPrint" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="添加产品">

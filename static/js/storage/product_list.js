@@ -170,3 +170,31 @@ $("#btnPrint").click(function () {
     window.print();
     window.location.href = '/storage/product/list'
 })
+
+
+$("#toggleView").click(function () {
+    html = "<tr><td>编号</td><td>名称</td><td>条码</td></tr>"
+    $("#thead").html(html);
+    $("#tbody").html("");
+
+    $.ajax({
+        url: "/storage/product/getcode",
+        success: function (res) {
+            if (res.code == 200) {
+                var list =res.data;
+                for (var i=0;i<list.length;i++){
+                    message = "<tr><td>"+list[i].code+"</td><td>"+list[i].name+"</td><td>" +
+                        "<img style='width: 160px;height: 60px' src='../../../static/barcode/69012345"+list[i].code+".png'>" +
+                        "</td></tr>"
+                    $("#tbody").append(message)
+                }
+
+            }
+        }
+    });
+});
+
+
+$("#dataView").click(function () {
+    window.location.href="/storage/product/list"
+})

@@ -6,10 +6,11 @@ from .views import (product_list, get_products, post_product,
                     order, order_edit, post_order, get_orders, delete_order,
                     get_details, detail_list, customer_search,
                     order_analysis, show_product, edit_product, enter_stat, get_enter_datas, out_stat, get_out_datas,
-                    get_order_list, storage_list, loss_list, loss_add, get_loss_list)
+                    get_order_list, storage_list, loss_list, loss_add, get_loss_list, get_bar_code_name)
 
 urlpatterns = [
     path('product/list', product_list, name="product_list"),
+    path('product/getcode', get_bar_code_name, name="get_bar_code_name"),
     path('editproduct', edit_product, name="edit_product"),  # 编辑产品信息
     path('showproduct', show_product, name="update_product"),  # 更新产品信息
     path('getproducts', get_products, name="get_products"),

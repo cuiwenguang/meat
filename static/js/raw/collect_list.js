@@ -94,19 +94,42 @@ var tableFormatter = {
 }
 
 function showPrint(id) {
-    $("#collectDetailsTable").bootstrapTable({
-        "url": "/raw/collect/getcoldetail?id=" + id,
-    });
     $.ajax({
-        url: "/raw/collect/getcoltotal?id=" + id,
+        url: "/raw/collect/getcoldetail?id=" + id,
         method: "get",
         async: false,
         success: function (res) {
+            $("#tbody").html("");
             if (res.code == 200) {
-                $("#totalNumber").html(res.data.total_number);
-                $("#totalPrice").html(res.data.total_price);
-                $("#span_datetime").html(res.data.sg_datetime);
-                $("#span_no").html(res.data.sg_no);
+                var data_list= res.data,sum_number=0,sum_money=0;
+                for (var i=0; i<data_list.length;i++){
+                    data = "<tr><td>"+data_list[i].name+"</td><td>"+data_list[i].m_weight+"</td><td>"+data_list[i].p_weight+"</td>" +
+                        "<td>"+data_list[i].weight+"</td><td>kg</td><td>"+data_list[i].price+"</td><td>"+data_list[i].number+"</td>" +
+                        "<td>"+data_list[i].money+"</td></tr>";
+                    sum_number += data_list[i].number;
+                    sum_money += data_list[i].money;
+                    $("#tbody").append(data);
+                }
+                $("#span_datetime").html(res.info.sg_datetime);
+                $("#span_no").html(res.info.sg_no);
+                count ="<tr>\n" +
+                    "                                    <td>合计:</td>\n" +
+                    "                                    <td colspan=\"5\" style=\"text-align: center\">\n" +
+                    "                                        <span style=\"letter-spacing: 25px\">\n" +
+                    "                                        <span>拾</span>\n" +
+                    "                                        <span>万</span>\n" +
+                    "                                        <span>千</span>\n" +
+                    "                                        <span>百</span>\n" +
+                    "                                        <span>拾</span>\n" +
+                    "                                        <span>元</span>\n" +
+                    "                                        <span>角</span>\n" +
+                    "                                        <span>分</span>\n" +
+                    "                                    </span>\n" +
+                    "                                    </td>\n" +
+                    "                                    <td>"+sum_number+"</td>\n" +
+                    "                                    <td>"+sum_money+"</td>\n" +
+                    "                                </tr>"
+                $("#tbody").append(count);
             }
         }
     });

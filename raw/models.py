@@ -171,6 +171,24 @@ class CollectDetail(models.Model, DictMixin):
     class Meta:
         default_permissions = ()
 
+    @classmethod
+    def get_collect_detail_data(cls, id):
+        cursor = connection.cursor()
+        cursor.execute(get_collect_detail_sql.format(id))
+        result = cursor.fetchall()
+        ret = []
+        for item in result:
+            ret.append({
+                "name": item[0],
+                "m_weight": item[1],
+                "p_weight": item[2],
+                "weight": item[3],
+                "price": item[4],
+                "number": item[5],
+                "money": item[6],
+            })
+        return ret
+
 
 class PayInfo(models.Model, DictMixin):
     collect_info = models.ForeignKey(CollectInfo, db_index=True, on_delete=models.CASCADE)

@@ -70,15 +70,34 @@ function showPrint(id) {
             data: {id:id},
             success: function (res) {
                 console.log(res.data)
-                dataList = res.data;
+                var dataList = res.data,sum_number=0,sum_price=0;
                 for (var i =0; i<dataList.length;i++){
                     html = "<tr><td>"+dataList[i].code+"</td><td>"+dataList[i].name+"</td><td>kg</td>" +
-                        "<td>"+dataList[i].number+"</td><td>"+dataList[i].price+"</td><td>"+dataList[i].money+"</td></tr>"
+                        "<td>"+dataList[i].price+"</td><td>"+dataList[i].number+"</td><td>"+dataList[i].money+"</td></tr>"
                     $("#tbody").append(html)
+                    sum_number += dataList[i].number;
+                    sum_price += dataList[i].money;
                 }
-
+                count="<tr>\n" +
+                    "                                    <td>合计</td>\n" +
+                    "                                    <td colspan=\"3\" style=\"text-align: center\">\n" +
+                    "                                        <span style=\"letter-spacing: 25px\">\n" +
+                    "                                            <span>拾</span>\n" +
+                    "                                            <span>万</span>\n" +
+                    "                                            <span>千</span>\n" +
+                    "                                            <span>百</span>\n" +
+                    "                                            <span>拾</span>\n" +
+                    "                                            <span>元</span>\n" +
+                    "                                        </span>\n" +
+                    "                                    </td>\n" +
+                    "                                    <td>"+sum_number+"</td>\n" +
+                    "                                    <td>"+sum_price+"</td>\n" +
+                    "                                </tr>"
+                $("#tbody").append(count)
             }
         });
+    $(".today").html(getToday(3));
+    $("#orderId").html("X20181234"+id)
     $("#frmCreate").modal();
 }
 

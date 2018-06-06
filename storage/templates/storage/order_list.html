@@ -1,6 +1,8 @@
 {% extends 'layout.html' %}
 {% load staticfiles %}
+{% load common_tag %}
 {% block styles %}
+
     <link rel="stylesheet" type="text/css" href="{% static 'lib/css/bootstrap-table.min.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'lib/css/bootstrapValidator.min.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'lib/css/daterangepicker.css' %}">
@@ -20,13 +22,13 @@
                         <div class="title">
                             <div id="alertContainer"></div>
                             <div id="printContainer" style="text-align: center">
-                                <h2 style="letter-spacing: 5px">锡林浩特市蒙辰畜产品有限公司 <span
+                                <h2 style="letter-spacing: 5px">{% company 'NAME' %} <span
                                         style="margin-left: 20px;font-size: 15px">销售单</span></h2>
                             </div>
                         </div>
                         <div>
-                            <div class="col-sm-6">单据日期：2010-05-11</div>
-                            <div class="col-sm-6">单据编号：X9544575</div>
+                            <div class="col-sm-6">单据日期: <span class="today"></span> </div>
+                            <div class="col-sm-6">单据编号：<span id="orderId"></span></div>
                         </div>
                         <div>
                             <div class="col-sm-6">购买单位：郝万军</div>
@@ -39,16 +41,16 @@
                                     <th>商品编号</th>
                                     <th>商品名称</th>
                                     <th>单位</th>
-                                    <th>数量</th>
                                     <th>单价</th>
+                                    <th>数量</th>
                                     <th>金额</th>
                                 </tr>
                                 </thead>
                                 <tbody id="tbody"></tbody>
                             </table>
-                            <div style="margin-bottom: 20px">
+                            <div style="margin:-15px 0 40px 0">
                                 <div class="col-sm-6">经手人：郝万军</div>
-                                <div class="col-sm-6">打印日期：<span>2018-06-03</span></div>
+                                <div class="col-sm-6">打印日期：<span class="today"></span></div>
                             </div>
                         </div>
                     </div>
@@ -151,5 +153,6 @@
     <script type="text/javascript" src="{% static 'lib/js/bootstrap-multiselect.js' %}"></script>
     <script type="text/javascript" src="{% static 'lib/js/jquery.tmpl.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/datapicker.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/date.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/storage/order_list.js' %}"></script>
 {% endblock %}

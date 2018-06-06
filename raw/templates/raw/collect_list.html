@@ -1,5 +1,6 @@
 {% extends 'layout.html' %}
 {% load staticfiles %}
+{% load common_tag %}
 {% block styles %}
     <link rel="stylesheet" type="text/css" href="{% static 'lib/css/bootstrap-table.min.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'lib/css/daterangepicker.css' %}">
@@ -19,41 +20,30 @@
                         <div class="title">
                             <div id="alertContainer"></div>
                             <div id="printContainer" style="text-align: center">
-                                <h2 style="letter-spacing: 5px">锡林浩特市蒙辰畜产品有限公司</h2>
-                                <div style="text-align: center">收购时间：<span id="span_datetime"></span>收购编号：<span
-                                        id="span_no"></span></div>
+                                <h2 style="letter-spacing: 5px">{% company 'NAME' %}</h2>
+                                <div>
+                                    <div class="col-sm-6">收购时间：<span id="span_datetime"></span></div>
+                                    <div class="col-sm-6">收购编号：<span id="span_no"></span></div>
+                                </div>
                             </div>
                         </div>
                         <div>
                             <table id="collectDetailsTable" class="table table-bordered">
                                 <thead>
-                                <tr>
-                                    <th data-field="category.name">名称</th>
-                                    <th data-field="m_weight">毛重</th>
-                                    <th data-field="p_weight">皮重</th>
-                                    <th data-field="weight">净重</th>
-                                    <th data-field="kg" data-formatter="kg">单位</th>
-                                    <th data-field="price">单价</th>
-                                    <th data-field="number">羊数</th>
-                                    <th data-field="number">合计金额</th>
-                                </tr>
+                                    <tr>
+                                        <th data-field="name">名称</th>
+                                        <th data-field="m_weight">毛重</th>
+                                        <th data-field="p_weight">皮重</th>
+                                        <th data-field="weight">净重</th>
+                                        <th data-field="kg" data-formatter="kg">单位</th>
+                                        <th data-field="price">单价(元)</th>
+                                        <th data-field="number">羊数(只)</th>
+                                        <th data-field="money">合计金额(元)</th>
+                                    </tr>
                                 </thead>
+                                <tbody id="tbody"></tbody>
                             </table>
-                            <div class="row" style="margin-left: 10px">
-                                <div style="margin: 10px 0">合计：
-                                    <span style="letter-spacing: 25px;margin-left: 25px">
-                                        <span>拾</span>
-                                        <span>万</span>
-                                        <span>千</span>
-                                        <span>百</span>
-                                        <span>拾</span>
-                                        <span>元</span>
-                                        <span>角</span>
-                                        <span>分</span>
-                                    </span>
-                                    总价：<span id="totalPrice">123556</span>&nbsp;数量：<span id="totalNumber">26</span>
-
-                                </div>
+                            <div style="margin: -15px 0 40px 0">
                                 <p style="width: 230px;float: left;">开票人：</p>
                                 <p style="width: 200px;float: left;">货主：</p>
                                 <p style="width: 200px;float: left;">财会：</p>

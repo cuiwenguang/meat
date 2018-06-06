@@ -5,7 +5,7 @@ from .views import (collect_list, get_collect_list, get_sub_detial,
                     submit_collect, collect_payview,
                     config_edit, post_config,
                     category_list, get_categories, get_category_by_id,
-                    post_category, delete_category, get_col_detail, get_col_total, collect_edit, collect_update,
+                    post_category, delete_category, get_col_detail, collect_edit, collect_update,
                     collect_update_info, collect_delcollectinfo, collect_update_customer, stat_list, get_stat_data,
                     collect_analyze, collect_del)
 
@@ -13,7 +13,7 @@ urlpatterns = [
     path('collect/list', collect_list, name="collect_list"),
 
     path('collect/getcoldetail', get_col_detail, name="get_col_tail"),  # 打印报表之获取详细
-    path('collect/getcoltotal', get_col_total, name="get_col_total"),  # 打印报表之打印信息
+    # path('collect/getcoltotal', get_col_total, name="get_col_total"),  # 打印报表之打印信息
 
     path('collect/edit', collect_edit, name="collect_edit"),  # 编辑信息
     path('collect/del', collect_del, name="collect_del"),  # 删除信息

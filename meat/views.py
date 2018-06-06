@@ -6,6 +6,7 @@ from django.contrib.auth.views import logout as sys_logout
 
 from .modules import modules
 
+
 def logout(request):
     sys_logout(request)
     return redirect(index)
@@ -70,6 +71,7 @@ def remove_user(request):
 def role_permission(request):
     roles = Group.objects.all()
     return render(request, 'permission.html', locals())
+
 
 
 

@@ -2,7 +2,7 @@ from django.urls import path
 
 from .views import (product_list, get_products, post_product,
                     del_product, create_barcode, get_product,
-                    storage_enter, post_enter_storage, get_enter_data,
+                    storage_enter, post_enter_storage, get_enter_data, delete_enter_storage,
                     order, order_edit, post_order, get_orders, delete_order,
                     get_details, detail_list, customer_search,
                     order_analysis, show_product, edit_product, enter_stat, get_enter_datas, out_stat, get_out_datas,
@@ -24,6 +24,7 @@ urlpatterns = [
     path("info", storage_list, name="storage_list"),
     path("enter", storage_enter, name="storage_enter"),
     path("post_enter", post_enter_storage, name="post_enter_storage"),
+    path("enter/delete", delete_enter_storage, name="delete_enter_storage"),
     path("getenterdata", get_enter_data, name="get_enter_data"),
     path("order", order, name="order"),
     path("order/edit", order_edit, name="order_edit"),

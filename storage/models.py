@@ -139,11 +139,11 @@ class StorageInfo(models.Model, DictMixin):
     def cancel_enter(cls, enter_id):
         model = EnterStorage.objects.get(id=enter_id)
         number = model.number
-        product_id = - model.product.id
+        product_id = model.product.id
         with transaction.atomic():
             model.delete()
             s = cls.objects.filter(product_id=product_id).first()
-            s.number += number
+            s.number -= number
             s.save()
 
 
@@ -164,12 +164,10 @@ class EnterStorage(models.Model, DictMixin):
 
     @classmethod
     def search(cls, limit=10, offset=0, condition={}):
-        begin = limit*offset
-        end = begin + limit
         query = models.Q()
         for k, v in condition.items():
             query.add(models.Q(**{k: v}), query.AND)
-        data = cls.objects.filter(query).order_by("-id")[begin:end]
+        data = cls.objects.filter(query).order_by("-id")[offset:limit+offset]
         count = cls.objects.filter(query).count()
         return {
             "total": count,

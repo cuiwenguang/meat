@@ -119,6 +119,13 @@ def post_enter_storage(request):
     return JsonResponse({"code":200, "message": "入库成功"})
 
 
+@csrf_exempt
+def delete_enter_storage(request):
+    pk = request.POST.get("id")
+    StorageInfo.cancel_enter(pk)
+    return JsonResponse({"code":200, "message": "删除成功"})
+
+
 def cancel_enter_storage(request):
     pk = request.GET.get("id")
     StorageInfo.cancel_enter(pk)
@@ -300,6 +307,7 @@ def loss_list(request):
     products = Product.objects.all()
     return render(request, 'storage/loss_list.html',{'products': products})
 
+
 def loss_add(request):
     model = Loss()
     model.create_at = request.POST.get('create_at')
@@ -310,6 +318,7 @@ def loss_add(request):
     model.state = 0
     model.save()
     return JsonResponse({"code": 200})
+
 
 def get_loss_list(request):
     limit = int(request.GET.get("limit", 10))
@@ -327,10 +336,12 @@ def get_loss_list(request):
     data = Loss.search(limit=limit, offset=offset, **query_params)
     return JsonResponse(data)
 
+
 def get_loss(request):
     id = request.POST.get('id')
     model = Loss.objects.get(id=id)
     return JsonResponse({"code": 200, "data" : model.to_dict()})
+
 
 def edit_loss(request):
     id = request.POST.get('code')
@@ -340,7 +351,7 @@ def edit_loss(request):
     model.check_desc = request.POST.get('check_desc')
     model.check_user = request.user
     model.save()
-    if model.state==1:
+    if model.state == 1:
         a = StorageInfo.objects.get(product_id=model.product.id)
         a.number = a.number - model.number
         a.save()

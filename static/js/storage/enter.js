@@ -102,5 +102,9 @@ var formatter = {
 };
 
 function del(id) {
-
+    $.post('/storage/enter/delete', {id:id}, function (res) {
+        if (res.code == 200){
+            $("#tableEnter").bootstrapTable('refresh');
+        }
+    })
 }

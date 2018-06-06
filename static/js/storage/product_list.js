@@ -10,7 +10,13 @@ $(function () {
 
 function showEdit(id) {
     if (id == 0) {
-        return false;
+        $("#code").val(""),
+        $("#name").val(""),
+            $("#standard").val(""),
+            $("#packing").val(""),
+            $("#price").val(""),
+            $("#remark").val("")
+
     } else {
         $("#id").val(id);
         $.post("/storage/showproduct", $("#frmProduct").serialize(), function (ret) {

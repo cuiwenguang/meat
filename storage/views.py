@@ -307,10 +307,13 @@ def loss_list(request):
     products = Product.objects.all()
     return render(request, 'storage/loss_list.html',{'products': products})
 
-
 def loss_add(request):
-    model = Loss()
-    model.create_at = request.POST.get('create_at')
+    id = request.POST.get("id")
+    print(id)
+    if id == '0':
+        model = Loss()
+    else:
+        model = Loss.objects.get(id=id)
     model.product_id = request.POST.get('product')
     model.number = request.POST.get('number')
     model.desc = request.POST.get('desc')
@@ -318,7 +321,6 @@ def loss_add(request):
     model.state = 0
     model.save()
     return JsonResponse({"code": 200})
-
 
 def get_loss_list(request):
     limit = int(request.GET.get("limit", 10))
@@ -328,7 +330,7 @@ def get_loss_list(request):
     date_params = request.GET.get("create_at", "")
     query_params = {}
     if len(date_params) > 0:
-        query_params["create_at__range"]=date_params.split(' ~ ')
+        query_params["create_at__range"] = date_params.split(' ~ ')
     if len(username)>0:
         query_params["user__username"] = username
     if len(state) > 0:
@@ -336,24 +338,39 @@ def get_loss_list(request):
     data = Loss.search(limit=limit, offset=offset, **query_params)
     return JsonResponse(data)
 
-
 def get_loss(request):
     id = request.POST.get('id')
     model = Loss.objects.get(id=id)
     return JsonResponse({"code": 200, "data" : model.to_dict()})
 
-
 def edit_loss(request):
     id = request.POST.get('code')
-    model = Loss.objects.get(id=id)
-    model.check_date = datetime.datetime.now()
-    model.state = request.POST.get('state')
-    model.check_desc = request.POST.get('check_desc')
-    model.check_user = request.user
-    model.save()
-    if model.state == 1:
+    state1 = request.POST.get('state')
+    ids = id.split(',')
+    if len(ids) > 1:
+        for code in ids:
+            model = Loss.objects.get(id=code)
+            state = model.state
+            model.state = state1
+            update_storage(model, state)
+        models = Loss.objects.filter(id__in=ids).update(state=state1, check_date=datetime.datetime.now(), check_user=request.user)
+    else:
+        model = Loss.objects.get(id=id)
+        state = model.state
+        model.check_date = datetime.datetime.now()
+        model.state = state1
+        model.check_desc = request.POST.get('check_desc')
+        model.check_user = request.user
+        model.save()
+        update_storage(model, state)
+    return JsonResponse({"code":200})
+
+def update_storage(model,state):
+    if model.state == '1':
         a = StorageInfo.objects.get(product_id=model.product.id)
         a.number = a.number - model.number
         a.save()
-
-    return JsonResponse({"code":200})
+    if model.state == '2' and state == 1:
+        a = StorageInfo.objects.get(product_id=model.product.id)
+        a.number = a.number + model.number
+        a.save()

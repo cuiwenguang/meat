@@ -12,6 +12,7 @@
         <div class="card-title"> 报损信息 </div>
         <div class="pull-right card-action">
             <div role="group">
+                <button id="btnChecks" class="btn btn-primary" onclick="checkEdit(0)"> 批量审核 </button>
                <button id="btnEdit" class="btn btn-primary" onclick="showEdit(0)"> 添加 </button>
             </div>
         </div>
@@ -22,6 +23,7 @@
                 <table id="tableLoss" class="table">
                     <thead>
                         <tr>
+                            <th data-field="check"data-checkbox="true">全选</th>
                             <th data-field="id">报损编号</th>
                             <th data-field="create_at">提交时间</th>
                             <th data-field="product" data-formatter="fmt.productFormatter">产品名称</th>
@@ -39,10 +41,10 @@
                 <template id="rowButtons">
                     <div class="table-button">
                         {% if perms.storage.post_product %}
-                            <a href='javascript:checkEdit(${id})'> 审核 </a>
+                            <a id="a1" href='javascript:checkEdit(${id})'> 审核 </a>
                         {% endif %}
                         {% if perms.raw.collect_edit %}
-                            <a href='javascript:showEdit(${id})'>编辑</a>
+                            <a id="a2" href='javascript:showEdit(${id})'>编辑</a>
                         {% endif %}
                     </div>
                 </template>
@@ -58,7 +60,7 @@
                                         <select id="state" name="state" multiple="multiple">
                                             <option value="0">申请</option>
                                             <option value="1">审核通过</option>
-                                            <option value="1">不通过</option>
+                                            <option value="2">不通过</option>
                                         </select>
                                     </div>
                                 </div>

@@ -4,7 +4,7 @@ $(function () {
         "pagination": true,
         "sidePagination": "server",
         "pageList": [10, 15, 20, 25, 30],
-        "detailView": true,
+        "clickToSelect": true,
     });
     datepickerInit("#create_at");
     $("#state").multiselect({});
@@ -26,6 +26,7 @@ $(function () {
         });
     });
 });
+
 function showEdit(id) {
     if (id == 0) {
         $("#number").val('');
@@ -52,23 +53,37 @@ $("#btnSave").click(function () {
 });
 //审核
 function checkEdit(id) {
-    $("#code").val(id);
     $("#frmCheck").modal({});
+    if (id == 0) {
+        var getSelectRows = $("#tableLoss").bootstrapTable('getSelections', function (row) {
+            return row;
+        });
+        var ids = new Array();
+        for(var i=0;i<getSelectRows.length;i++){
+            ids[i] = getSelectRows[i].id;
+        }
+        $("#code").val(ids);
+    } else {
+        $("#code").val(id);
+    }
     $("#btnCheck").click(function () {
         $("#frmChecks").bootstrapValidator('validate');
         if ($("#frmChecks").data('bootstrapValidator').isValid()) {
-            $.post('/storage/edit/loss', $("#frmChecks").serialize(),function (res) {
-                if(res.code==200){
-                     window.location.href = '/storage/loss/list';
+            $.post('/storage/edit/loss', $("#frmChecks").serialize(), function (res) {
+                if (res.code == 200) {
+                    window.location.href = '/storage/loss/list';
                 }
             });
-        };
+        }
     });
 }
 var fmt = {
-    optFormatter: function (value) {
-       html = $('#rowButtons').tmpl({id:value}).prop("outerHTML");
-        return html;
+    optFormatter: function (value,row) {
+       html = $('#rowButtons').tmpl(row);
+       if(row.state==1){
+           html.find("#a2").remove()
+       }
+       return html.prop("outerHTML");
     },
     stateFormatter: function (value) {
         switch(value){
@@ -110,7 +125,8 @@ $(function () {
                         message:"数量不能为0",
                         min:1,
                         max:10000,
-                    }
+                    },
+
                 },
             },
             'desc': {
@@ -123,23 +139,4 @@ $(function () {
 
         }
     });
-    $("#frmChecks").bootstrapValidator({
-        message: "无效的值",
-        feedbackIcons: {
-            /*input状态样式图片*/
-            valid: 'glyphicon glyphicon-ok',
-            invalid: 'glyphicon glyphicon-remove',
-            validating: 'glyphicon glyphicon-refresh'
-        },
-        excuded: "disabled",
-         fields: {
-            'check_desc': {
-                validators: {
-                    notEmpty: {
-                        message: "审核描述不能为空"
-                    }
-                }
-            }
-         }
-    });
-})
+});

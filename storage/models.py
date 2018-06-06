@@ -365,9 +365,39 @@ class Loss(models.Model, DictMixin):
         rows = cls.objects.all()
         return rows
 
+
     class Meta:
         verbose_name = "报损"
         default_permissions = ()
         permissions = (
             ("loss_list", "查看"),
         )
+
+
+class Exchange(models.Model, DictMixin):
+    """退换货"""
+    cusotmer = models.ForeignKey(Customer, null=True, on_delete=models.SET_NULL)
+    create_at = models.DateTimeField(auto_now=True)
+    remark = models.CharField(max_length=100, null=True, blank=True) # 退货原因
+    money = models.DecimalField(default=0, max_digits=8, decimal_places=2)  # 金额
+    state = models.IntegerField(default=0)  # 0 申请，1 通过，2 不通过
+    opt_user = models.CharField(max_length=20)
+    check_user = models.ForeignKey(User, related_name='exch_check_user', null=True, on_delete=models.SET_NULL)
+    check_desc = models.CharField(max_length=100, null=True, blank=True)
+
+    class Meta:
+        verbose_name = "退换货"
+        default_permissions = ()
+        permissions = (
+            ('exchange_list', '查看'),
+        )
+
+
+class ExchangeDetail(models.Model, DictMixin):
+    exchange = models.ForeignKey(Exchange, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, null=True, on_delete=models.SET_NULL)
+    number = models.IntegerField(default=0)
+    direct = models.IntegerField(default=0)  # 0 退的产品  1. 换的产品
+
+    class Meta:
+        default_permissions = ()

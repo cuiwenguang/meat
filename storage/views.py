@@ -96,15 +96,15 @@ def storage_enter(request):
 def get_enter_data(request):
     limit = request.GET.get("limit", 10)
     offset = request.GET.get("offset", 0)
-    condation = {}
+    condition = {}
     range_data = request.GET.get("rangeDate", '')
     products = request.GET.getlist('products')
     if len(range_data) > 0:
-        condation['create_at__range'] = range_data.split(' ~ ')
+        condition['create_at__range'] = range_data.split(' ~ ')
     if len(products) > 0:
-        condation['product_id__in'] = products
+        condition['product_id__in'] = products
 
-    data = EnterStorage.search(int(limit), int(offset), condation)
+    data = EnterStorage.search(int(limit), int(offset), condition)
     return JsonResponse(data)
 
 
@@ -307,6 +307,7 @@ def loss_list(request):
     products = Product.objects.all()
     return render(request, 'storage/loss_list.html',{'products': products})
 
+
 def loss_add(request):
     id = request.POST.get("id")
     print(id)
@@ -321,6 +322,7 @@ def loss_add(request):
     model.state = 0
     model.save()
     return JsonResponse({"code": 200})
+
 
 def get_loss_list(request):
     limit = int(request.GET.get("limit", 10))
@@ -338,10 +340,12 @@ def get_loss_list(request):
     data = Loss.search(limit=limit, offset=offset, **query_params)
     return JsonResponse(data)
 
+
 def get_loss(request):
     id = request.POST.get('id')
     model = Loss.objects.get(id=id)
     return JsonResponse({"code": 200, "data" : model.to_dict()})
+
 
 def edit_loss(request):
     id = request.POST.get('code')
@@ -365,6 +369,7 @@ def edit_loss(request):
         update_storage(model, state)
     return JsonResponse({"code":200})
 
+
 def update_storage(model,state):
     if model.state == '1':
         a = StorageInfo.objects.get(product_id=model.product.id)
@@ -374,3 +379,9 @@ def update_storage(model,state):
         a = StorageInfo.objects.get(product_id=model.product.id)
         a.number = a.number + model.number
         a.save()
+
+    return JsonResponse({"code":200})
+
+
+def exchange_list(request):
+    return render(request, 'storage/exchange_list.html')

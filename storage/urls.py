@@ -8,7 +8,8 @@ from .views import (product_list, get_products, post_product,
                     order_analysis, show_product, edit_product, enter_stat, get_enter_datas, out_stat, get_out_datas,
                     get_order_list, storage_list, loss_list, loss_add, get_loss_list, edit_loss, get_loss,
                     get_bar_code_name,
-                    get_order_list, storage_list, loss_list, loss_add, get_loss_list, get_bar_code_name)
+                    get_order_list, storage_list, loss_list, loss_add, get_loss_list, get_bar_code_name,
+                    exchange_list)
 
 urlpatterns = [
     path('product/list', product_list, name="product_list"),
@@ -48,4 +49,6 @@ urlpatterns = [
     path("get/loss/list", get_loss_list, name="get_loss_list"),
     path("edit/loss", edit_loss, name="edit_loss"),
     path("get/loss", get_loss, name="get_loss"),
+
+    path("exchange/list", exchange_list, name="exchange_list"),
 ]

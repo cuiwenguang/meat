@@ -135,6 +135,16 @@ modules = [
                     "display": True,
                 },
                 {
+                    "name": "退换货",
+                    "url": "/storage/exchange/list",
+                    "icon": "",
+                    "label": "storage",
+                    "model": "",
+                    "perimission": "exchange_list",
+                    "parent": 3,
+                    "display": True,
+                },
+                {
                     "name": "库存盘点",
                     "url": "/storage/info",
                     "icon": "",

@@ -1,6 +1,10 @@
 $(function () {
     $("#tableUser").bootstrapTable({
-        "url": "/system/getusers"
+        "url": "/system/getusers",
+        "pagination": true,
+        // "sidePagination": "server",
+        "pageList": [10, 15, 20, 25, 30],
+        "detailView": true,
     });
     validate();
     $("#btnSave").click(save);
@@ -8,7 +12,26 @@ $(function () {
 
 function showEdit(id) {
     if(id>0){
-        //
+        $("#id").val(id);
+        $.post("/system/user/edit", $("#frmUser").serialize(), function (ret) {
+            if (ret.code == 200) {
+                var user = ret.data;
+                console.log(user[0].username);
+                $("#username").val(user[0].username);
+                $("#email").val(user[0].email);
+                $("#start-psd").css("display","none");
+                $("#first_name").val(user[0].first_name)
+            }
+        }, "json");
+    }else {
+        $("#id").val(id)
+        $("#username").val("");
+        $("#first_name").val("");
+        $("#password").val("");
+        $("#email").val("");
+        $("#start-psd").css("display","block");
+        $("#group").val("");
+
     }
     $("#frmCreate").modal();
 }
@@ -19,19 +42,28 @@ var save = function() {
        $.post('/system/user/create', $("#frmUser").serialize(), function (res) {
            if (res.code == 200){
                $("#tableUser").bootstrapTable('refresh');
+               window.location.href = '/system/user'
            }
-       });
+           if(res.code == 300){
+               $("#tableUser").bootstrapTable("refresh");
+               window.location.href = '/system/user'
+           }
+       },"json");
     }
 }
 
 function delUser(id){
-    $.post('/system/user/delete', {id:id}, function (res) {
-        if(res.code == 200){
-            $("#tableUser").bootstrapTable('refersh');
-        } else {
-            // 发生错误
+    alert(id)
+     $.ajax({
+        url: "/system/user/delete",
+        method: "get",
+        data:{id:id},
+        success: function (res) {
+            if (res.code == 200) {
+                $("#tableUser").bootstrapTable("refresh");
+            }
         }
-    })
+    });
 }
 
 function validate() {

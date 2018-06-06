@@ -2,9 +2,7 @@ $(function () {
     $("#tableUser").bootstrapTable({
         "url": "/system/getusers",
         "pagination": true,
-        // "sidePagination": "server",
         "pageList": [10, 15, 20, 25, 30],
-        "detailView": true,
     });
     validate();
     $("#btnSave").click(save);
@@ -30,7 +28,7 @@ function showEdit(id) {
         $("#password").val("");
         $("#email").val("");
         $("#start-psd").css("display","block");
-        $("#group").val("");
+        $("#group").val("1");
 
     }
     $("#frmCreate").modal();
@@ -55,7 +53,7 @@ var save = function() {
 function delUser(id){
     alert(id)
      $.ajax({
-        url: "/system/user/delete",
+        url: "/system/role/delete",
         method: "get",
         data:{id:id},
         success: function (res) {

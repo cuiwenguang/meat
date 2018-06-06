@@ -16,7 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, re_path, include
 from django.contrib.auth.views import login as sys_login
-from .views import logout, index, nav, user_list, get_users, create_user, edit_user, remove_user
+from .views import logout, index, nav, user_list, get_users, create_user, edit_user, remove_user, role_list, get_role, \
+    create_role, edit_role, remove_role
 
 from raw.urls import urlpatterns as raw_urls
 from storage.urls import urlpatterns as storage_urls
@@ -31,6 +32,11 @@ urlpatterns = [
     path("system/user/create", create_user, name="create_user"),
     path("system/user/edit", edit_user, name="edit_user"),  # 编辑用户
     path("system/user/delete", remove_user, name="remove_user"),  # 删除用户
+    path('system/role', role_list, name="role_list"),
+    path('system/role/getrole', get_role, name="get_role"),
+    path("system/role/create", create_role, name="create_role"),
+    path("system/role/edit", edit_role, name="edit_role"),  # 编辑角色
+    path("system/role/delete", remove_role, name="remove_role"),  # 删除角色
     path('nav', nav),
     re_path('raw/', include(raw_urls)),
     re_path('storage/', include(storage_urls)),

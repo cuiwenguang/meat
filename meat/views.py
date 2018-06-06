@@ -88,9 +88,7 @@ def edit_user(request):
 
 def remove_user(request):
     pk = request.GET.get("id")
-    print(id)
     user = User.objects.get(id=pk)
-    print(user.first_name)
     user.delete()
     return JsonResponse({"code": 200, "message": "删除成功"})
 
@@ -100,5 +98,47 @@ def role_permission(request):
     return render(request, 'permission.html', locals())
 
 
+def role_list(request):
+    return render(request, "role_list.html")
 
 
+def get_role(request):
+    group = Group.objects.all()
+    ret = []
+    for g in group:
+        ret.append({
+            "id": g.id,
+            "name": g.name,
+        })
+    return JsonResponse({"code": 200, "data": ret})
+
+
+def create_role(request):
+    id = request.POST.get("id")
+    print(id)
+    if int(id) == 0:
+        name = request.POST.get("name")
+        role = Group.objects.create(name=name)
+        role.save()
+        return JsonResponse({"code": 200, "message": "用户创建成功"})
+    else:
+        group = Group.objects.get(id=id)
+        print(group.id, group.name)
+        name = request.POST.get("name")
+        group.name = name
+        group.save()
+        return JsonResponse({"code": 300, "mess":"修改成功"})
+
+
+def edit_role(request):
+    id = request.GET.get("id")
+    group = Group.objects.get(id=id)
+    name = group.name
+    return JsonResponse({"code": 200, "data": name})
+
+
+def remove_role(request):
+    id= request.GET.get("id")
+    group = Group.objects.get(id=id)
+    group.delete()
+    return JsonResponse({"code": 200, "mess": "删除成功"})

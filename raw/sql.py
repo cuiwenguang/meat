@@ -17,4 +17,7 @@ sum(price*weight) as total_money FROM raw_collectinfo
 GROUP BY dt, name;
 '''
 
+get_collect_detail_sql ="""select category.name,m_weight,p_weight,weight,price,number,number*price as money from raw_collectdetail
+inner join raw_category category on raw_collectdetail.category_id = category.id
+where collect_info_id = '{0}'"""
 

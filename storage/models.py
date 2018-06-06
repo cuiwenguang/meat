@@ -352,11 +352,13 @@ class Loss(models.Model, DictMixin):
 
     @classmethod
     def search(cls, limit, offset, **condition):
+        begin = limit * offset
+        end = begin + limit
         q = models.Q()
         for k, v in condition.items():
             q.add(models.Q(**{k: v}), models.Q.AND)
         total = cls.objects.filter(q).count()
-        rows = cls.objects.filter(q)[offset:offset + limit]
+        rows = cls.objects.filter(q).order_by("-id")[begin:end][offset:offset + limit]
         return {
             "total": total,
             "rows": [o.to_dict() for o in rows]

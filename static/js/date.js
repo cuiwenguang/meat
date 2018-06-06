@@ -17,6 +17,9 @@ function getToday(type) {
     if (type == 1) {
         var currentdate = year + seperator1 + month + seperator1 + strDate + " 23:59:59";
         return currentdate;
+    }else {
+        var currentdate = year + seperator1 + month + seperator1 + strDate;
+        return currentdate;
     }
 }
 

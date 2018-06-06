@@ -27,9 +27,9 @@ $(function () {
     });
 });
 function showEdit(id) {
-    console.log(id);
     if (id == 0) {
-
+        $("#number").val('');
+        $("#desc").val('');
     } else {
         $("#id").val(id);
         $.post("/storage/get/loss", $("#frmProduct").serialize(), function (ret) {

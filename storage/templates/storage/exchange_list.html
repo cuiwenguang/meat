@@ -1,14 +1,140 @@
 {% extends 'layout.html' %}
 {% load staticfiles %}
-{% block styles %}{% endblock %}
+{% block styles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'lib/css/bootstrap-table.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'lib/css/bootstrapValidator.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'lib/css/daterangepicker.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'lib/css/bootstrap-multiselect.css' %}">
+{% endblock %}
 {% block content %}
 <div class="card">
     <div class="card-header">
-
+        <div class="card-title"> 退换货 </div>
+        <div class="pull-right card-action">
+            <div role="group">
+                {% if perms.storage.order_edit %}
+                    <a class="btn btn-primary" href="{% url 'exchange_edit' %}"> 申请退换货 </a>
+                {% endif %}
+            </div>
+        </div>
     </div>
     <div class="card-body">
-
+        <div class="row">
+            <div class="col-sm-8">
+                <table class="table" id="tableEnter">
+                    <thead>
+                        <tr>
+                            <th data-field="id">流水号</th>
+                            <th data-field="cusotmer" data-formatter="fmt.customerFormatter">客户</th>
+                            <th data-field="create_at">申请时间</th>
+                            <th data-field="remark">退货原因</th>
+                            <th data-field="money">差价</th>
+                            <th data-field="state" data-formatter="fmt.stateFormatter">状态</th>
+                            <th data-field="opt_user">操作员</th>
+                            <th data-field="check_user">审核员</th>
+                            <th data-field="check_desc">审核意见</th>
+                            <th data-field="id" data-formatter="fmt.optFormatter">操作</th>
+                        </tr>
+                    </thead>
+                </table>
+                <template id="rowButtons">
+                    <div class="table-button">
+                        {% if perms.storage.order_edit %}
+                            <a id="a1" href='/storage/exchange/edit?id=${id}'> 编辑 </a>
+                        {% endif %}
+                            <a id="a2" href='javascript:showPrint(${id})'> 审核 </a>
+                        {% if perms.storage.order_edit %}
+                            <a id="a3" href='javascript:deleteOrder(${id})'> 删除 </a>
+                        {% endif %}
+                    </div>
+                </template>
+            </div>
+            <div class="col-sm-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">查询</div>
+                    <div class="panel-body">
+                        <form class="form-horizontal">
+                            <div class="form-group">
+                                <label class="control-label col-sm-3" for="state">状态</label>
+                                <div class="col-sm-9">
+                                    <select id="state" name="state" multiple="multiple">
+                                        <option value="-1">暂存</option>
+                                        <option value="0">申请</option>
+                                        <option value="1">通过</option>
+                                        <option value="2">不通过</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-3" for="create_at">申请时间</label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" id="create_at" name="create_at">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-3" for="customer">客户</label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" id="customer" name="customer">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-9 col-sm-offset-3">
+                                    <button type="button" id="btnSearch" class="btn btn-primary">
+                                        <span class="fa fa-search"></span>查询
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="frmCreate" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="审核编辑">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">审核编辑</h4>
+            </div>
+            <div class="modal-body">
+                <form id="frmProduct" class="form-horizontal">
+                    {% csrf_token %}
+                    <input type="hidden" id="code" name="code" value="0" />
+                    <div class="form-group">
+                        <label for="product" class="col-sm-4 control-label">审核意见</label>
+                        <div class="col-sm-8">
+                            <select class="form-control" id="state" name="state" value="" required>
+                                <option value="1">通过</option>
+                                <option value="2">不通过</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="number" class="col-sm-4 control-label">审核描述</label>
+                        <div class="col-sm-8">
+                            <input class="form-control" id="check_desc" name="check_desc" value="">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnCheck" class="btn btn-primary"> 保存 </button>
+                <button type="button" class="btn btn-default"  data-dismiss="modal"> 取消 </button>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}
-{% block scripts %}{% endblock %}
+{% block scripts %}
+    <script type="text/javascript" src="{% static 'lib/js/bootstrap-table.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'lib/js/bootstrap-table-zh-CN.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'lib/js/bootstrapValidator.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'lib/js/moment.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'lib/js/daterangepicker.js' %}"></script>
+    <script type="text/javascript" src="{% static 'lib/js/bootstrap-multiselect.js' %}"></script>
+    <script type="text/javascript" src="{% static 'lib/js/jquery.tmpl.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/datapicker.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/storage/exchange_list.js' %}"></script>
+{% endblock %}

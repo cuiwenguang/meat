@@ -1,0 +1,130 @@
+{% extends 'layout.html' %}
+{% load staticfiles %}
+{% load common_tag %}
+{% block styles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'lib/css/bootstrap-table.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'lib/css/bootstrapValidator.min.css' %}">
+{% endblock %}
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <div class="card-title"> 申请退换货 </div>
+        <div class="pull-right card-action">
+            <div role="group">
+                <a class="btn btn-default" href="{% url 'exchange_list' %}">返回列表</a>
+                <button type="button" id="btnSave" class="btn btn-primary"> 提交 </button>
+                <button type="button" id="btnSaveAndPrint" class="btn btn-primary"> 提交并打印 </button>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div id="alertContainer"></div>
+        <form class="form-horizontal" id="formOrder" method="post">
+            <input type="hidden" class="form-control" id="direct" name="direct" value="0">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-sm-8">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">产品</label>
+                                <div class="col-sm-9">
+                                    <select class="form-control" id="product" name="product">
+                                        {% for p in products %}
+                                        <option value="{{ p.id }}" data-price="{{ p.price }}">{{ p.code }}-{{ p.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">数量</label>
+                                <div class="col-sm-9">
+                                    <input type="number" class="form-control" id="number" name="number" value="0">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="form-group">
+                                <div class="col-sm-9">
+                                    <select id="directState" class="form-control">
+                                        <option value="0">退货</option>
+                                        <option value="1">换货</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="form-group">
+                                <div class="col-sm-9">
+                                    <button type="button" id="btnAddDetail" class="btn btn-warning" style="margin:0px"> 添加明细 </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table id="tableDetail" class="table">
+                                <thead>
+                                    <tr>
+                                        <th data-field="product" data-formatter="fmt.codeFormatter">编号</th>
+                                        <th data-field="product" data-formatter="fmt.nameFormatter">名称</th>
+                                        <th data-field="product" data-formatter="fmt.standardFormatter">规格</th>
+                                        <th data-field="product" data-formatter="fmt.priceFormatter">价格</th>
+                                        <th data-field="number">数量</th>
+                                        <th data-field="direct" data-formatter="fmt.directFormatter">状态</th>
+                                        <th data-field="id" data-formatter="fmt.optFormatter">操作</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">退换货基本信息</div>
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <input type="hidden" id="id" name="id" value="{{ model.id|default:0 }}">
+                                <input type="hidden" id="state" name="state" value="{{ model.state|default:-1 }}">
+                                <label class="control-label col-sm-3" for="customer">退货单位</label>
+                                <div class="col-sm-9 has-feedback">
+                                    <input type="text" id="customer" name="customer" class="form-control" value="{{ model.customer.customer_name }}" >
+                                    <span class="glyphicon glyphicon-triangle-bottom form-control-feedback" aria-hidden="true"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-3" for="create_at">退货时间</label>
+                                <div class="col-sm-9 has-feedback">
+                                    <input type="text" id="create_at" name="create_at" class="form-control" value="{{ model.create_at|date:'Y-m-d H:i:s' }}" >
+                                    <span class="glyphicon glyphicon-calendar form-control-feedback" aria-hidden="true"></span>
+                                </div>
+                            </div>
+                            <div class="form-group ">
+                                <label class="control-label col-sm-3" for="money">差价</label>
+                                <div class="col-sm-9">
+                                    <input type="text" id="money" name="money" class="form-control" data-value="0" value="{{ model.money }}" >
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-3" for="remark">退货原因</label>
+                                <div class="col-sm-9">
+                                    <input type="text" id="remark" name="remark" class="form-control" value="{{ model.remark }}" >
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+    <script type="text/javascript" src="{% static 'lib/js/bootstrap-table.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'lib/js/bootstrap-table-zh-CN.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'lib/js/bootstrapValidator.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'lib/js/bootstrap3-typeahead.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/storage/exchange_edit.js' %}"></script>
+{% endblock %}

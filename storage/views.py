@@ -4,7 +4,7 @@ from django.http.response import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 
-from .models import Product, EnterStorage, StorageInfo, Customer, Order, OrderDetail,Loss
+from .models import Product, EnterStorage, StorageInfo, Customer, Order, OrderDetail, Loss, Exchange, ExchangeDetail
 
 
 def product_list(request):
@@ -385,3 +385,97 @@ def update_storage(model,state):
 
 def exchange_list(request):
     return render(request, 'storage/exchange_list.html')
+
+
+def exchange_edit(request):
+    pk = request.GET.get("id", 0)
+    if int(pk) == 0:
+        model = Exchange()
+        model.create_at = datetime.datetime.now()
+        model.remark = ''
+    else:
+        model = Exchange.get(pk)
+    products = Product.get_all()
+    return render(request, 'storage/exchange_edit.html', locals())
+
+
+def exchange_post(request):
+    customer_name = request.POST.get("customer")
+    cusotmer = Customer.get_by_name(customer_name)
+    if cusotmer is None:
+        if len(customer_name) > 0:
+            cusotmer = Customer(customer_name=customer_name)
+            cusotmer.save()
+        else:
+            None
+    create_at = request.POST.get("create_at")
+    money = request.POST.get("money")
+    remark = request.POST.get("remark")
+    state = request.POST.get("state")
+    id = request.POST.get("id")
+    if int(id) == 0:
+        exchange = Exchange()
+        exchange.opt_user = request.user
+    else:
+        exchange = Exchange.get(id)
+    exchange.create_at = create_at
+    exchange.cusotmer = cusotmer
+    exchange.state = state
+    exchange.money = money
+    exchange.remark = remark
+    if int(state) == -1:
+        detail = ExchangeDetail()
+        detail.exchange = exchange
+        detail.product_id = request.POST.get("product")
+        detail.number = request.POST.get("number")
+        detail.direct = request.POST.get("direct")
+    else:
+        detail = None
+    exchange.create(detail)
+    return JsonResponse({"code": 200, "message": "保存成功", "data": exchange.to_dict()})
+
+
+def exchange_get_details(request):
+    eid = request.GET.get("id")
+    details = Exchange.details(eid)
+    return JsonResponse([d.to_dict() for d in details], safe=False)
+
+
+def exchange_all(request):
+    limit = int(request.GET.get("limit", 10))
+    offset = int(request.GET.get("offset", 0))
+    date_params = request.GET.get("create_at", "")
+    query_params = {}
+    if len(date_params) > 0:
+        query_params["create_at__range"] = date_params.split(' ~ ')
+    customer = request.GET.get("customer", "")
+    if len(customer) > 0:
+        query_params["cusotmer__customer_name"] = customer
+    state = request.GET.getlist("state")
+    if len(state):
+        query_params["state__in"] = [int(s) for s in state]
+    data = Exchange.search(limit=limit, offset=offset, **query_params)
+    return JsonResponse(data)
+
+
+def exchange_detail_list(request):
+    oid = request.GET.get("id")
+    details = Exchange.details(oid)
+    return render(request, "storage/exchangedetail_partial.html", locals())
+
+
+def exchange_check(request):
+    model = Exchange.get(request.POST.get("code"))
+    state = model.state
+    model.state = request.POST.get("state")
+    model.check_desc = request.POST.get("check_desc")
+    model.check_user = request.user
+    model.edit(state)
+    return JsonResponse({"code": 200})
+
+
+@csrf_exempt
+def exchange_delete(request):
+    id = request.POST.get("id")
+    Exchange.remove_at(id)
+    return JsonResponse({"code": 200, "message": "删除成功！"})

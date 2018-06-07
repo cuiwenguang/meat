@@ -392,6 +392,64 @@ class Exchange(models.Model, DictMixin):
             ('exchange_list', '查看'),
         )
 
+    @classmethod
+    def search(cls, limit, offset, **condition):
+        q = models.Q()
+        for k, v in condition.items():
+            q.add(models.Q(**{k: v}), models.Q.AND)
+        total = cls.objects.filter(q).count()
+        rows = cls.objects.filter(q).order_by("-id")[offset:limit + offset]
+        return {
+            "total": total,
+            "rows": [o.to_dict() for o in rows]
+        }
+
+    def create(self, detail):
+        with transaction.atomic():
+            self.save()
+            if detail is not None:
+                detail.exchange_id = self.id
+                detail.save()
+
+    @classmethod
+    def details(self, exchange_id):
+        return ExchangeDetail.objects.filter(exchange_id=exchange_id)
+
+    @classmethod
+    def get(cls, pk):
+        try:
+            return cls.objects.get(id=pk)
+        except Exception as e:
+            return None
+
+    def edit(self,state):
+        with transaction.atomic():
+            self.save()
+            if int(self.state) == 1 and int(state) != 1:
+                details = ExchangeDetail.objects.filter(exchange_id=self.id)
+                for detail in details:
+                    storage = StorageInfo.objects.get(product_id=detail.product_id)
+                    if int(detail.direct) == 0:
+                        storage.number += detail.number
+                    if int(detail.direct) == 1:
+                        storage.number -= detail.number
+                    storage.save()
+            if int(self.state) == 2 and int(state) == 1:
+                details = ExchangeDetail.objects.filter(exchange_id=self.id)
+                for detail in details:
+                    storage = StorageInfo.objects.get(product_id=detail.product_id)
+                    if int(detail.direct) == 0:
+                        storage.number -= detail.number
+                    if int(detail.direct) == 1:
+                        storage.number += detail.number
+                    storage.save()
+
+    @classmethod
+    def remove_at(cls, pk):
+        with transaction.atomic():
+            ExchangeDetail.objects.filter(exchange_id=pk).delete()
+            cls.objects.get(id=pk).delete()
+
 
 class ExchangeDetail(models.Model, DictMixin):
     exchange = models.ForeignKey(Exchange, on_delete=models.CASCADE)

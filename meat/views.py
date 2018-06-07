@@ -127,7 +127,7 @@ def create_role(request):
         name = request.POST.get("name")
         group.name = name
         group.save()
-        return JsonResponse({"code": 300, "mess":"修改成功"})
+        return JsonResponse({"code": 300, "mess": "修改成功"})
 
 
 def edit_role(request):
@@ -142,3 +142,33 @@ def remove_role(request):
     group = Group.objects.get(id=id)
     group.delete()
     return JsonResponse({"code": 200, "mess": "删除成功"})
+
+
+def power_resp(request):
+    id = request.GET.get("id")
+    group = Group.objects.get(id=id)
+    perms = [p for p in group.permissions.all()]
+    return render(request, 'power_resp.html', {"group": group, "perms": perms})
+
+
+def get_perms(request):
+    from django.contrib.auth.models import Permission
+    perms = Permission.objects.filter(content_type__id__gte=7).values('id', 'name')
+    ret = []
+    for p in perms:
+        ret.append({
+            "id": p["id"],
+            "name": p["name"],
+        })
+    return JsonResponse({"code": 200, "data": ret})
+
+
+def update_perms(request):
+    id = request.GET.get("id")
+    group = Group.objects.get(id=id)
+    print(group)
+    perms = request.GET.getlist("perm[]")
+    print(perms)
+    group.permissions.clear()
+    group.permissions.add(*perms)
+    return JsonResponse({"code": 200})

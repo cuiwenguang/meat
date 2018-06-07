@@ -1,0 +1,73 @@
+{% extends 'layout.html' %}
+{% load staticfiles %}
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="{% static 'lib/css/bootstrap-table.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'lib/css/bootstrapValidator.min.css' %}">
+{% endblock %}
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <div class="card-title"> 权限分配 </div>
+        <div class="pull-right card-action">
+            <div role="group">
+                <button type="button" onclick="Update({{ group.id }})" class="btn btn-primary"> 保存 </button>
+                <input id="groupId" type="hidden" value="{{ group.id }}">
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <label class="control-label col-sm-3" for="name">名称</label>
+                    <div class="col-sm-9">
+                        <input class="form-control" id="name" readonly name="name" value="{{ group.name }}">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="control-label col-sm-2" for="name">权限</label>
+                    <div class="col-sm-8">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">可用权限</div>
+                            <div class="panel-body">
+                                <select name="permissions" id="permissions" multiple="multiple" style="width: 100%;
+                                    min-height: 200px;">
+
+                                </select>
+                                <a href="#">全选</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">已分配权限</div>
+                    <div class="panel-body">
+                        <select name="perm" id="id_perm" multiple="multiple" style="width: 100%;
+                                    min-height: 200px;" data-field-name="权限" data-is-stacked="0">
+                            {% for p in perms %}
+                                <option value="{{ p.id }}">{{ p.name }}</option>
+                            {% endfor %}
+                        </select>
+                        <a href="#">全部删除</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block scripts %}
+   <script type="text/javascript" src="{% static 'lib/js/bootstrap-table.min.js' %}"></script>
+   <script type="text/javascript" src="{% static 'lib/js/bootstrap-table-zh-CN.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'lib/js/bootstrapValidator.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/power.js' %}"></script>
+{% endblock %}

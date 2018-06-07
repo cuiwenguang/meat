@@ -85,7 +85,8 @@ function validate() {
 var fmt = {
     optFormatter: function (value) {
         html = "<a href='javascript:showEdit("+value+")'> 编辑 </a>" +
-            "<a href='javascript:delUser("+value+")'> 删除 </a>";
+            "<a href='javascript:delUser("+value+")'> 删除 </a>" +
+        "<a href='/system/power/resp?id="+value+"'> 权限分配 </a>";
         return html;
     }
 }

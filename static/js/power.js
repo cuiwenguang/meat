@@ -24,6 +24,11 @@ $(function () {
                 $('#id_perm').dblclick(function () {
                     id = $("#id_perm").val();
                     $("#id_perm option[value=" + id + "]").remove(); //删除Select中Value='3'的Option
+                    for (var i = 0; i < data.length; i++) {
+                        if (data[i].id == id) {
+                            $("#permissions").append("<option value=" + id + ">" + data[i].name + "</option>"); //为Select追加一个Option(下拉项)
+                        }
+                    }
                 })
             }
         }

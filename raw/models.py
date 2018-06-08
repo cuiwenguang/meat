@@ -16,7 +16,7 @@ class RawConfig(models.Model, DictMixin):
         verbose_name = '参数配置模块'
         default_permissions = ()
         permissions = (
-            ("config_edit", "配置编辑"),
+            ("config_edit", "收购|参数设置"),
         )
 
 
@@ -53,9 +53,9 @@ class Category(models.Model, DictMixin):
         verbose_name = '品种分类'
         default_permissions = ()
         permissions = (
-            ("category_list", "查看"),
-            ("post_category", "编辑"),
-            ("delete_category", "删除"),
+            ("category_list", "品种管理"),
+            ("post_category", "品种编辑"),
+            ("delete_category", "删除品种"),
         )
 
     @classmethod
@@ -85,14 +85,14 @@ class CollectInfo(models.Model, DictMixin):
         verbose_name = "收购"
         default_permissions = ()
         permissions = (
-            ('collect_list', '查看'),
-            ('collect_create', '称重'),
-            ('collect_edit', '编辑'),
-            ('collect_delete', '删除'),
-            ('collect_payview', '结算'),
-            ('collect_print', '打印'),
-            ('stat_list', '统计'),
-            ('collect_analyze', '收购分析')
+            ('collect_list', '收购|查看收购'),
+            ('collect_create', '收购|收购称重'),
+            ('collect_edit', '收购|收购编辑'),
+            ('collect_delete', '收购|删除收购信息'),
+            ('collect_payview', '收购|结算'),
+            ('collect_print', '收购|打印收购信息'),
+            ('stat_list', '收购|收购统计'),
+            ('collect_analyze', '收购|收购分析')
         )
 
     def update_total_fields(self):

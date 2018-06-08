@@ -21,9 +21,9 @@ class Product(models.Model, DictMixin):
         verbose_name = '产品'
         default_permissions = ()
         permissions = (
-            ('product_list', '查看'),
-            ('post_product', '编辑'),
-            ('del_product', '删除'),
+            ('product_list', '库存|查看'),
+            ('post_product', '库存|编辑'),
+            ('del_product', '库存|删除'),
         )
 
     @classmethod
@@ -115,7 +115,7 @@ class StorageInfo(models.Model, DictMixin):
         verbose_name = '库存'
         default_permissions = ()
         permissions = (
-            ("storage_list", "盘库"),
+            ("storage_list", "库存|盘库"),
         )
 
     @classmethod
@@ -159,7 +159,7 @@ class EnterStorage(models.Model, DictMixin):
         default_permissions = ()
         permissions = (
             ('storage_enter', '入库'),
-            ('enter_stat', '入库统计'),
+            ('enter_stat', '入库|入库统计'),
         )
 
     @classmethod
@@ -234,11 +234,11 @@ class Order(models.Model, DictMixin):
         verbose_name = '销售订单'
         default_permissions = ()
         permissions = (
-            ('order', '查看订单'),
-            ('order_edit', '创建订单'),
-            ('delete_order', '删除订单'),
-            ('out_stat', '销售统计'),
-            ('order_analysis', '销售分析')
+            ('order', '销售|查看订单'),
+            ('order_edit', '销售|创建订单'),
+            ('delete_order', '销售|删除订单'),
+            ('out_stat', '销售|统计'),
+            ('order_analysis', '销售|销售分析')
         )
 
     @classmethod
@@ -370,7 +370,7 @@ class Loss(models.Model, DictMixin):
         verbose_name = "报损"
         default_permissions = ()
         permissions = (
-            ("loss_list", "查看"),
+            ("loss_list", "库存|查看报损"),
         )
 
 
@@ -389,7 +389,7 @@ class Exchange(models.Model, DictMixin):
         verbose_name = "退换货"
         default_permissions = ()
         permissions = (
-            ('exchange_list', '查看'),
+            ('exchange_list', '库存|查看退换货'),
         )
 
     @classmethod

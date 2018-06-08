@@ -228,7 +228,7 @@ class Order(models.Model, DictMixin):
     user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     money = models.DecimalField(default=0, max_digits=11, decimal_places=2)
     remark = models.CharField(max_length=50)
-    state = models.IntegerField(default=0)
+    state = models.IntegerField(default=0) # 0 暂存，1 出库完成
 
     class Meta:
         verbose_name = '销售订单'

@@ -126,24 +126,26 @@ function initForm(form) {
     $("#money").val(form.money);
     $("#remark").val(form.remark);
 }
-function clearForm(form) {
+function clearForm() {
     $("#id").val(0);
     $("#customer").val("");
     $("#hand_user").val("");
     $("#money").val(0);
+    $("#state").val(0);
     $("#remark").val('');
 }
 
 function tableBind(isPostBack) {
     var id = $("#id").val();
-    if (parseInt(id) > 0) {
-        $("#tableDetail").bootstrapTable({
-            "url": "/storage/order/details?id=" + id
+    $("#tableDetail").bootstrapTable({
+            "url": "/storage/order/details"
         });
-    }
-    ;
-    if (isPostBack) {
-        $("#tableDetail").bootstrapTable('refresh');
+    if(isPostBack) {
+        queryParams = {id: id};
+        $("#tableDetail").bootstrapTable('refreshOptions', {
+            queryParams: queryParams,
+            ajaxOptions: {traditional: true}
+        });
     }
 }
 

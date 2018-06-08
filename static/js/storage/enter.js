@@ -18,6 +18,11 @@ $(function () {
                     },
                     digits: {
                         message: "数量只能输入整数"
+                    },
+                    between: {
+                        message: "数量不能为0",
+                        min: 1,
+                        max: Number.MAX_VALUE,
                     }
                 }
             },

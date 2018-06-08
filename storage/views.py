@@ -300,11 +300,17 @@ def get_out_datas(request):
 
 @csrf_exempt
 def storage_check_number(request):
+    result = {}
+    state = request.POST.get('state')
+    if state != None:
+        if int(state) == 0:
+            result['valid'] = True
+            return JsonResponse(result)
     product = int(request.POST.get('product'))
     number = int(request.POST.get('number'))
     number -= 1
     model = StorageInfo.objects.get(product_id=product)
-    result = {}
+
     result['valid'] = model.number > number
     return JsonResponse(result)
 

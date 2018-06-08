@@ -100,7 +100,7 @@ function validateForm() {
                     between:{
                         message:"数量不能为0",
                         min:1,
-                        max:10000,
+                        max:Number.MAX_VALUE,
                     },
                     remote:{
                         url: "../check/number",

@@ -11,11 +11,12 @@ from .views import (product_list, get_products, post_product,
                     get_order_list, storage_list, loss_list, get_bar_code_name,
                     exchange_list, exchange_edit, exchange_post, exchange_get_details, exchange_all,
                     exchange_detail_list, exchange_check, exchange_delete, loss_post, loss_get_list, loss_get,
-                    storage_check_number)
+                    storage_check_number, cheek_code)
 
 urlpatterns = [
     path('product/list', product_list, name="product_list"),
-    path('product/getcode', get_bar_code_name, name="get_bar_code_name"),
+    path('product/getcode', get_bar_code_name, name="get_bar_code_name"),  # 获取条码名
+    # path('product/cheek/code', cheek_code, name="cheek_code"),  # 异步校验产品编号
     path('editproduct', edit_product, name="edit_product"),  # 编辑产品信息
     path('showproduct', show_product, name="update_product"),  # 更新产品信息
     path('getproducts', get_products, name="get_products"),

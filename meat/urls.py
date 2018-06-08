@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path, re_path, include
 from django.contrib.auth.views import login as sys_login
 from .views import logout, index, nav, user_list, get_users, create_user, edit_user, remove_user, \
-    role_list, get_role, create_role, edit_role, remove_role, power_resp, get_perms, update_perms
+    role_list, get_role, create_role, edit_role, remove_role, power_resp, get_perms, update_perms, change_password
 
 from raw.urls import urlpatterns as raw_urls
 from storage.urls import urlpatterns as storage_urls
@@ -25,6 +25,7 @@ from storage.urls import urlpatterns as storage_urls
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/login/', sys_login, {'template_name': 'login.html'}),
+    path('changepsd', change_password, name='change_password'),
     path('logout/', logout, name="logout"),
     path('', index),
     path('system/user', user_list, name="user_list"),

@@ -17,6 +17,45 @@
 </head>
 
 <body class="flat-blue">
+    <div class="modal fade" id="frmPassword" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="修改密码">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">修改密码</h4>
+            </div>
+            <div class="modal-body">
+                <form id="frmPsd" class="form-horizontal">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="psd" class="col-sm-4 control-label">输入密码</label>
+                        <div class="col-sm-6">
+                            <input class="form-control" id="psd" name="psd" type="password">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="rePsd" class="col-sm-4 control-label">输入新密码</label>
+                        <div class="col-sm-6">
+                            <input class="form-control" id="rePsd" name="rePsd" type="password">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cheekPsd" class="col-sm-4 control-label">确认新密码</label>
+                        <div class="col-sm-6">
+                            <input class="form-control" id="cheekPsd" name="cheekPsd" type="password">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnSubmit" class="btn btn-primary"> 提交 </button>
+                <button type="button" class="btn btn-default"  data-dismiss="modal"> 取消 </button>
+            </div>
+        </div>
+    </div>
+</div>
     <div class="app-container">
         <div class="row content-container">
             <nav class="navbar navbar-inverse navbar-fixed-top navbar-top">
@@ -51,7 +90,7 @@
                                         <h4 class="username">{{ user.first_name }}</h4>
                                         <p>  </p>
                                         <div class="btn-group margin-bottom-2x" role="group">
-                                            <button type="button" class="btn btn-default"><i class="fa fa-user"></i> 修改密码 </button>
+                                            <button type="button" id="updatePsd" class="btn btn-default"><i class="fa fa-user"></i> 修改密码 </button>
                                             <a href="{% url 'logout' %}" class="btn btn-default"><i class="fa fa-sign-out"></i> 注销 </a>
                                         </div>
                                     </div>
@@ -98,6 +137,7 @@
             <script type="text/javascript" src="{% static 'lib/js/jquery.min.js' %}"></script>
             <script type="text/javascript" src="{% static 'lib/js/bootstrap.min.js' %}"></script>
             <script type="text/javascript" src="{% static 'lib/js/bootstrap-switch.min.js' %}"></script>
+            <script type="text/javascript" src="{% static 'lib/js/bootstrapValidator.min.js' %}"></script>
             <script type="text/javascript" src="{% static 'lib/js/jquery.matchHeight-min.js' %}"></script>
             <script type="text/javascript" src="{% static 'lib/js/ace/ace.js' %}"></script>
             <!-- Javascript -->

@@ -62,54 +62,59 @@ $(function () {
                     regexp: {
                         regexp: /^[0-9]+$/,
                         message: '请输入数字..'
+                    },
+                    threshold: 8,
+
+                    remote: {//例表示正确：{"valid",true}
+                        url: '/storage/product/cheek/code',//验证地址
+                        data: {"code": $('#code').val()}
+                    }, message: '产品编号已被注册',//提示消息
+                    delay: 2000,
+                    type: 'POST'
+
+                },
+                name: {
+                    validators: {
+                        notEmpty: {
+                            message: '名称不能为空'
+                        },
                     }
                 },
-            },
-            name: {
-                validators: {
-                    notEmpty: {
-                        message: '名称不能为空'
-                    },
-                    // threshold: 2, //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
-                    // remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
-                    //     url: '/storage/cheekdata',//验证地址
-                    //     message: '名称已存在',//提示消息
-                    //     delay: 2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
-                    //     type: 'get',//请求方式
-                    //     // 自定义提交数据，默认值提交当前input value
-                    //     data: function (validator) {
-                    //         return {
-                    //             name: $('[name="name"]').val(),
-                    //         }
-                    //     },
-                    // }
-                }
-            },
-            'standard': {
-                validators: {
-                    notEmpty: {
-                        message: "规格不能为空"
+                'standard': {
+                    validators: {
+                        notEmpty: {
+                            message: "规格不能为空"
+                        }
                     }
-                }
-            },
-            'packing': {
-                validators: {
-                    notEmpty: {
-                        message: "包装不能为空"
+                },
+                'packing': {
+                    validators: {
+                        notEmpty: {
+                            message: "包装不能为空"
+                        }
                     }
-                }
-            },
-            'price': {
-                validators: {
-                    notEmpty: {
-                        message: "价格不能为空"
+                },
+                'price': {
+                    validators: {
+                        notEmpty: {
+                            message: "价格不能为空"
+                        }
                     }
-                }
-            },
-
+                },
+            }
         }
     });
-})
+});
+
+// $("#code").keyup(function () {
+//     if ($("#code").val().length == 4) {
+//         $.get("/storage/product/cheek/code?code=" + $("#code").val(), function (res) {
+//             if (res.code == 200) {
+//                 alert(res.mess);
+//             }
+//         });
+//     }
+// });
 
 $("#btnSave").click(function () {
     $("#frmProduct").bootstrapValidator('validate');

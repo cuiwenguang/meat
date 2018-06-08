@@ -1,3 +1,5 @@
+from django.contrib.auth import authenticate
+from django.contrib.auth.hashers import make_password
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User, Group
@@ -172,3 +174,18 @@ def update_perms(request):
     group.permissions.clear()
     group.permissions.add(*perms)
     return JsonResponse({"code": 200})
+
+
+def change_password(request):
+    old_psd = request.POST.get("psd")
+    rePsd = request.POST.get("rePsd")
+    print(rePsd)
+    username = request.user
+    user = authenticate(username=username, password=old_psd)
+    print(user)
+    if user:
+        user.password = make_password(rePsd)
+        user.save()
+        return JsonResponse({"code": 200, "mess": "修改成功，本次退出后生效"})
+    else:
+        return JsonResponse({"mess": "密码输入错误"})

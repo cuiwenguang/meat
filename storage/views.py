@@ -83,8 +83,20 @@ def get_product(request):
     code = request.GET.get("code")
     model = Product.get_by_code(code)
     if model is None:
-        return JsonResponse({"code": 401, "message": "产品不存在" })
+        return JsonResponse({"code": 401, "message": "产品不存在"})
     return JsonResponse({"code": 200, "data": model.to_dict()})
+
+
+def cheek_code(request):
+    post_code = request.POST.get("code")
+    print(post_code)
+    product_code = Product.objects.all().values('code')
+    for p in product_code:
+        if p['code'] == post_code:
+            print(post_code)
+            return JsonResponse({"valid": "False"})
+        else:
+            return JsonResponse({"valid": "True"})
 
 
 def storage_enter(request):

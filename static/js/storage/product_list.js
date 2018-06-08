@@ -1,7 +1,9 @@
 $(function () {
     $("#productTable").bootstrapTable({
         "url": "/storage/getproducts",
-        "checkbox": true
+        "checkbox": true,
+        "pageList": [10, 15, 20, 25, 30],
+        "pagination": true,
     });
     $("#btnEdit").click(function () {
         $("#frmCreate").modal({});

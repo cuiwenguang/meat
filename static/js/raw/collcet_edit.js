@@ -74,34 +74,11 @@ $("#dataSave").click(function () {
 })
 
 $("#saveCus").click(function () {
-    var sgDatetime = $("#sg_datetime").val();
-    var idCard = $("#id_card").val();
-    var custName = $("#cust_name").val();
-    var mobile = $("#mobile").val();
-    var address = $("#address").val();
-    var collect_info_id = $("#collect_info_id").val()
-
-    data = {
-        "sgDatetime": sgDatetime,
-        "idCard": idCard,
-        "custName": custName,
-        "mobile": mobile,
-        "address": address,
-        'collect_info_id': collect_info_id
-    }
-
-    $.ajax({
-        url: "/raw/collect/updatecustomer",
-        method: "get",
-        async: false,
-        data: data,
-        success: function (res) {
-            if (res.code == 200) {
-                alert("修改成功")
-                window.location.href = "/raw/collect/edit?id=" + collect_info_id
-            }
+    $.post("/raw/collect/updatecustomer", $("#frmCustomer").serialize(), function (ret) {
+        if(ret.code==200){
+            alert("修改成功");
         }
-    });
+    })
 })
 
 function delData(did) {

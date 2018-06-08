@@ -152,14 +152,27 @@ def collect_delcollectinfo(request):
 
 
 def collect_update_customer(request):
-    id = request.GET.get("collect_info_id")
-    collectInfo = CollectInfo.objects.get(id=id)
-    collectInfo.sg_datetime = request.GET.get("sgDatetime")
-    customer = Customer.objects.get(id=collectInfo.customer_id)
-    customer.cust_name = request.GET.get("custName")
-    customer.mobile = request.GET.get('mobile')
-    customer.address = request.GET.get('address')
-    customer.save()
+    id = request.POST.get("id")
+    collect_info = CollectInfo.objects.get(id=id)
+    collect_info.sg_datetime = request.POST.get("sg_datetime")
+    if collect_info.customer_id == None:
+        id_card = request.POST.get("id_card")
+        cust_name = request.POST.get("cust_name")
+        address = request.POST.get("address")
+        mobile = request.POST.get("mobile")
+        print(id_card, cust_name, address, mobile)
+        customer = Customer.objects.create(id_card=id_card, cust_name=cust_name, address=address, mobile=mobile)
+        customer.save()
+        new_cus = Customer.objects.get(id_card=id_card)
+        collect_info.customer_id = new_cus.id
+        collect_info.save()
+    else:
+        customer = Customer.objects.get(id=collect_info.customer_id)
+        customer.id_card = request.POST.get("id_card")
+        customer.cust_name = request.POST.get("cust_name")
+        customer.mobile = request.POST.get('mobile')
+        customer.address = request.POST.get('address')
+        customer.save()
     return JsonResponse({"code": 200})
 
 

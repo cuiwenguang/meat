@@ -31,7 +31,7 @@ function datepickerInit(input) {
             endDate: moment()
         },
         function (start, end) {
-            $(input).val(start.format('YYYY-MM-DD') + ' ~ ' + end.format('YYYY-MM-DD'));
+            $(input).val(start.format('YYYY-MM-DD')+ ' 00:00' + ' ~ ' + end.format('YYYY-MM-DD') + ' 23:59');
         }
    );
 };

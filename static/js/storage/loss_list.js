@@ -1,6 +1,6 @@
 $(function () {
     $("#tableLoss").bootstrapTable({
-        "url": '/storage/get/loss/list',
+        "url": '/storage/loss/get/list',
         "pagination": true,
         "sidePagination": "server",
         "pageList": [10, 15, 20, 25, 30],
@@ -33,7 +33,7 @@ function showEdit(id) {
         $("#desc").val('');
     } else {
         $("#id").val(id);
-        $.post("/storage/get/loss", $("#frmProduct").serialize(), function (ret) {
+        $.post("/storage/loss/get", $("#frmProduct").serialize(), function (ret) {
             if(ret.code==200){
                 $("#product").val(ret.data.product.id);
                 $("#number").val(ret.data.number);
@@ -46,30 +46,34 @@ function showEdit(id) {
 $("#btnSave").click(function () {
     $("#frmProduct").bootstrapValidator('validate');
     if ($("#frmProduct").data('bootstrapValidator').isValid()) {
-        $.post('/storage/loss/add', $("#frmProduct").serialize(), function (res) {
+        $.post('/storage/loss/post', $("#frmProduct").serialize(), function (res) {
             window.location.href = '/storage/loss/list';
         });
     }
 });
 //审核
 function checkEdit(id) {
-    $("#frmCheck").modal({});
-    if (id == 0) {
-        var getSelectRows = $("#tableLoss").bootstrapTable('getSelections', function (row) {
-            return row;
-        });
-        var ids = new Array();
-        for(var i=0;i<getSelectRows.length;i++){
-            ids[i] = getSelectRows[i].id;
+    var getSelectRows = $("#tableLoss").bootstrapTable('getSelections', function (row) {
+        return row;
+    });
+    if(getSelectRows.length == 0){
+        showMessage({code: 403, message: "没有选择任何信息，无法进行批量审核"})
+    }else{
+        if(id == 0){
+            var ids = new Array();
+            for(var i=0;i<getSelectRows.length;i++){
+                ids[i] = getSelectRows[i].id;
+            }
+            $("#code").val(ids);
+        }else{
+            $("#code").val(id);
         }
-        $("#code").val(ids);
-    } else {
-        $("#code").val(id);
+        $("#frmCheck").modal({});
     }
     $("#btnCheck").click(function () {
         $("#frmChecks").bootstrapValidator('validate');
         if ($("#frmChecks").data('bootstrapValidator').isValid()) {
-            $.post('/storage/edit/loss', $("#frmChecks").serialize(), function (res) {
+            $.post('/storage/loss/check', $("#frmChecks").serialize(), function (res) {
                 if (res.code == 200) {
                     window.location.href = '/storage/loss/list';
                 }

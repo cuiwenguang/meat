@@ -91,6 +91,27 @@ function validateForm() {
                         message: "金额只能输入整数"
                     }
                 }
+            },
+            'number':{
+                validators:{
+                    notEmpty:{
+                        message:"数量不能为空"
+                    },
+                    between:{
+                        message:"数量不能为0",
+                        min:1,
+                        max:10000,
+                    },
+                    remote:{
+                        url: "../check/number",
+                        data: {'product': function () {
+                                return $("#product").val();
+                            }, 'number': $("#number").val()},
+                        message: "所选数量大于库存",
+                        delay: 2000,
+                        type: 'POST'
+                    }
+                }
             }
         }
     });

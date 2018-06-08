@@ -6,11 +6,12 @@ from .views import (product_list, get_products, post_product,
                     order, order_edit, post_order, get_orders, delete_order,
                     get_details, detail_list, customer_search,
                     order_analysis, show_product, edit_product, enter_stat, get_enter_datas, out_stat, get_out_datas,
-                    get_order_list, storage_list, loss_list, loss_add, get_loss_list, edit_loss, get_loss,
+                    get_order_list, storage_list, loss_list, loss_check,
                     get_bar_code_name,
-                    get_order_list, storage_list, loss_list, loss_add, get_loss_list, get_bar_code_name,
+                    get_order_list, storage_list, loss_list, get_bar_code_name,
                     exchange_list, exchange_edit, exchange_post, exchange_get_details, exchange_all,
-                    exchange_detail_list, exchange_check, exchange_delete)
+                    exchange_detail_list, exchange_check, exchange_delete, loss_post, loss_get_list, loss_get,
+                    storage_check_number)
 
 urlpatterns = [
     path('product/list', product_list, name="product_list"),
@@ -25,6 +26,7 @@ urlpatterns = [
 
     path("info", storage_list, name="storage_list"),
     path("enter", storage_enter, name="storage_enter"),
+    path("check/number", storage_check_number, name="storage_check_number"),
     path("post_enter", post_enter_storage, name="post_enter_storage"),
     path("enter/delete", delete_enter_storage, name="delete_enter_storage"),
     path("getenterdata", get_enter_data, name="get_enter_data"),
@@ -46,10 +48,10 @@ urlpatterns = [
     path("out/analysis", order_analysis, name="order_analysis"),
 
     path("loss/list", loss_list, name="loss_list"),
-    path("loss/add", loss_add, name="loss_add"),
-    path("get/loss/list", get_loss_list, name="get_loss_list"),
-    path("edit/loss", edit_loss, name="edit_loss"),
-    path("get/loss", get_loss, name="get_loss"),
+    path("loss/post", loss_post, name="loss_post"),
+    path("loss/get/list", loss_get_list, name="loss_get_list"),
+    path("loss/check", loss_check, name="loss_check"),
+    path("loss/get", loss_get, name="loss_get"),
 
     path("exchange/list", exchange_list, name="exchange_list"),
     path("exchange/edit", exchange_edit, name="exchange_edit"),

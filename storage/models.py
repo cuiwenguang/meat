@@ -365,6 +365,21 @@ class Loss(models.Model, DictMixin):
         rows = cls.objects.all()
         return rows
 
+    @classmethod
+    def get(cls, pk):
+        return cls.objects.get(id=pk)
+
+    def edit(self,state):
+        with transaction.atomic():
+            self.save()
+            if int(self.state) == 1 and int(state) != 1:
+                storage = StorageInfo.objects.get(product_id=self.product_id)
+                storage.number -= self.number
+                storage.save()
+            if int(self.state) == 2 and int(state) == 1:
+                storage = StorageInfo.objects.get(product_id=self.product_id)
+                storage.number += self.number
+                storage.save()
 
     class Meta:
         verbose_name = "报损"
@@ -422,7 +437,7 @@ class Exchange(models.Model, DictMixin):
         except Exception as e:
             return None
 
-    def edit(self,state):
+    def edit(self, state):
         with transaction.atomic():
             self.save()
             if int(self.state) == 1 and int(state) != 1:
